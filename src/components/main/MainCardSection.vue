@@ -14,7 +14,6 @@ const swiperOptions = ref({
   slidesPerView: "5",
   centeredSlides: true,
   initialSlide: initialIndex,
-  grabCursor: true,
 });
 
 const swiperInstance = ref(null);
@@ -35,10 +34,39 @@ const onSlideChange = () => {
     targetIdx.value = null;
 };
 
-const handleClickTarget = (idx) => {
+const moveSlide = (nextTarget) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      swiperInstance.value.slideTo(nextTarget); // 슬라이드 이동
+      activeIndex.value = nextTarget; // 상태 업데이트
+      resolve();
+    }, 100);
+  });
+};
+
+const handleClickTarget = async (idx) => {
+  if (!swiperInstance.value) return;
+
+  const isUpper = idx > activeIndex.value; // 이동 방향 확인
+  let target = activeIndex.value; // 현재 활성 인덱스
+
+  if (isUpper) {
+    while (target < idx) {
+      target++;
+      await moveSlide(target);
+    }
+  } else {
+    while (target > idx) {
+      target--;
+      await moveSlide(target);
+    }
+  }
+
   if (targetIdx.value === idx) {
     targetIdx.value = null;
-  } else targetIdx.value = idx;
+  } else {
+    targetIdx.value = idx;
+  }
 };
 </script>
 
@@ -66,7 +94,7 @@ const handleClickTarget = (idx) => {
           alt="title"
         />
       </h2>
-      <div class="w-[calc(100%-32px)] max-w-[1920px] h-[40vh] max-h-[400px]">
+      <div class="w-[calc(100%-32px)] max-w-[1200px] h-[41vh] max-h-[400px]">
         <swiper
           v-bind="swiperOptions"
           class="mySwiper w-full"
@@ -78,7 +106,7 @@ const handleClickTarget = (idx) => {
             :key="idx"
             :class="
               twMerge(
-                'group max-w-[374px] w-full relative',
+                'group max-w-[374px] w-full relative flex justify-center',
                 calculateOffset(idx) === 1 && 'z-20 ',
                 calculateOffset(idx) === 2 && 'z-10 ',
                 idx === activeIndex && 'z-30',
@@ -90,21 +118,21 @@ const handleClickTarget = (idx) => {
               @click="handleClickTarget(idx)"
               :class="
                 twMerge(
-                  'w-full min-w-[300px] h-[516px] absolute top-1/2 rounded-3xl ease-linear bg-white shadow-xl transition-all z-[9] flex items-center justify-center text-2xl font-bold',
+                  'w-full min-w-[370px] h-[516px] left-1/2 -translate-x-1/2 relative rounded-3xl ease-linear bg-white shadow-xl transition-all z-[9] flex items-center justify-center text-2xl font-bold',
                   calculateOffset(idx) === 1 &&
                     (isNegativeOffset(idx)
-                      ? '-rotate-6 translate-x-[50px] translate-y-20 '
-                      : 'rotate-6 -translate-x-[50px] translate-y-20 '),
+                      ? '-rotate-6 translate-y-10'
+                      : 'rotate-6 translate-y-10'),
                   calculateOffset(idx) === 2 &&
                     (isNegativeOffset(idx)
-                      ? '-rotate-12 translate-x-[120px] translate-y-[200px] '
-                      : 'rotate-12 -translate-x-[120px] translate-y-[200px] '),
+                      ? '-rotate-12 translate-y-[140px] '
+                      : 'rotate-12 translate-y-[140px] '),
                   calculateOffset(idx) > 2 &&
                     (isNegativeOffset(idx)
                       ? '-rotate-90 translate-y-96'
                       : 'rotate-90 translate-y-96'),
                   idx === activeIndex &&
-                    'text-point-500 rotate-0 translate-x-0 -translate-y-7 ',
+                    'text-point-500 rotate-0 -translate-y-7 ',
                   targetIdx === idx && 'rotate-0 -translate-y-[300px] scale-110'
                 )
               "

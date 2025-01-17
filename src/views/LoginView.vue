@@ -57,6 +57,21 @@ watch(user, () => {
         </button>
       </div>
     </section>
+    <img
+      class="absolute top-12 left-12"
+      src="/assets/images/login/play@2x.png"
+      alt="play"
+    />
+    <img
+      class="absolute bottom-12 left-12"
+      src="/assets/images/login/timeline@2x.png"
+      alt="timeline"
+    />
+    <img
+      class="absolute top-12 right-12"
+      src="/assets/images/login/vhs@2x.png"
+      alt="vhs"
+    />
   </main>
 </template>
 <style scoped></style>

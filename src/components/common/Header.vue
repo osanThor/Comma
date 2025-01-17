@@ -1,0 +1,78 @@
+<script setup>
+import { twMerge } from "tailwind-merge";
+import { useAuthStore } from "@/stores/auth";
+import { storeToRefs } from "pinia";
+import Avatar from "./Avatar.vue";
+import SideMenu from "@/components/common/SideMenu.vue";
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+
+const isAtTop = ref(false);
+const topAnchor = ref(null);
+
+let observer = null;
+
+const setupObserver = () => {
+  observer = new IntersectionObserver(
+    ([entry]) => {
+      isAtTop.value = entry.isIntersecting;
+    },
+    {
+      root: null,
+      threshold: 0,
+    }
+  );
+
+  if (topAnchor.value) {
+    observer.observe(topAnchor.value);
+  }
+};
+
+const isOpenMenu = ref(false);
+
+onMounted(() => {
+  setupObserver();
+});
+
+onUnmounted(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
+</script>
+<template>
+  <div ref="topAnchor"></div>
+  <header
+    :class="
+      twMerge(
+        'h-[84px] sticky top-0 left-0 flex items-center justify-center transition-all',
+        !isAtTop && 'backdrop-blur-sm'
+      )
+    "
+  >
+    <div
+      class="w-[calc(100%-40px)] max-w-[1660px] flex items-center justify-between"
+    >
+      <h1 class="max-w-[120px]">
+        <RouterLink to="/">
+          <img src="/assets/images/logo.png" alt="logo" />
+        </RouterLink>
+      </h1>
+      <div class="flex items-center gap-4">
+        <RouterLink :to="`/user/${user.id}`">
+          <Avatar v-show="user" :src="user.profile_image" />
+        </RouterLink>
+        <button class="relative" aria-label="alarm button" type="button">
+          <img
+            class="w-[24px]"
+            src="/assets/images/icons/alarm-icon.svg"
+            alt="알림"
+          />
+        </button>
+        <SideMenu />
+      </div>
+    </div>
+  </header>
+</template>
+<style scoped></style>

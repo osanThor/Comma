@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "DNFBitBitv2";
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url(/assets/fonts/DNFBitBitv2.otf) format("opentype");
+  }
+  @font-face {
+    font-family: "DNFBitBitv2";
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url(/assets/fonts/DNFBitBitv2.ttf) format("truetype");
+  }
+}

@@ -72,10 +72,10 @@ const handleClickTarget = async (idx) => {
 
 <template>
   <section
-    class="relative w-full flex flex-col items-center h-screen sm:max-h-[1080px] mb-[152px]"
+    class="relative w-full flex flex-col items-center h-screen mb-[152px]"
   >
     <img
-      class="w-[31.927vw] max-w-[613px] absolute -scale-x-100 top-[9.4vh] -left-[148px]"
+      class="w-[31.927vw] max-w-[613px] absolute -scale-x-100 top-[1.1vw] -left-[148px]"
       src="/assets/images/cloud.png"
       alt="cloud"
     />
@@ -87,9 +87,9 @@ const handleClickTarget = async (idx) => {
     <div
       class="w-full pt-[13vh] flex-grow flex flex-col justify-between items-center gap-[8.45vw] overflow-hidden"
     >
-      <h2 class="max-w-[48.88vh]">
+      <h2 class="max-w-[30.41vw]">
         <img
-          class="w-full max-w-[30.31vw]"
+          class="w-full max-w-[584px]"
           src="/assets/images/main-title.png"
           alt="title"
         />
@@ -129,8 +129,8 @@ const handleClickTarget = async (idx) => {
                       : 'rotate-12 translate-y-[140px] '),
                   calculateOffset(idx) > 2 &&
                     (isNegativeOffset(idx)
-                      ? '-rotate-90 translate-y-96'
-                      : 'rotate-90 translate-y-96'),
+                      ? '-rotate-45 translate-y-96'
+                      : 'rotate-45 translate-y-96'),
                   idx === activeIndex &&
                     'text-point-500 rotate-0 -translate-y-7 ',
                   targetIdx === idx && 'rotate-0 -translate-y-[300px] scale-110'

@@ -1,10 +1,11 @@
 <script setup>
 import MainCardSection from "@/components/main/MainCardSection.vue";
+import MainCommunitySection from "@/components/main/MainCommunitySection.vue";
 </script>
 
 <template>
   <MainCardSection />
-  <section class="min-h-screen">22</section>
+  <MainCommunitySection />
 </template>
 
 <style scoped></style>

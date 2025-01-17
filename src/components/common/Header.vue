@@ -46,7 +46,7 @@ onUnmounted(() => {
   <header
     :class="
       twMerge(
-        'h-[84px] sticky top-0 left-0 flex items-center justify-center transition-all',
+        'h-[84px] fixed top-0 left-0 right-0 flex items-center justify-center transition-all z-[99999]',
         !isAtTop && 'backdrop-blur-sm'
       )
     "

@@ -47,7 +47,7 @@ export default {
     ({ addUtilities }) => {
       addUtilities({
         ".contents-box": {
-          "@apply flex flex-col items-center justify-center border-4 border-white bg-main-500/50 rounded-[30px] backdrop-blur-md":
+          "@apply flex flex-col items-center justify-center border-4 border-white bg-main-600/20 rounded-[30px] backdrop-blur-md":
             "",
         },
         ".bg-size": {

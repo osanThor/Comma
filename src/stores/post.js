@@ -12,20 +12,12 @@ export const usePostStroe = defineStore("post", {
   state: () => ({
     title: "",
     content: "",
-    imageBlobs: [],
+    images: [],
     posts: [],
     totalCount: 0,
     category: "free",
   }),
   getters: {
-    imagesByOpacity(state) {
-      return {
-        100: state.imageBlobs.filter((blob) => blob.opacity === 100),
-        70: state.imageBlobs.filter((blob) => blob.opacity === 70),
-        50: state.imageBlobs.filter((blob) => blob.opacity === 50),
-        30: state.imageBlobs.filter((blob) => blob.opacity === 30),
-      };
-    },
     isValidPost(state) {
       return state.title.trim() !== "" && state.content.trim() !== "";
     },
@@ -42,23 +34,21 @@ export const usePostStroe = defineStore("post", {
       this.content = newContent;
     },
 
-    addImage({ opacity, images }) {
-      const newImages = images.map((image) => ({ ...image, opacity }));
-      if (this.imageBlobs.length + newImages.length > 4) {
+    addImage({ index, images }) {
+      if (this.images.length + images.length > 4) {
         alert("이미지는 최대 4개까지 업로드 할 수 있습니다.");
         return;
       }
-      this.imageBlobs.push(...newImages);
-      console.log("Updated imageBlobs:", this.imageBlobs);
+      this.images.splice(index, 0, ...images);
+      if (this.images.length > 4) {
+        this.images.splice(4);
+      }
+      console.log("Updated images:", this.images);
     },
 
-    removeImage({ opacity, index }) {
-      const groupIndex = this.imageBlobs.findIndex(
-        (blob, idx) => blob.opacity === opacity && idx === index
-      );
-      if (groupIndex !== -1) {
-        this.imageBlobs.splice(groupIndex, 1);
-      }
+    removeImage({ index }) {
+      this.images.splice(index, 1);
+      console.log("Updated images after removal:", this.images);
     },
 
     // 게시글 저장
@@ -69,17 +59,22 @@ export const usePostStroe = defineStore("post", {
       }
 
       try {
-        const imageUrls = await Promise.all(
-          this.imageBlobs.map((blob) => {
-            console.log("업로드할 이미지 Blob:", blob);
-            return uploadImage(blob)
-          })
+        const uploadResults = await Promise.allSettled(
+          this.images.map(uploadImage)
         );
+        const successfulUploads = uploadResults
+          .filter((result) => result.status === "fulfilled")
+          .map((result) => result.value);
+    
+        if (successfulUploads.length !== this.images.length) {
+          alert("일부 이미지를 업로드하지 못했습니다.");
+        }
+
         const postPayload = {
           userId: user.value.id,
           title: this.title,
           content: this.content,
-          images: imageUrls,
+          images: successfulUploads,
           category: "free",
         };
 
@@ -99,7 +94,7 @@ export const usePostStroe = defineStore("post", {
     resetPost() {
       this.title = "";
       this.content = "";
-      this.imageBlobs = [];
+      this.images = [];
     },
   },
 

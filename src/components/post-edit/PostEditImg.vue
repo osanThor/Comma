@@ -7,14 +7,19 @@ export default {
     PostEditImgCard,
   },
   props: {
-    imagesByOpacity: {
-      type: Object,
-      default: () => ({ 100: [], 70: [], 50: [], 30: [] }),
+    images: {
+      type: Array,
+      default: () => [],
     },
   },
   emits: ["addImage", "removeImage"],
+  computed: {
+    totalImages() {
+      return this.images.length;
+    },
+  },
   methods: {
-    handleFileChange(event, opacity) {
+    handleFileChange(event, index) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
 
@@ -23,19 +28,19 @@ export default {
         preview: URL.createObjectURL(file),
       }));
 
-      this.$emit("addImage", { opacity, images: newImages });
+      this.$emit("addImage", { index, images: newImages });
       event.target.value = "";
     },
-    triggerFileSelect(opacity) {
-      const inputRef = this.$refs[`fileInput${opacity}`];
-      if(inputRef && inputRef.length > 0) {
-        inputRef[0].click();
+    triggerFileSelect(index) {
+      const inputRef = document.getElementById(`fileInput${index}`);
+      if (inputRef) {
+        inputRef.click();
       } else {
         console.error(`File input not found`);
       }
     },
-    handleRemoveImage(opacity, index) {
-      this.$emit("removeImage", { opacity, index });
+    handleRemoveImage(index) {
+      this.$emit("removeImage", { index });
     },
   },
 };
@@ -45,43 +50,55 @@ export default {
   <section class="flex flex-col items-center">
     <!-- 이미지 업로드 입력창 -->
     <input
-      v-for="opacity in [100, 70, 50, 30]"
-      :key="'fileInput' + opacity"
-      :ref="'fileInput' + opacity"
+      v-for="index in [0, 1, 2, 3]"
+      :key="'fileInput' + index"
+      :id="'fileInput' + index"
       type="file"
       accept="image/png, image/jpeg, image/jpg"
       multiple
       class="hidden"
-      @change="(e) => handleFileChange(e, opacity)"
+      @change="(e) => handleFileChange(e, index)"
     />
 
     <div>
+      <!-- 기본 이미지 영역 -->
       <PostEditImgCard
-        v-for="(blob, index) in imagesByOpacity[100]"
-        :key="'img100-' + index"
-        :imgSrc="blob.preview"
+        v-if="images.length > 0"
+        :imgSrc="images[0].preview"
         :size="'w-[440px] h-[440px]'"
         :opacity="100"
-        @click="handleRemoveImage(100, index)"
+        @click="handleRemoveImage(0)"
       />
-      <PostEditImgCard @click="triggerFileSelect(100)" />
+      <PostEditImgCard v-else @click="triggerFileSelect(0)" />
     </div>
+    <!-- 추가 이미지 영역 -->
     <div class="flex flex-row items-center w-full justify-between mt-2">
-      <div v-for="opacity in [70, 50, 30]" :key="'group-' + opacity">
-        <PostEditImgCard
-          v-for="(blob, index) in imagesByOpacity[opacity]"
-          :key="'img-' + opacity + '-' + index"
-          :imgSrc="blob.preview"
-          :size="'w-[140px] h-[140px]'"
-          :opacity="opacity"
-          @click="handleRemoveImage(opacity, index)"
-        />
-        <PostEditImgCard
-          :opacity="opacity"
-          :size="'w-[140px] h-[140px]'"
-          @click="triggerFileSelect(opacity)"
-        />
-      </div>
+    <PostEditImgCard
+        v-if="images.length > 1"
+        :imgSrc="images[1].preview"
+        :size="'w-[140px] h-[140px]'"
+        :opacity="70"
+        @click="handleRemoveImage(1)"
+      />
+      <PostEditImgCard v-else @click="triggerFileSelect(1)" :opacity="70" :size="'w-[140px] h-[140px]'" />
+
+      <PostEditImgCard
+        v-if="images.length > 2"
+        :imgSrc="images[2].preview"
+        :size="'w-[140px] h-[140px]'"
+        :opacity="50"
+        @click="handleRemoveImage(2)"
+      />
+      <PostEditImgCard v-else @click="triggerFileSelect(2)" :opacity="50" :size="'w-[140px] h-[140px]'" />
+
+      <PostEditImgCard
+        v-if="images.length > 3"
+        :imgSrc="images[3].preview"
+        :size="'w-[140px] h-[140px]'"
+        :opacity="30"
+        @click="handleRemoveImage(3)"
+      />
+      <PostEditImgCard v-else @click="triggerFileSelect(3)" :opacity="30" :size="'w-[140px] h-[140px]'" />
     </div>
   </section>
 </template>

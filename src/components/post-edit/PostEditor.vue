@@ -9,12 +9,13 @@ export default {
     PostEditContent,
     PostEditImg,
   },
-  data() {
+  setup() {
     const postStore = usePostStroe();
     return {
+      ...postStore,
       title: postStore.title,
       content: postStore.content,
-      imagesByOpacity: postStore.imagesByOpacity,
+      images: postStore.images,
     };
   },
   methods: {
@@ -24,19 +25,18 @@ export default {
     setContent(content) {
       this.content = content;
     },
-    addImage({ opacity, images }) {
-      this.imagesByOpacity[opacity] = [
-        ...this.imagesByOpacity[opacity],
-        ...images,
-      ];
+    addImage({ index, images }) {
+      this.images.splice(index, 0, ...images);
+      if (this.images.length > 4) {
+        this.images.splice(4);
+      }
     },
-    removeImage({ opacity, index }) {
-      this.imagesByOpacity[opacity].splice(index, 1);
+    removeImage({ index }) {
+      this.images.splice(index, 1);
     },
-
     async handleSave() {
       try {
-        await this.$store.savePost();
+        await this.savePost();
         alert("게시글이 저장되었습니다.");
       } catch (err) {
         console.error("게시글 저장 실패:", err);
@@ -45,7 +45,7 @@ export default {
     },
     async fetchPosts() {
       try {
-        await this.$store.fetchPostsByCategory();
+        await this.fetchPostsByCategory();
       } catch (err) {
         console.error("게시글 불러오기 실패:", err);
       }
@@ -58,12 +58,12 @@ export default {
   <main class="flex flex-row items-start justify-center gap-12">
     <!-- 이미지 업로드 -->
     <PostEditImg
-      :imagesByOpacity="imagesByOpacity"
+      :images="images"
       @addImage="addImage"
       @removeImage="removeImage"
     />
     <!-- 게시글 내용 작성 -->
-    <section class="flex flex-col items-end gap-10">
+    <section class="flex flex-col items-end gap-12">
       <PostEditContent
         :title="title"
         :content="content"

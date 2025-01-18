@@ -7,6 +7,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 const items = ref(Array.from({ length: 5 }, (_, i) => `Item ${i + 1}`));
+const evetItems = ref(Array(10).fill(0));
 const initialIndex = 2;
 
 // Swiper 설정
@@ -147,7 +148,13 @@ const handleClickTarget = async (idx) => {
         </swiper>
       </div>
     </div>
-    <div class="w-full bg-main-500/50 h-[50px]"></div>
+    <div class="w-full bg-main-500/50 h-[50px] flex items-center">
+      <ul class="flex gap-[248px] text-sm font-dnf text-white">
+        <li class="whitespace-nowrap" v-for="(_, idx) in evetItems" :key="idx">
+          🎉 박지운님이 [틀린그림 찾기] 신기록에 달성하셨습니다.
+        </li>
+      </ul>
+    </div>
   </section>
 </template>
 <style scoped>

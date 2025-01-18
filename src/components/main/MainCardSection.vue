@@ -76,12 +76,12 @@ const handleClickTarget = async (idx) => {
     class="relative w-full flex flex-col items-center h-screen mb-[152px]"
   >
     <img
-      class="w-[31.927vw] max-w-[613px] absolute -scale-x-100 top-[1.1vw] -left-[148px]"
+      class="w-[31.927vw] max-w-[613px] absolute -scale-x-100 top-[1.1vw] -left-[148px] pointer-events-none"
       src="/assets/images/cloud.png"
       alt="cloud"
     />
     <img
-      class="w-[31.927vw] max-w-[613px] absolute top-[26.8vh] -right-[148px]"
+      class="w-[31.927vw] max-w-[613px] absolute top-[26.8vh] -right-[148px] pointer-events-none"
       src="/assets/images/cloud.png"
       alt="cloud"
     />

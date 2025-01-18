@@ -4,6 +4,7 @@ import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import Avatar from "./Avatar.vue";
 import SideMenu from "@/components/common/SideMenu.vue";
+import Notification from "./Notification.vue";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -61,15 +62,9 @@ onUnmounted(() => {
       </h1>
       <div class="flex items-center gap-4">
         <RouterLink :to="`/user/${user.id}`">
-          <Avatar v-show="user" :src="user.profile_image" />
+          <Avatar v-show="user" :src="user.profile_image" size="sm" />
         </RouterLink>
-        <button class="relative" aria-label="alarm button" type="button">
-          <img
-            class="w-[24px]"
-            src="/assets/images/icons/alarm-icon.svg"
-            alt="알림"
-          />
-        </button>
+        <Notification />
         <SideMenu />
       </div>
     </div>

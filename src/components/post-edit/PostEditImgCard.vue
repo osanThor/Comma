@@ -21,8 +21,12 @@ export default {
     },
     opacityStyle(){
       return { opacity: this.opacity / 100};
+    },
+    logImgSrc() {
+      console.log("Image source:", this.imgSrc);  // computed 속성에서 출력
+      return this.imgSrc;
     }
-  }
+  },
 };
 </script>
 
@@ -36,7 +40,7 @@ export default {
       </button>
       <!-- 이미지 삽입 영역 -->
       <div :class="`w-full h-full rounded-xl bg-white`">
-        <img :src="imgSrc" alt="" />
+        <img class="w-full h-full rounded-xl object-cover object-center" :src="imgSrc" alt="" />
       </div>
     </section>
   </button>

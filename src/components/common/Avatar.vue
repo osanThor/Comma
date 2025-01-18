@@ -14,6 +14,7 @@ const props = defineProps({
 });
 
 const formatedSize = computed(() => {
+  if (props.size === "xs") return "w-[18px] h-[18px]";
   if (props.size === "sm") return "w-[27px] h-[27px]";
 });
 </script>

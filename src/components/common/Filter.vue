@@ -8,10 +8,10 @@ const open = ref(false);
 <template>
   <div class="w-[106px] h-9 relative">
     <div
-      class="w-[106px] border border-white rounded-md text-white absolute top-0 left-0"
+      @click="open = !open"
+      class="w-[106px] border border-white rounded-md text-white absolute top-0 left-0 bg-white/20 backdrop-blur-lg"
     >
       <div
-        @click="open = !open"
         class="flex items-center h-9 pl-10 pr-3 relative cursor-pointer font-semibold"
       >
         <FilterArrow

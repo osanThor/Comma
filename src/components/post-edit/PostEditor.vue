@@ -9,51 +9,53 @@ export default {
     PostEditContent,
     PostEditImg,
   },
-  setup() {
+  data() {
     const postStore = usePostStroe();
-    const {
-      title,
-      content,
-      imagesByOpacity,
-      setTitle,
-      setContent,
-      addImage,
-      removeImage,
-      savePost,
-      fetchPostsByCategory,
-    } = postStore;
+    return {
+      title: postStore.title,
+      content: postStore.content,
+      imagesByOpacity: postStore.imagesByOpacity,
+    };
+  },
+  methods: {
+    setTitle(title) {
+      this.title = title;
+    },
+    setContent(content) {
+      this.content = content;
+    },
+    addImage({ opacity, images }) {
+      this.imagesByOpacity[opacity] = [
+        ...this.imagesByOpacity[opacity],
+        ...images,
+      ];
+    },
+    removeImage({ opacity, index }) {
+      this.imagesByOpacity[opacity].splice(index, 1);
+    },
 
-    const handleSave = async () => {
+    async handleSave() {
       try {
-        await savePost();
+        await this.$store.savePost();
         alert("게시글이 저장되었습니다.");
       } catch (err) {
         console.error("게시글 저장 실패:", err);
         alert("게시글 저장에 실패했습니다.");
       }
-    };
-
-    const fetchPosts = async () => {
-      await fetchPostsByCategory("free", "dec", 1, 10);
-    };
-
-    return {
-      title,
-      content,
-      imagesByOpacity,
-      setTitle,
-      setContent,
-      addImage,
-      removeImage,
-      handleSave,
-      fetchPosts,
-    };
+    },
+    async fetchPosts() {
+      try {
+        await this.$store.fetchPostsByCategory();
+      } catch (err) {
+        console.error("게시글 불러오기 실패:", err);
+      }
+    },
   },
 };
 </script>
 
 <template>
-  <main class="flex flex-row items-center justify-center gap-12">
+  <main class="flex flex-row items-start justify-center gap-12">
     <!-- 이미지 업로드 -->
     <PostEditImg
       :imagesByOpacity="imagesByOpacity"
@@ -61,13 +63,20 @@ export default {
       @removeImage="removeImage"
     />
     <!-- 게시글 내용 작성 -->
-    <PostEditContent
-      :title="title"
-      :content="content"
-      @setTitle="setTitle"
-      @setContent="setContent"
-      @save="handleSave"
-    />
+    <section class="flex flex-col items-end gap-10">
+      <PostEditContent
+        :title="title"
+        :content="content"
+        @setTitle="setTitle"
+        @setContent="setContent"
+      />
+      <button
+        @click="handleSave"
+        class="bg-white w-28 h-10 rounded-xl font-dnf text-main-500 disabled:opacity-50 hover:bg-point-500 ml-auto transition-all duration-60 transform hover:scale-110 hover:shadow-xl"
+      >
+        저장
+      </button>
+    </section>
   </main>
 </template>
 

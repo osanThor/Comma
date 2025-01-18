@@ -17,7 +17,7 @@ export default {
 
 <template>
   <!-- todo: 스크롤 수정하기 -->
-  <section class="relative w-[600px] h-[588px] flex flex-col justify-between">
+  <section class="relative w-[600px] h-auto flex flex-col justify-between">
     <div>
       <!-- 제목 -->
       <input
@@ -39,13 +39,6 @@ export default {
         placeholder="내용을 입력해주세요..."
       ></textarea>
     </div>
-
-    <button
-      @click="$emit('save')"
-      class="bg-white w-28 h-10 rounded-xl font-dnf text-main-500 disabled:opacity-50 hover:bg-point-500 ml-auto transition-all duration-60 transform hover:scale-110 hover:shadow-xl"
-    >
-      저장
-    </button>
   </section>
 </template>
 

@@ -38,8 +38,8 @@ const onSlideChange = () => {
 const moveSlide = (nextTarget) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      swiperInstance.value.slideTo(nextTarget); // 슬라이드 이동
-      activeIndex.value = nextTarget; // 상태 업데이트
+      swiperInstance.value.slideTo(nextTarget);
+      activeIndex.value = nextTarget;
       resolve();
     }, 100);
   });
@@ -48,8 +48,8 @@ const moveSlide = (nextTarget) => {
 const handleClickTarget = async (idx) => {
   if (!swiperInstance.value) return;
 
-  const isUpper = idx > activeIndex.value; // 이동 방향 확인
-  let target = activeIndex.value; // 현재 활성 인덱스
+  const isUpper = idx > activeIndex.value;
+  let target = activeIndex.value;
 
   if (isUpper) {
     while (target < idx) {
@@ -69,6 +69,27 @@ const handleClickTarget = async (idx) => {
     targetIdx.value = idx;
   }
 };
+
+const animationMarquee = (selector, speed) => {
+  const parentSelector = document.querySelector(selector);
+  const clone = parentSelector.innerHTML;
+  const firstElement = parentSelector.firstElementChild;
+  let i = 0;
+  parentSelector.insertAdjacentHTML("beforeend", clone);
+  parentSelector.insertAdjacentHTML("beforeend", clone);
+
+  const moveItem = () => {
+    firstElement.style.marginLeft = `-${i}px`;
+    if (i > firstElement.clientWidth) i = 0;
+    i += speed;
+    requestAnimationFrame(moveItem);
+  };
+  requestAnimationFrame(moveItem);
+};
+
+onMounted(() => {
+  animationMarquee(".marquee", 1);
+});
 </script>
 
 <template>
@@ -148,7 +169,7 @@ const handleClickTarget = async (idx) => {
         </swiper>
       </div>
     </div>
-    <div class="w-full bg-main-500/50 h-[50px] flex items-center">
+    <div class="w-full bg-main-500/50 h-[50px] flex items-center marquee">
       <ul class="flex gap-[248px] text-sm font-dnf text-white">
         <li class="whitespace-nowrap" v-for="(_, idx) in evetItems" :key="idx">
           🎉 박지운님이 [틀린그림 찾기] 신기록에 달성하셨습니다.

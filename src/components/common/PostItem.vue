@@ -3,7 +3,10 @@ import Avatar from "@/components/common/Avatar.vue";
 import SmallLike from "@/components/common/icons/SmallLike.vue";
 </script>
 <template>
-  <div to="/post/dididididid" class="text-white rounded-lg overflow-hidden">
+  <RouterLink
+    to="/post/dididididid"
+    class="text-white rounded-lg overflow-hidden"
+  >
     <div
       class="w-full h-[130px] flex items-center justify-center overflow-hidden"
     >
@@ -43,6 +46,6 @@ import SmallLike from "@/components/common/icons/SmallLike.vue";
         </div>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 <style scoped></style>

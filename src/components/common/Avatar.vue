@@ -23,9 +23,7 @@ const formatedSize = computed(() => {
 });
 
 const handleLoad = () => {
-  setTimeout(() => {
-    imgLoaded.value = true;
-  }, 500);
+  imgLoaded.value = true;
 };
 </script>
 <template>

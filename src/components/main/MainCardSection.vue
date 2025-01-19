@@ -5,9 +5,9 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import MainMarquee from "./MainMarquee.vue";
 
 const items = ref(Array.from({ length: 5 }, (_, i) => `Item ${i + 1}`));
-const evetItems = ref(Array(10).fill(0));
 const initialIndex = 2;
 
 // Swiper 설정
@@ -69,27 +69,6 @@ const handleClickTarget = async (idx) => {
     targetIdx.value = idx;
   }
 };
-
-const animationMarquee = (selector, speed) => {
-  const parentSelector = document.querySelector(selector);
-  const clone = parentSelector.innerHTML;
-  const firstElement = parentSelector.firstElementChild;
-  let i = 0;
-  parentSelector.insertAdjacentHTML("beforeend", clone);
-  parentSelector.insertAdjacentHTML("beforeend", clone);
-
-  const moveItem = () => {
-    firstElement.style.marginLeft = `-${i}px`;
-    if (i > firstElement.clientWidth) i = 0;
-    i += speed;
-    requestAnimationFrame(moveItem);
-  };
-  requestAnimationFrame(moveItem);
-};
-
-onMounted(() => {
-  animationMarquee(".marquee", 1);
-});
 </script>
 
 <template>
@@ -169,13 +148,7 @@ onMounted(() => {
         </swiper>
       </div>
     </div>
-    <div class="w-full bg-main-500/50 h-[50px] flex items-center marquee">
-      <ul class="flex gap-[248px] text-sm font-dnf text-white">
-        <li class="whitespace-nowrap" v-for="(_, idx) in evetItems" :key="idx">
-          🎉 박지운님이 [틀린그림 찾기] 신기록에 달성하셨습니다.
-        </li>
-      </ul>
-    </div>
+    <main-marquee />
   </section>
 </template>
 <style scoped>

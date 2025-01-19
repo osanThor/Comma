@@ -106,12 +106,14 @@ export const createPost = async ({
   content,
   images,
 }) => {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("posts")
-    .insert([{ title, category, content, images, user_id: userId }]);
-
+    .insert([{ title, category, content, images, user_id: userId }])
+    .select("id");
   if (error) throw error;
-  return "success";
+  if (data && data.length > 0)
+    return { postId: data[0].id, message: "success" };
+  return new Error("Create Post Fail");
 };
 
 export const updatePost = async ({ postId, title, content, images }) => {
@@ -121,7 +123,7 @@ export const updatePost = async ({ postId, title, content, images }) => {
     .eq("id", postId);
 
   if (error) throw error;
-  return "success";
+  return { postId, message: "success" };
 };
 
 export const deletePost = async (postId) => {

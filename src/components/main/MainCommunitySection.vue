@@ -32,9 +32,12 @@ const handleGetPosts = async (page) => {
 const handleChangePage = (currentPage) => {
   page.value = currentPage;
 };
-const handleChangeSort = (currentSort) => {
-  sort.value = currentSort;
-  page.value = 1;
+const handleChangeSort = async (currentSort) => {
+  if (sort.value !== currentSort) {
+    sort.value = currentSort;
+    page.value = 1;
+    await handleGetPosts(page.value, sort.value);
+  }
 };
 
 onBeforeMount(async () => {

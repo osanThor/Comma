@@ -29,7 +29,6 @@ const otherSortOptions = computed(() =>
 );
 
 const handleChangeSort = (value) => {
-  console.log(value);
   emit("change-sort", value);
 };
 </script>

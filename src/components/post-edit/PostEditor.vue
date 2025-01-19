@@ -9,7 +9,7 @@ export default {
     PostEditContent,
     PostEditImg,
   },
-  setup() {
+  data() {
     const postStore = usePostStroe();
     return {
       ...postStore,

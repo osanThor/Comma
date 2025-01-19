@@ -11,7 +11,7 @@ export default {
       default: '',
     },
   },
-  emits: ['setTitle', 'setContent', 'save'],
+  emits: ['setTitle', 'setContent'],
 };
 </script>
 

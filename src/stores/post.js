@@ -22,7 +22,7 @@ export const usePostStroe = defineStore("post", {
       return state.title.trim() !== "" && state.content.trim() !== "";
     },
     imageCount(state) {
-      return state.imageBlobs.length;
+      return state.images.length;
     },
   },
   actions: {
@@ -60,7 +60,7 @@ export const usePostStroe = defineStore("post", {
 
       try {
         const uploadResults = await Promise.allSettled(
-          this.images.map(uploadImage)
+          this.images.map(image => uploadImage(image.file))
         );
         const successfulUploads = uploadResults
           .filter((result) => result.status === "fulfilled")

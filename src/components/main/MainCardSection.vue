@@ -6,8 +6,10 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
 import MainMarquee from "./MainMarquee.vue";
+import { useGameStore } from "@/stores/test-game";
 
-const items = ref(Array.from({ length: 5 }, (_, i) => `Item ${i + 1}`));
+const { rawGames: games } = useGameStore();
+
 const initialIndex = 2;
 
 // Swiper 설정
@@ -103,8 +105,8 @@ const handleClickTarget = async (idx) => {
           @slideChange="onSlideChange"
         >
           <swiper-slide
-            v-for="(value, idx) in items"
-            :key="idx"
+            v-for="(value, idx) in games"
+            :key="value.id"
             :class="
               twMerge(
                 'group max-w-[374px] w-full relative flex justify-center',
@@ -119,7 +121,7 @@ const handleClickTarget = async (idx) => {
               @click="handleClickTarget(idx)"
               :class="
                 twMerge(
-                  'w-full min-w-[370px] h-[516px] left-1/2 -translate-x-1/2 relative rounded-3xl ease-linear bg-white shadow-xl transition-all z-[9] flex items-center justify-center text-2xl font-bold',
+                  'w-full min-w-[370px] h-[516px] cursor-pointer left-1/2 -translate-x-1/2 relative rounded-3xl ease-linear bg-white shadow-xl transition-all z-[9] flex items-center justify-center text-2xl font-bold',
                   calculateOffset(idx) === 1 &&
                     (isNegativeOffset(idx)
                       ? '-rotate-6 translate-y-10'
@@ -142,7 +144,7 @@ const handleClickTarget = async (idx) => {
                 v-if="targetIdx === idx"
                 class="animate-ping absolute inline-flex h-[300px] w-[300px] blur-sm rounded-full bg-white opacity-20 pointer-events-none"
               />
-              Slide {{ value }}
+              {{ value.display_name }}
             </div>
           </swiper-slide>
         </swiper>

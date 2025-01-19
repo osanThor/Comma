@@ -65,7 +65,7 @@ export const updateGameScore = async (gameId, userId, score, playTime) => {
 export const getGameRanking = async (gameId, sortType = "desc") => {
   const { data, error } = await supabase
     .from("game_scores")
-    .select("*")
+    .select("*,user:user_id(id, name, email, profile_image)")
     .eq("game_id", gameId)
     .order("score", { ascending: sortType === "asc" });
   if (!data) return [];

@@ -5,7 +5,8 @@ import PlayIcon from "@/components/common/icons/PlayIcon.vue";
 import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 
-const { rawGames: games } = useGameStore();
+const gameStore = useGameStore();
+const { rawGames: games } = storeToRefs(gameStore);
 </script>
 <template>
   <section

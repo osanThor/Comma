@@ -3,7 +3,9 @@ import TitleLeft from "@/components/common/icons/TitleLeft.vue";
 import TitleRight from "@/components/common/icons/TitleRight.vue";
 import PlayIcon from "@/components/common/icons/PlayIcon.vue";
 import CommentIcon from "@/components/common/icons/CommentIcon.vue";
-const items = ref(Array(5).fill(0));
+import { useGameStore } from "@/stores/test-game";
+
+const { rawGames: games } = useGameStore();
 </script>
 <template>
   <section
@@ -23,15 +25,17 @@ const items = ref(Array(5).fill(0));
     </h2>
     <ul class="w-full flex items-center gap-[18px] mb-[95px]">
       <li
-        v-for="(value, idx) in items"
-        key="idx"
+        v-for="value in games"
+        :key="value.id"
         class="flex-1 w-full max-w-[19%]"
       >
         <RouterLink
           to="/game/gameName"
           class="flex flex-col flex-1 px-[30px] pt-[26px] pb-[19px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"
         >
-          <div class="font-dnf text-2xl mb-1 truncate">테트리스</div>
+          <div class="font-dnf text-2xl mb-1 truncate">
+            {{ value.display_name }}
+          </div>
           <div class="font-semibold text-sm">BEST SCORE : 999점</div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">

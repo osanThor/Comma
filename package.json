@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.47.12",
     "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
     "install": "^0.13.0",
     "npm": "^10.9.2",
     "pinia": "^2.3.0",

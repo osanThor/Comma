@@ -5,8 +5,11 @@ import { storeToRefs } from "pinia";
 import Avatar from "./Avatar.vue";
 import SideMenu from "@/components/common/SideMenu.vue";
 import Notification from "./Notification.vue";
+import { useGameStore } from "@/stores/test-game";
 
 const authStore = useAuthStore();
+const gameStore = useGameStore();
+
 const { user } = storeToRefs(authStore);
 
 const isAtTop = ref(false);
@@ -30,7 +33,9 @@ const setupObserver = () => {
   }
 };
 
-const isOpenMenu = ref(false);
+onBeforeMount(async () => {
+  await gameStore.getGamesData();
+});
 
 onMounted(() => {
   setupObserver();
@@ -61,7 +66,7 @@ onUnmounted(() => {
         </RouterLink>
       </h1>
       <div class="flex items-center gap-4">
-        <RouterLink :to="`/user/${user.id}`">
+        <RouterLink :to="`/user/${user?.id}`">
           <Avatar v-show="user" :src="user.profile_image" size="sm" />
         </RouterLink>
         <Notification />

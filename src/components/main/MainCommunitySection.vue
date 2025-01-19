@@ -4,8 +4,46 @@ import TitleRight from "@/components/common/icons/TitleRight.vue";
 import Filter from "@/components/common/Filter.vue";
 import Pagination from "@/components/common/Pagination.vue";
 import PostItem from "../common/PostItem.vue";
+import { getPostsByCategory } from "@/services/post.service";
 
-const postItems = ref(Array(12).fill(0));
+const postData = reactive({
+  posts: [],
+  total: 0,
+});
+const page = ref(1);
+const sort = ref("likes");
+const sortOption = [
+  { name: "인기순", value: "likes" },
+  { name: "최신순", value: "desc" },
+];
+
+const handleGetPosts = async (page) => {
+  try {
+    const data = await getPostsByCategory("free", "desc", page, 12);
+    if (data) {
+      postData.posts = data.data;
+      postData.total = data.totalCount;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const handleChangePage = (currentPage) => {
+  page.value = currentPage;
+};
+const handleChangeSort = (currentSort) => {
+  sort.value = currentSort;
+  page.value = 1;
+};
+
+onBeforeMount(async () => {
+  await handleGetPosts(1);
+});
+
+watch(page, async () => {
+  await handleGetPosts(page.value, sort.value);
+});
 </script>
 <template>
   <section
@@ -31,13 +69,25 @@ const postItems = ref(Array(12).fill(0));
     </RouterLink>
     <div class="w-[calc(100%-40px)] max-w-[970px] flex flex-col">
       <div class="w-full flex items-center justify-end mb-5">
-        <Filter />
+        <Filter
+          :sort="sort"
+          :sortOption="sortOption"
+          @change-sort="handleChangeSort"
+        />
       </div>
       <div class="grid grid-cols-4 gap-x-5 gap-y-[30px] mb-[70px]">
-        <PostItem v-for="(_, idx) in postItems" />
+        <PostItem
+          v-for="value in postData.posts"
+          :key="value.id"
+          :item="value"
+        />
       </div>
       <div class="w-full flex justify-center">
-        <Pagination :total="220" />
+        <Pagination
+          :page="page"
+          :total="postData.total"
+          @page-change="handleChangePage"
+        />
       </div>
     </div>
   </section>

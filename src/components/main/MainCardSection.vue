@@ -5,9 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
+import MainMarquee from "./MainMarquee.vue";
+import { useGameStore } from "@/stores/test-game";
 
-const items = ref(Array.from({ length: 5 }, (_, i) => `Item ${i + 1}`));
-const evetItems = ref(Array(10).fill(0));
+const { rawGames: games } = useGameStore();
+
 const initialIndex = 2;
 
 // Swiper 설정
@@ -38,8 +40,8 @@ const onSlideChange = () => {
 const moveSlide = (nextTarget) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      swiperInstance.value.slideTo(nextTarget); // 슬라이드 이동
-      activeIndex.value = nextTarget; // 상태 업데이트
+      swiperInstance.value.slideTo(nextTarget);
+      activeIndex.value = nextTarget;
       resolve();
     }, 100);
   });
@@ -48,8 +50,8 @@ const moveSlide = (nextTarget) => {
 const handleClickTarget = async (idx) => {
   if (!swiperInstance.value) return;
 
-  const isUpper = idx > activeIndex.value; // 이동 방향 확인
-  let target = activeIndex.value; // 현재 활성 인덱스
+  const isUpper = idx > activeIndex.value;
+  let target = activeIndex.value;
 
   if (isUpper) {
     while (target < idx) {
@@ -103,8 +105,8 @@ const handleClickTarget = async (idx) => {
           @slideChange="onSlideChange"
         >
           <swiper-slide
-            v-for="(value, idx) in items"
-            :key="idx"
+            v-for="(value, idx) in games"
+            :key="value.id"
             :class="
               twMerge(
                 'group max-w-[374px] w-full relative flex justify-center',
@@ -119,7 +121,7 @@ const handleClickTarget = async (idx) => {
               @click="handleClickTarget(idx)"
               :class="
                 twMerge(
-                  'w-full min-w-[370px] h-[516px] left-1/2 -translate-x-1/2 relative rounded-3xl ease-linear bg-white shadow-xl transition-all z-[9] flex items-center justify-center text-2xl font-bold',
+                  'w-full min-w-[370px] h-[516px] cursor-pointer left-1/2 -translate-x-1/2 relative rounded-3xl ease-linear bg-white shadow-xl transition-all z-[9] flex items-center justify-center text-2xl font-bold',
                   calculateOffset(idx) === 1 &&
                     (isNegativeOffset(idx)
                       ? '-rotate-6 translate-y-10'
@@ -142,19 +144,13 @@ const handleClickTarget = async (idx) => {
                 v-if="targetIdx === idx"
                 class="animate-ping absolute inline-flex h-[300px] w-[300px] blur-sm rounded-full bg-white opacity-20 pointer-events-none"
               />
-              Slide {{ value }}
+              {{ value.display_name }}
             </div>
           </swiper-slide>
         </swiper>
       </div>
     </div>
-    <div class="w-full bg-main-500/50 h-[50px] flex items-center">
-      <ul class="flex gap-[248px] text-sm font-dnf text-white">
-        <li class="whitespace-nowrap" v-for="(_, idx) in evetItems" :key="idx">
-          🎉 박지운님이 [틀린그림 찾기] 신기록에 달성하셨습니다.
-        </li>
-      </ul>
-    </div>
+    <main-marquee />
   </section>
 </template>
 <style scoped>

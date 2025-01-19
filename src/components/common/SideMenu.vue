@@ -3,6 +3,9 @@ import { logout } from "@/services/user.service";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "vue-router";
 import LogoutIcon from "./icons/LogoutIcon.vue";
+import { useGameStore } from "@/stores/test-game";
+
+const { rawGames: games } = useGameStore();
 
 const router = useRouter();
 
@@ -54,12 +57,12 @@ const handleLogout = async () => await logout();
     >
       <nav class="w-full flex flex-col">
         <button
-          v-for="(_, idx) in Array(5).fill(0)"
-          :key="idx"
+          v-for="value in games"
+          :key="value.id"
           class="w-full border-main-200/30 border-b-2 last:border-0 pt-3 pb-[10px] flex justify-center text-main-500 hover:text-point-500"
-          @mousedown.prevent="mouseDownItem('/game/gameName')"
+          @mousedown.prevent="mouseDownItem(`/game/${value.name}`)"
         >
-          테트리스
+          {{ value.display_name }}
         </button>
       </nav>
       <button

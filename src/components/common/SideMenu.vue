@@ -2,6 +2,7 @@
 import { logout } from "@/services/user.service";
 import { twMerge } from "tailwind-merge";
 import { useRouter } from "vue-router";
+import LogoutIcon from "./icons/LogoutIcon.vue";
 
 const router = useRouter();
 
@@ -55,7 +56,7 @@ const handleLogout = async () => await logout();
         <button
           v-for="(_, idx) in Array(5).fill(0)"
           :key="idx"
-          class="w-full border-main-200 border-b last:border-0 pt-3 pb-[10px] flex justify-center text-main-500 hover:text-point-500"
+          class="w-full border-main-200/30 border-b-2 last:border-0 pt-3 pb-[10px] flex justify-center text-main-500 hover:text-point-500"
           @mousedown.prevent="mouseDownItem('/game/gameName')"
         >
           테트리스
@@ -67,11 +68,7 @@ const handleLogout = async () => await logout();
         type="button"
         @mousedown.prevent="mouseDownItem('logout')"
       >
-        <img
-          class="fill-main-300 hover:fill-main-500"
-          src="/assets/images/icons/logout-icon.svg"
-          alt="로그아웃"
-        />
+        <LogoutIcon />
         로그아웃
       </button>
     </div>

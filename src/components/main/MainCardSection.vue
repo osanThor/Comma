@@ -8,7 +8,8 @@ import "swiper/css/pagination";
 import MainMarquee from "./MainMarquee.vue";
 import { useGameStore } from "@/stores/test-game";
 
-const { rawGames: games } = useGameStore();
+const gameStore = useGameStore();
+const { rawGames: games } = storeToRefs(gameStore);
 
 const initialIndex = 2;
 
@@ -132,8 +133,8 @@ const handleClickTarget = async (idx) => {
                       : 'rotate-12 translate-y-[140px] '),
                   calculateOffset(idx) > 2 &&
                     (isNegativeOffset(idx)
-                      ? '-rotate-45 translate-y-96'
-                      : 'rotate-45 translate-y-96'),
+                      ? '-rotate-90 translate-y-96'
+                      : 'rotate-90 translate-y-96'),
                   idx === activeIndex &&
                     'text-point-500 rotate-0 -translate-y-7 ',
                   targetIdx === idx && 'rotate-0 -translate-y-[300px] scale-110'

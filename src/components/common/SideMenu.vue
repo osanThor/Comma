@@ -5,7 +5,8 @@ import { useRouter } from "vue-router";
 import LogoutIcon from "./icons/LogoutIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 
-const { rawGames: games } = useGameStore();
+const gameStore = useGameStore();
+const { rawGames: games } = storeToRefs(gameStore);
 
 const router = useRouter();
 

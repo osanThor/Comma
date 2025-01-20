@@ -106,7 +106,9 @@ watch([isOpenMenu, user], async () => {
       <div class="w-full max-h-[50vh] overflow-y-auto py-5">
         <!-- <div class="w-full max-h-[650px] overflow-y-auto"> -->
         <ul class="w-full flex flex-col gap-9">
-          <li v-if="!items.length">알림이 없습니다.</li>
+          <li v-if="!items.length" class="text-center text-main-200">
+            알림이 없습니다.
+          </li>
           <li
             class="w-full flex items-center gap-[10px]"
             v-for="(_, idx) in items"

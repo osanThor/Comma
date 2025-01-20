@@ -1,34 +1,30 @@
 <script setup>
 import { twMerge } from "tailwind-merge";
 import FilterArrow from "@/components/common/icons/FilterArrow.vue";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
-const props = defineProps({
-  sort: {
-    type: String,
-    required: true,
-  },
-  sortOption: {
-    type: Array,
-    required: true,
-  },
-});
+const sort = ref("likes");
+const sortOption = [
+  { name: "인기순", value: "likes" },
+  { name: "최신순", value: "desc" },
+];
+
 const emit = defineEmits(["change-sort"]);
-
 const open = ref(false);
 
 const currentSort = computed(() => {
-  const matchedOption = props.sortOption.find(
-    (option) => option.value === props.sort
+  const matchedOption = sortOption.find(
+    (option) => option.value === sort.value
   );
   return matchedOption ? matchedOption.name : "인기순";
 });
 
 const otherSortOptions = computed(() =>
-  props.sortOption.filter((option) => option.value !== props.sort)
+  sortOption.filter((option) => option.value !== sort.value)
 );
 
 const handleChangeSort = (value) => {
+  sort.value = value;
   emit("change-sort", value);
 };
 </script>

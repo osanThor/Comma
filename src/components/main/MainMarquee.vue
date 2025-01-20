@@ -2,8 +2,13 @@
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { gameTopRankers } = storeToRefs(gameStore);
-const items = computed(() => Object.values(gameTopRankers.value));
+const { games, gameTopRankers } = storeToRefs(gameStore);
+const rankItems = computed(() => {
+  return Object.values(gameTopRankers.value).map((item) => ({
+    user: item?.user ?? "Unknown User",
+    game: item?.game ?? { display_name: "Unknown Game" },
+  }));
+});
 
 const animationMarquee = (selector, speed) => {
   const parentSelector = document.querySelector(selector);
@@ -22,17 +27,21 @@ const animationMarquee = (selector, speed) => {
   requestAnimationFrame(moveItem);
 };
 
-onMounted(async () => {
-  await gameStore.getGameTopRankers();
-});
-onMounted(() => {
-  animationMarquee("#marquee", 0.5);
+watch(games, async () => {
+  if (games.value.length) {
+    await gameStore.getGameTopRankers();
+    animationMarquee("#marquee", 0.5);
+  }
 });
 </script>
 <template>
-  <div id="marquee" class="w-full bg-main-500/50 h-[50px] flex items-center">
+  <div
+    v-if="rankItems.length"
+    id="marquee"
+    class="w-full bg-main-500/50 h-[50px] flex items-center"
+  >
     <ul class="flex gap-[248px] text-sm font-dnf text-white pr-[248px]">
-      <li class="whitespace-nowrap" v-for="item in items" :key="item">
+      <li v-for="(item, idx) in rankItems" class="whitespace-nowrap" :key="idx">
         🎉 {{ item.user.name }}님이 [{{ item.game.display_name }}] 신기록에
         달성하셨습니다.
       </li>

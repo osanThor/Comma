@@ -4,7 +4,11 @@ import Avatar from "./Avatar.vue";
 import {
   getNotifications,
   realtimeNewNotifications,
+  readNotification,
 } from "@/services/notification.service";
+import { twMerge } from "tailwind-merge";
+
+const router = useRouter();
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -22,42 +26,49 @@ const handleGetNotifications = async (userId) => {
 };
 
 const items = ref([]);
+const computedItems = computed(() =>
+  isAll.value ? items.value : items.value.filter((item) => !item.is_read)
+);
 
 const header = ref(null);
 const modal = ref(null);
 const isOpenMenu = ref(false);
 
-function toggleListener(active) {
+const isAll = ref(true);
+
+const toggleListener = (active) => {
   active
     ? window.addEventListener("mousedown", mouseDownOutside)
     : window.removeEventListener("mousedown", mouseDownOutside);
-}
+};
 
-function mouseDownHeader() {
+const mouseDownHeader = () => {
   const active = (isOpenMenu.value = !isOpenMenu.value);
   toggleListener(active);
-}
+};
 
-function mouseDownOutside(e) {
+const mouseDownOutside = (e) => {
   const isOutside = header.value && !header.value.contains(e.target);
   const isModal = modal.value && modal.value.contains(e.target);
   if (isOutside && !isModal) toggleListener((isOpenMenu.value = false));
-}
+};
 
-function mouseDownItem(handler) {
+const mouseDownItem = async (handler, targetId) => {
   router.push(handler);
   toggleListener((isOpenMenu.value = false));
-}
+  await readNotification(targetId);
+};
 
 watch(user, () => {
   if (!user.value || !user.value.id) return console.log("로그인 해야함");
   realtimeNewNotifications(user.value.id, (noti) => {
     console.log("new notification", noti);
-    newAlarm.value = true;
+    if (!noti.is_read) newAlarm.value = true;
   });
 });
 
 watch([isOpenMenu, user], async () => {
+  newAlarm.value = false;
   if (user.value && isOpenMenu.value)
     await handleGetNotifications(user.value.id);
 });
@@ -73,6 +84,7 @@ watch([isOpenMenu, user], async () => {
     >
       <span
         v-if="newAlarm"
+        @mousedown.prevent="mouseDownHeader"
         class="absolute top-0 right-0 flex h-3 w-3 items-center justify-center"
       >
         <span
@@ -96,28 +108,44 @@ watch([isOpenMenu, user], async () => {
     >
       <div class="w-full flex justify-between items-center mb-5">
         <div class="flex items-center gap-4 text-main-500 font-bold">
-          <button class="">전체</button>
-          <button class="opacity-30">읽지 않음</button>
+          <button
+            @click="isAll = true"
+            :class="twMerge(!isAll && 'opacity-30')"
+          >
+            전체
+          </button>
+          <button
+            @click="isAll = false"
+            :class="twMerge(isAll && 'opacity-30')"
+          >
+            읽지 않음
+          </button>
         </div>
         <button class="w-20 h-9 rounded-[10px] bg-main-200 text-white text-sm">
           모두 읽음
         </button>
       </div>
       <div class="w-full max-h-[50vh] overflow-y-auto py-5">
-        <!-- <div class="w-full max-h-[650px] overflow-y-auto"> -->
         <ul class="w-full flex flex-col gap-9">
           <li v-if="!items.length" class="text-center text-main-200">
             알림이 없습니다.
           </li>
           <li
-            class="w-full flex items-center gap-[10px]"
-            v-for="(_, idx) in items"
-            :key="idx"
+            v-for="item in computedItems"
+            :class="
+              twMerge(
+                'w-full flex items-center gap-[10px] cursor-pointer',
+                item.is_read && 'opacity-60'
+              )
+            "
+            :key="item.id"
+            @click="mouseDownItem(`/user/${item.sender.id}`, item.id)"
           >
-            <Avatar />
-            <div class="font-medium text-sm text-main-500/70">
-              <span class="font-bold">허정민</span> 님이 [벽돌 깨기] 신기록에
-              달성하셨습니다. <span class="text-xs">2025년 1월 13일</span>
+            <Avatar :src="item.sender.profile_image" />
+            <div class="font-medium text-sm text-main-500/70 break-keep">
+              <span class="font-bold">{{ item.sender.name }}</span> 님이
+              {{ item.message }}<span class="ml-1" />
+              <span class="text-xs">2025년 1월 13일</span>
             </div>
           </li>
         </ul>

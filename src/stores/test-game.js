@@ -11,7 +11,6 @@ export const useGameStore = defineStore(
       tetris: null,
       shooting: null,
     });
-    const rawGames = computed(() => toRaw(games.value));
 
     const getGamesData = async () => {
       try {
@@ -47,7 +46,6 @@ export const useGameStore = defineStore(
 
     return {
       games,
-      rawGames,
       getGamesData,
       gameTopRankers,
       getGameTopRanker,

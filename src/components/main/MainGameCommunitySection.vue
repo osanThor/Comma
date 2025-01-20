@@ -6,7 +6,7 @@ import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { rawGames: games, gameTopRankers } = storeToRefs(gameStore);
+const { games, gameTopRankers } = storeToRefs(gameStore);
 </script>
 <template>
   <section
@@ -38,7 +38,7 @@ const { rawGames: games, gameTopRankers } = storeToRefs(gameStore);
             {{ game.display_name }}
           </div>
           <div class="font-semibold text-sm">
-            BEST SCORE : {{ gameTopRankers[game.name].score }}점
+            BEST SCORE : {{ gameTopRankers[game.name]?.score || 0 }}점
           </div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">

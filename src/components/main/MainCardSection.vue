@@ -9,7 +9,7 @@ import MainMarquee from "./MainMarquee.vue";
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { rawGames: games } = storeToRefs(gameStore);
+const { games } = storeToRefs(gameStore);
 
 const initialIndex = 2;
 

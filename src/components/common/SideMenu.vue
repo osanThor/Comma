@@ -6,7 +6,7 @@ import LogoutIcon from "./icons/LogoutIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { rawGames: games } = storeToRefs(gameStore);
+const { games } = storeToRefs(gameStore);
 
 const router = useRouter();
 

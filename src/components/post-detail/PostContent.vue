@@ -1,6 +1,24 @@
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   name: "PostContent",
+  props: {
+    postId: {
+      type: String,
+      required: true,
+    },
+},
+data(){
+  return {
+    router: useRouter(),
+  };
+},
+methods: {
+  editPost(){
+    this.router.push(`/post/edit/${this.postId}`);
+  },
+},
 };
 </script>
 
@@ -34,7 +52,7 @@ export default {
 
           <!-- 수정/삭제 버튼 -->
           <div class="flex flex-row gap-6 text-lg font-semibold text-white/50">
-            <button class="hover:text-white/100">수정</button>
+            <button @click="editPost" class="hover:text-white/100">수정</button>
             <button class="hover:text-white/100">삭제</button>
           </div>
         </header>

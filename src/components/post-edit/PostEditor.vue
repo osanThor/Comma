@@ -1,5 +1,6 @@
 <script>
 import { usePostStroe } from "../../stores/post";
+import { useRouter, useRoute } from "vue-router";
 import PostEditContent from "./PostEditContent.vue";
 import PostEditImg from "./PostEditImg.vue";
 
@@ -9,14 +10,29 @@ export default {
     PostEditContent,
     PostEditImg,
   },
+  props: {
+    isEdit:{
+      type:Boolean,
+      default: false,
+    },
+  },
   data() {
     const postStore = usePostStroe();
+    const router = useRouter();
+    const route = useRoute();
     return {
       ...postStore,
-      title: postStore.title,
-      content: postStore.content,
-      images: postStore.images,
+      router,
+      route,
     };
+  },
+  async created() {
+    if(this.isEdit){
+      const postId = this.route.params.postId;
+      await this.fetchPostById(postId);
+    } else {
+      this.resetPost();
+    }
   },
   methods: {
     setTitle(title) {
@@ -36,8 +52,10 @@ export default {
     },
     async handleSave() {
       try {
-        await this.savePost();
+        const response = await this.savePost();
+        console.log(response);
         alert("게시글이 저장되었습니다.");
+        this.router.push(`/post/${response.postId}`);
       } catch (err) {
         console.error("게시글 저장 실패:", err);
         alert("게시글 저장에 실패했습니다.");
@@ -80,4 +98,4 @@ export default {
   </main>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

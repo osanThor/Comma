@@ -10,6 +10,7 @@ import { uploadImage } from "../services/upload.service";
 
 export const usePostStroe = defineStore("post", {
   state: () => ({
+    id: null,
     title: "",
     content: "",
     images: [],
@@ -118,4 +119,16 @@ export const usePostStroe = defineStore("post", {
       console.error("게시글 가져오기 실패:", error);
     }
   },
+
+  //게시글 내용 불러오기
+  async fetchPostById(postId) {
+    try{
+      const post = await getPostsByUserId(postId);
+      this.setTitle(post.title);
+      this.setContent(post.content);
+      this.images = post.images;
+    }catch(error){
+      console.error("게시글 불러오기 실패:", error);
+    }
+  }
 });

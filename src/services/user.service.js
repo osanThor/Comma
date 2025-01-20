@@ -6,7 +6,7 @@ export const loginWithSocial = async (provider) => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: "http://localhost:5173/login",
+      redirectTo: `${import.meta.env.VITE_PUBLIC_URL}/login`,
     },
   });
   if (error) throw error;

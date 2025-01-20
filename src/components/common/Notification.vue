@@ -142,7 +142,7 @@ watch([isOpenMenu, user], async () => {
       </div>
       <div class="w-full max-h-[50vh] overflow-y-auto py-5">
         <ul class="w-full flex flex-col gap-9">
-          <li v-if="!items.length" class="text-center text-main-200">
+          <li v-if="!computedItems.length" class="text-center text-main-200">
             알림이 없습니다.
           </li>
           <li

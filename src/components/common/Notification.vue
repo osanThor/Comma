@@ -5,6 +5,7 @@ import {
   getNotifications,
   realtimeNewNotifications,
   readNotification,
+  readAllNotifications,
 } from "@/services/notification.service";
 import { twMerge } from "tailwind-merge";
 
@@ -35,6 +36,17 @@ const modal = ref(null);
 const isOpenMenu = ref(false);
 
 const isAll = ref(true);
+
+const handleClickAllRead = async () => {
+  if (!user.value || !user.value.id) return alert("다시 로그인 해주세요");
+  if (!items.value.filter((item) => !item.is_read).length) return;
+  try {
+    await readAllNotifications(user.value.id);
+    await handleGetNotifications(user.value.id);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const toggleListener = (active) => {
   active
@@ -121,7 +133,10 @@ watch([isOpenMenu, user], async () => {
             읽지 않음
           </button>
         </div>
-        <button class="w-20 h-9 rounded-[10px] bg-main-200 text-white text-sm">
+        <button
+          @click="handleClickAllRead"
+          class="w-20 h-9 rounded-[10px] bg-main-200 text-white text-sm"
+        >
           모두 읽음
         </button>
       </div>

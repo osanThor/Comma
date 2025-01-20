@@ -54,7 +54,7 @@ const handleLogout = async () => await logout();
     <div
       id="menu-dropdown"
       v-if="isOpenMenu"
-      class="absolute bg-white w-[180px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center gap-[40px] px-6 py-4 font-semibold"
+      class="absolute bg-white w-[180px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col shadow-md items-center gap-[40px] px-6 py-4 font-semibold"
     >
       <nav class="w-full flex flex-col">
         <button

@@ -47,7 +47,7 @@ function mouseDownItem(handler) {
       ref="modal"
       id="alarm-dropdown"
       v-if="isOpenMenu"
-      class="absolute bg-white w-[calc(100vw-40px)] max-w-[440px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center px-12 py-8"
+      class="absolute bg-white w-[calc(100vw-40px)] max-w-[440px] top-full shadow-md translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center px-12 py-8"
     >
       <div class="w-full flex justify-between items-center mb-5">
         <div class="flex items-center gap-4 text-main-500 font-bold">

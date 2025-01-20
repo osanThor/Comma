@@ -91,9 +91,9 @@ const handleClickTarget = async (idx) => {
     <div
       class="w-full pt-[13vh] flex-grow flex flex-col justify-between items-center gap-[8.45vw] overflow-hidden"
     >
-      <h2 class="max-w-[30.41vw]">
+      <h2 class="">
         <img
-          class="w-full max-w-[584px]"
+          class="w-full max-w-[584px] min-w-[584px]"
           src="/assets/images/main-title.png"
           alt="title"
         />

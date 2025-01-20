@@ -1,5 +1,9 @@
 <script setup>
-const evetItems = ref(Array(10).fill(0));
+import { useGameStore } from "@/stores/test-game";
+
+const gameStore = useGameStore();
+const { gameTopRankers } = storeToRefs(gameStore);
+const items = computed(() => Object.values(gameTopRankers.value));
 
 const animationMarquee = (selector, speed) => {
   const parentSelector = document.querySelector(selector);
@@ -18,15 +22,26 @@ const animationMarquee = (selector, speed) => {
   requestAnimationFrame(moveItem);
 };
 
+onMounted(async () => {
+  await gameStore.getGameTopRankers();
+});
 onMounted(() => {
   animationMarquee("#marquee", 0.5);
 });
+
+watch(items, () => {
+  console.log(items.value);
+});
 </script>
 <template>
-  <div id="marquee" class="w-full bg-main-500/50 h-[50px] flex items-center">
+  <div
+    id="marquee"
+    class="w-full bg-main-500/50 h-[50px] flex gap-[248px] items-center"
+  >
     <ul class="flex gap-[248px] text-sm font-dnf text-white">
-      <li class="whitespace-nowrap" v-for="(_, idx) in evetItems" :key="idx">
-        🎉 박지운님이 [틀린그림 찾기] 신기록에 달성하셨습니다.
+      <li class="whitespace-nowrap" v-for="item in items" :key="item">
+        🎉 {{ item.user.name }}님이 [{{ item.game.display_name }}] 신기록에
+        달성하셨습니다.
       </li>
     </ul>
   </div>

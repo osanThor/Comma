@@ -1,9 +1,16 @@
-import { getGames } from "@/services/game.service";
+import { getGameRanking, getGames } from "@/services/game.service";
 
 export const useGameStore = defineStore(
   "testGameStore",
   () => {
     const games = ref([]);
+    const gameTopRankers = reactive({
+      flappyBird: null,
+      mineSweeper: null,
+      ballBounce: null,
+      tetris: null,
+      shooting: null,
+    });
     const rawGames = computed(() => toRaw(games.value));
 
     const getGamesData = async () => {
@@ -16,10 +23,35 @@ export const useGameStore = defineStore(
       }
     };
 
+    const getGameTopRanker = async (gameId) => {
+      try {
+        const data = await getGameRanking(gameId);
+        gameTopRankers[data[0].game?.name] = data[0];
+        return data[0];
+      } catch (err) {
+        console.error(err);
+        throw new Error(`GET RANKER ERROR`);
+      }
+    };
+
+    const getGameTopRankers = async () => {
+      try {
+        if (games.value.length)
+          await Promise.all(
+            games.value.map((game) => getGameTopRanker(game.id))
+          );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
     return {
       games,
       rawGames,
       getGamesData,
+      gameTopRankers,
+      getGameTopRanker,
+      getGameTopRankers,
     };
   },
   {

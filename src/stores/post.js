@@ -1,5 +1,10 @@
 import { storeToRefs } from "pinia";
-import { createPost, getPost, updatePost } from "../services/post.service.js";
+import {
+  createPost,
+  deletePost,
+  getPost,
+  updatePost,
+} from "../services/post.service.js";
 import { useAuthStore } from "./auth";
 
 const authStore = useAuthStore();
@@ -13,10 +18,13 @@ export const usePostStore = defineStore("post", {
     id: "",
     title: "",
     content: "",
+    author: "",
+    createdAt: "",
+    updatedAt: null,
     images: [],
-    posts: [],
-    totalCount: 0,
     category: "free",
+    likeCount: 0,
+    commentCount: 0,
   }),
   getters: {
     isValidPost(state) {
@@ -39,6 +47,30 @@ export const usePostStore = defineStore("post", {
       this.images = newImages;
     },
 
+    setAuthor(newAuthor) {
+      this.author = newAuthor;
+    },
+
+    setCreatedAt(newCreatedAt) {
+      this.createdAt = newCreatedAt;
+    },
+
+    setUpdatedAt(newUpdatedAt) {
+      this.updatedAt = newUpdatedAt;
+    },
+
+    setCategory(newCategory) {
+      this.category = newCategory;
+    },
+
+    setLikeCount(newLikeCount) {
+      this.likeCount = newLikeCount;
+    },
+
+    setCommentCount(newCommentCount) {
+      this.commentCount = newCommentCount;
+    },
+
     addImage({ index, images }) {
       if (this.images.length + images.length > 4) {
         alert("이미지는 최대 4개까지 업로드 할 수 있습니다.");
@@ -48,12 +80,22 @@ export const usePostStore = defineStore("post", {
       if (this.images.length > 4) {
         this.images.splice(4);
       }
-      console.log("Updated images:", this.images);
+      console.log("이미지 업로드:", this.images);
     },
 
     removeImage({ index }) {
       this.images.splice(index, 1);
-      console.log("Updated images after removal:", this.images);
+      console.log("삭제되었습니다:", this.images);
+    },
+
+    async deletePost(postId) {
+      try {
+        const response = await deletePost(postId);
+        return response;
+      } catch (error) {
+        console.error("게시글 삭제 실패:", error);
+        throw error;
+      }
     },
 
     //게시글 내용 불러오기
@@ -64,7 +106,12 @@ export const usePostStore = defineStore("post", {
         this.setTitle(post.title);
         this.setContent(post.content);
         this.setImages(post.images);
-        
+        this.setAuthor(post.user.name);
+        this.setCreatedAt(post.created_at);
+        this.setUpdatedAt(post.updated_at);
+        this.setCategory(post.category);
+        this.setLikeCount(post.like_count);
+        this.setCommentCount(post.comment_count);
       } catch (error) {
         console.error("게시글 불러오기 실패:", error);
       }
@@ -145,6 +192,8 @@ export const usePostStore = defineStore("post", {
       this.title = "";
       this.content = "";
       this.images = [];
+      this.author = "";
+      this.createdAt = "";
     },
   },
 });

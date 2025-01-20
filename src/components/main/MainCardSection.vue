@@ -9,7 +9,7 @@ import MainMarquee from "./MainMarquee.vue";
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { rawGames: games } = storeToRefs(gameStore);
+const { games } = storeToRefs(gameStore);
 
 const initialIndex = 2;
 
@@ -91,9 +91,9 @@ const handleClickTarget = async (idx) => {
     <div
       class="w-full pt-[13vh] flex-grow flex flex-col justify-between items-center gap-[8.45vw] overflow-hidden"
     >
-      <h2 class="max-w-[30.41vw]">
+      <h2>
         <img
-          class="w-full max-w-[584px]"
+          class="w-full max-w-[584px] min-w-[584px]"
           src="/assets/images/main-title.png"
           alt="title"
         />
@@ -145,6 +145,16 @@ const handleClickTarget = async (idx) => {
                 v-if="targetIdx === idx"
                 class="animate-ping absolute inline-flex h-[300px] w-[300px] blur-sm rounded-full bg-white opacity-20 pointer-events-none"
               />
+              <div
+                v-if="targetIdx === idx"
+                class="absolute top-0 left-0 w-full h-full bg-main-500/50 rounded-3xl flex items-center justify-center"
+              >
+                <router-link
+                  :to="`/game/${value.name}`"
+                  class="font-dnf text-2xl text-white w-[200px] flex items-center justify-center py-3 bg-main-500 transition-all hover:bg-point-500 rounded-full"
+                  >Detail</router-link
+                >
+              </div>
               {{ value.display_name }}
             </div>
           </swiper-slide>

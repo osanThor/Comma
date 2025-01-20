@@ -6,7 +6,7 @@ import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { rawGames: games } = storeToRefs(gameStore);
+const { games, gameTopRankers } = storeToRefs(gameStore);
 </script>
 <template>
   <section
@@ -26,18 +26,20 @@ const { rawGames: games } = storeToRefs(gameStore);
     </h2>
     <ul class="w-full flex items-center gap-[18px] mb-[95px]">
       <li
-        v-for="value in games"
-        :key="value.id"
+        v-for="game in games"
+        :key="game.id"
         class="flex-1 w-full max-w-[19%]"
       >
         <RouterLink
-          to="/game/gameName"
+          :to="`/game/${game.name}`"
           class="flex flex-col flex-1 px-[30px] pt-[26px] pb-[19px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"
         >
           <div class="font-dnf text-2xl mb-1 truncate">
-            {{ value.display_name }}
+            {{ game.display_name }}
           </div>
-          <div class="font-semibold text-sm">BEST SCORE : 999점</div>
+          <div class="font-semibold text-sm">
+            BEST SCORE : {{ gameTopRankers[game.name]?.score || 0 }}점
+          </div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">
               <CommentIcon />999+

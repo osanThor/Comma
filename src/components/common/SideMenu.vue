@@ -6,7 +6,7 @@ import LogoutIcon from "./icons/LogoutIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 
 const gameStore = useGameStore();
-const { rawGames: games } = storeToRefs(gameStore);
+const { games } = storeToRefs(gameStore);
 
 const router = useRouter();
 
@@ -54,13 +54,13 @@ const handleLogout = async () => await logout();
     <div
       id="menu-dropdown"
       v-if="isOpenMenu"
-      class="absolute bg-white w-[180px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center gap-[40px] px-6 py-4 font-semibold"
+      class="absolute bg-white w-[180px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center gap-[40px] px-6 py-4 font-semibold shadow-md"
     >
       <nav class="w-full flex flex-col">
         <button
           v-for="value in games"
           :key="value.id"
-          class="w-full border-main-200/30 border-b-2 last:border-0 pt-3 pb-[10px] flex justify-center text-main-500 hover:text-point-500"
+          class="w-full border-main-200/20 border-b-2 last:border-0 pt-3 pb-[10px] flex justify-center text-main-500 hover:text-point-500"
           @mousedown.prevent="mouseDownItem(`/game/${value.name}`)"
         >
           {{ value.display_name }}

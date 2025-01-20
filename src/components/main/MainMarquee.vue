@@ -34,11 +34,8 @@ watch(items, () => {
 });
 </script>
 <template>
-  <div
-    id="marquee"
-    class="w-full bg-main-500/50 h-[50px] flex gap-[248px] items-center"
-  >
-    <ul class="flex gap-[248px] text-sm font-dnf text-white">
+  <div id="marquee" class="w-full bg-main-500/50 h-[50px] flex items-center">
+    <ul class="flex gap-[248px] text-sm font-dnf text-white pr-[248px]">
       <li class="whitespace-nowrap" v-for="item in items" :key="item">
         🎉 {{ item.user.name }}님이 [{{ item.game.display_name }}] 신기록에
         달성하셨습니다.

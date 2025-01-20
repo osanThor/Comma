@@ -3,9 +3,11 @@ import { loginWithSocial } from "@/services/user.service";
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
 import KakaoIcon from "@/components/common/icons/KakaoIcon.vue";
+import { useToastStore } from "@/stores/toast";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+const { addToast } = useToastStore();
 
 const router = useRouter();
 
@@ -14,7 +16,10 @@ const googleLogin = async () => await loginWithSocial("google");
 const kakaoLogin = async () => await loginWithSocial("kakao");
 
 watch(user, () => {
-  if (user.value) router.push("/");
+  if (user.value) {
+    router.push("/");
+    addToast("정상적으로 로그인 되었습니다.");
+  }
 });
 </script>
 <template>

@@ -4,9 +4,11 @@ import { twMerge } from "tailwind-merge";
 import { useRouter } from "vue-router";
 import LogoutIcon from "./icons/LogoutIcon.vue";
 import { useGameStore } from "@/stores/test-game";
+import { useToastStore } from "@/stores/toast";
 
 const gameStore = useGameStore();
 const { games } = storeToRefs(gameStore);
+const { addToast } = useToastStore();
 
 const router = useRouter();
 
@@ -34,7 +36,10 @@ function mouseDownItem(handler) {
   else router.push(handler);
   toggleListener((isOpenMenu.value = false));
 }
-const handleLogout = async () => await logout();
+const handleLogout = async () => {
+  await logout();
+  addToast("정상적으로 로그아웃 되었습니다.");
+};
 </script>
 <template>
   <div class="relative">

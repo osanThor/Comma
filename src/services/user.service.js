@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabase/client";
 import { useAuthStore } from "@/stores/auth";
+import { useToastStore } from "@/stores/toast";
 
 // 로그인
 export const loginWithSocial = async (provider) => {
@@ -93,9 +94,11 @@ supabase.auth.onAuthStateChange((event, session) => {
         const user = await upsertUser(session.user);
         updateUser(user);
       } catch (error) {
+        const { addToast } = useToastStore();
         console.error("Error handling auth state change:", error);
-        if (error.code === "23505") alert("이미 사용중인 이메일입니다.");
-        else alert(error.message);
+        if (error.code === "23505")
+          addToast("이미 사용중인 이메일입니다.", "error");
+        else addToast(error.message, "error");
         updateUser(null);
       }
     }, 0);

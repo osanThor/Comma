@@ -38,7 +38,7 @@ const formatedDate = (D) => {
         @load="imageLoaded = true"
       />
     </div>
-    <div class="p-4 bg-main-500 flex-grow">
+    <div class="p-4 bg-main-500 flex-grow flex flex-col">
       <div class="flex gap-2 items-end mb-3 justify-between">
         <div class="text-sm font-dnf line-clamp-1">
           {{ item.title }}
@@ -47,7 +47,7 @@ const formatedDate = (D) => {
           {{ formatedDate(item.created_at) }}
         </div>
       </div>
-      <div class="line-clamp-2 text-xs opacity-70 mb-3">
+      <div class="line-clamp-2 text-xs opacity-70 mb-3 break-words flex-grow">
         {{ item.content }}
       </div>
       <div class="w-full flex justify-between items-center">

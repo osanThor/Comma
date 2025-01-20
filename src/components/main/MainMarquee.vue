@@ -28,10 +28,6 @@ onMounted(async () => {
 onMounted(() => {
   animationMarquee("#marquee", 0.5);
 });
-
-watch(items, () => {
-  console.log(items.value);
-});
 </script>
 <template>
   <div id="marquee" class="w-full bg-main-500/50 h-[50px] flex items-center">

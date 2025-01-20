@@ -64,7 +64,7 @@ export default {
       <!-- 기본 이미지 영역 -->
       <PostEditImgCard
         v-if="images.length > 0"
-        :imgSrc="images[0].preview"
+        :imgSrc="images[0].preview || images[0]"
         :size="'w-[440px] h-[440px]'"
         :opacity="100"
         @click="handleRemoveImage(0)"
@@ -75,7 +75,7 @@ export default {
     <div class="flex flex-row items-center w-full justify-between mt-2">
     <PostEditImgCard
         v-if="images.length > 1"
-        :imgSrc="images[1].preview"
+        :imgSrc="images[1].preview || images[1]"
         :size="'w-[140px] h-[140px]'"
         :opacity="70"
         @click="handleRemoveImage(1)"
@@ -84,7 +84,7 @@ export default {
 
       <PostEditImgCard
         v-if="images.length > 2"
-        :imgSrc="images[2].preview"
+        :imgSrc="images[2].preview || images[2]"
         :size="'w-[140px] h-[140px]'"
         :opacity="50"
         @click="handleRemoveImage(2)"
@@ -93,7 +93,7 @@ export default {
 
       <PostEditImgCard
         v-if="images.length > 3"
-        :imgSrc="images[3].preview"
+        :imgSrc="images[3].preview || images[3]"
         :size="'w-[140px] h-[140px]'"
         :opacity="30"
         @click="handleRemoveImage(3)"

@@ -140,6 +140,5 @@ export const getPost = async (postId) => {
     .single();
 
   if (error) throw error;
-
   return data;
 };

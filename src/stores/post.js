@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { createPost, getPostsByCategory } from "../services/post.service.js";
+import { createPost, getPost, updatePost } from "../services/post.service.js";
 import { useAuthStore } from "./auth";
 
 const authStore = useAuthStore();
@@ -8,9 +8,9 @@ const { user } = storeToRefs(authStore);
 import { defineStore } from "pinia";
 import { uploadImage } from "../services/upload.service";
 
-export const usePostStroe = defineStore("post", {
+export const usePostStore = defineStore("post", {
   state: () => ({
-    id: null,
+    id: "",
     title: "",
     content: "",
     images: [],
@@ -35,6 +35,10 @@ export const usePostStroe = defineStore("post", {
       this.content = newContent;
     },
 
+    setImages(newImages) {
+      this.images = newImages;
+    },
+
     addImage({ index, images }) {
       if (this.images.length + images.length > 4) {
         alert("이미지는 최대 4개까지 업로드 할 수 있습니다.");
@@ -52,6 +56,20 @@ export const usePostStroe = defineStore("post", {
       console.log("Updated images after removal:", this.images);
     },
 
+    //게시글 내용 불러오기
+    async fetchPostById(postId) {
+      try {
+        const post = await getPost(postId);
+        this.id = post.id;
+        this.setTitle(post.title);
+        this.setContent(post.content);
+        this.setImages(post.images);
+        
+      } catch (error) {
+        console.error("게시글 불러오기 실패:", error);
+      }
+    },
+
     // 게시글 저장
     async savePost() {
       if (!this.isValidPost) {
@@ -61,12 +79,12 @@ export const usePostStroe = defineStore("post", {
 
       try {
         const uploadResults = await Promise.allSettled(
-          this.images.map(image => uploadImage(image.file))
+          this.images.map((image) => uploadImage(image.file))
         );
         const successfulUploads = uploadResults
           .filter((result) => result.status === "fulfilled")
           .map((result) => result.value);
-    
+
         if (successfulUploads.length !== this.images.length) {
           alert("일부 이미지를 업로드하지 못했습니다.");
         }
@@ -92,43 +110,41 @@ export const usePostStroe = defineStore("post", {
       }
     },
 
+    // 게시글 수정하기
+    async editPost(postId) {
+      if (!this.isValidPost) {
+        alert("제목과 내용을 모두 입력해주세요.");
+        return;
+      }
+
+      try {
+        const postPayload = {
+          postId: postId,
+          userId: user.value.id,
+          title: this.title,
+          content: this.content,
+          images: this.images,
+          category: "free",
+        };
+
+        console.log("업데이트 게시글 데이터:", postPayload);
+
+        const response = await updatePost(postPayload);
+        console.log("게시글 업데이트 성공!", response);
+
+        this.resetPost();
+        return response;
+      } catch (error) {
+        console.error("게시글 업데이트 중 오류 발생:", error);
+        throw error;
+      }
+    },
+
     resetPost() {
+      this.id = "";
       this.title = "";
       this.content = "";
       this.images = [];
     },
   },
-
-  // 게시글 목록 가져오기
-  async fetchPostsByCategory(
-    category = "free",
-    sort = "dec",
-    page = 1,
-    limit = 10
-  ) {
-    try {
-      const { data, totalCount } = await getPostsByCategory(
-        category || this.category,
-        sort,
-        page,
-        limit
-      ); 
-      this.posts = data;
-      this.totalCount = totalCount;
-    } catch (error) {
-      console.error("게시글 가져오기 실패:", error);
-    }
-  },
-
-  //게시글 내용 불러오기
-  async fetchPostById(postId) {
-    try{
-      const post = await getPostsByUserId(postId);
-      this.setTitle(post.title);
-      this.setContent(post.content);
-      this.images = post.images;
-    }catch(error){
-      console.error("게시글 불러오기 실패:", error);
-    }
-  }
 });

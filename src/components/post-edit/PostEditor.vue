@@ -1,6 +1,6 @@
 <script>
-import { usePostStroe } from "../../stores/post";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { usePostStore } from "../../stores/post";
 import PostEditContent from "./PostEditContent.vue";
 import PostEditImg from "./PostEditImg.vue";
 
@@ -11,61 +11,57 @@ export default {
     PostEditImg,
   },
   props: {
-    isEdit:{
-      type:Boolean,
+    isEdit: {
+      type: Boolean,
       default: false,
     },
   },
   data() {
-    const postStore = usePostStroe();
+    const postStore = usePostStore();
     const router = useRouter();
     const route = useRoute();
     return {
-      ...postStore,
+      postStore,
       router,
       route,
     };
   },
   async created() {
-    if(this.isEdit){
+    if (this.isEdit) {
       const postId = this.route.params.postId;
-      await this.fetchPostById(postId);
+      await this.postStore.fetchPostById(postId);
     } else {
-      this.resetPost();
+      this.postStore.resetPost();
     }
   },
   methods: {
     setTitle(title) {
-      this.title = title;
+      this.postStore.setTitle(title);
     },
     setContent(content) {
-      this.content = content;
+      this.postStore.setContent(content);
     },
     addImage({ index, images }) {
-      this.images.splice(index, 0, ...images);
-      if (this.images.length > 4) {
-        this.images.splice(4);
-      }
+      this.postStore.addImage({ index, images });
     },
     removeImage({ index }) {
-      this.images.splice(index, 1);
+      this.postStore.removeImage({ index });
     },
     async handleSave() {
       try {
-        const response = await this.savePost();
+        let response;
+        const postId = this.route.params.postId;
+        if (this.isEdit) {
+          response = await this.postStore.editPost(postId);
+        } else {
+          response = await this.postStore.savePost();
+        }
         console.log(response);
         alert("게시글이 저장되었습니다.");
         this.router.push(`/post/${response.postId}`);
       } catch (err) {
         console.error("게시글 저장 실패:", err);
         alert("게시글 저장에 실패했습니다.");
-      }
-    },
-    async fetchPosts() {
-      try {
-        await this.fetchPostsByCategory();
-      } catch (err) {
-        console.error("게시글 불러오기 실패:", err);
       }
     },
   },
@@ -76,15 +72,15 @@ export default {
   <main class="flex flex-row items-start justify-center gap-12">
     <!-- 이미지 업로드 -->
     <PostEditImg
-      :images="images"
+      :images="postStore.images"
       @addImage="addImage"
       @removeImage="removeImage"
     />
     <!-- 게시글 내용 작성 -->
     <section class="flex flex-col items-end gap-12">
       <PostEditContent
-        :title="title"
-        :content="content"
+        :title="postStore.title"
+        :content="postStore.content"
         @setTitle="setTitle"
         @setContent="setContent"
       />

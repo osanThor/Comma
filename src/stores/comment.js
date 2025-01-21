@@ -17,7 +17,6 @@ export const useCommentStore = defineStore("comment", {
           page,
           limit
         );
-        console.log("서버에서 반환된 데이터:", data);
         const authStore = useAuthStore();
         const userId = authStore.user.id;
 
@@ -36,12 +35,8 @@ export const useCommentStore = defineStore("comment", {
           })
         );
 
-        this.comments = data;
+        this.comments = commentsWithLikes;
         this.totalCount = totalCount;
-        console.log(
-          "like counts:",
-          this.comments.map((c) => ({ id: c.id, like_count: c.like_count }))
-        );
       } catch (error) {
         console.error("댓글 불러오기 실패:", error);
       }
@@ -50,7 +45,6 @@ export const useCommentStore = defineStore("comment", {
       try {
         const authStore = useAuthStore();
         const userId = authStore.user.id;
-        console.log("addComment 호출됨", { postId, content, userId });
         const data = await createComment({ postId, content, userId });
 
         const index = this.comments.findIndex(
@@ -62,23 +56,17 @@ export const useCommentStore = defineStore("comment", {
           this.comments.push(data[0]);
         }
         this.totalCount += 1;
-        console.log("Added comment with like count:", data[0].like_count);
       } catch (error) {
         console.error("댓글 작성 실패:", error);
       }
     },
     addOptimisticComment(comment) {
       this.comments.push(comment);
-      console.log(
-        "Optimistically added comment with like count:",
-        comment.like_count
-      );
     },
     removeOptimisticComment(commentId) {
       this.comments = this.comments.filter(
         (comment) => comment.id !== commentId
       );
-      console.log("Optimistically removed comment with ID:", commentId);
     },
 
     async likeComment(commentId) {
@@ -95,8 +83,6 @@ export const useCommentStore = defineStore("comment", {
           comment.like_count += 1;
           comment.liked = true;
         }
-        console.log("Liked comment with new like count:", comment.like_count);
-        console.log("response:", response);
         return response;
       } catch (error) {
         console.error("댓글 좋아요 실패:", error);
@@ -118,7 +104,6 @@ export const useCommentStore = defineStore("comment", {
           comment.like_count -= 1;
           comment.liked = false;
         }
-        console.log("Unliked comment with new like count:", comment.like_count);
         return response;
       } catch (error) {
         console.error("댓글 좋아요 취소 실패:", error);

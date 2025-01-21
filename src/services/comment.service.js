@@ -2,7 +2,7 @@ import supabase from "@/lib/supabase/client";
 
 const formetSort = (value) => {
   switch (value) {
-    case "dec":
+    case "desc":
       return ["created_at", "desc"];
     case "likes":
       return ["like_count", "desc"];
@@ -13,7 +13,7 @@ const formetSort = (value) => {
 
 export const getComments = async (
   postId,
-  sort = "dec",
+  sort = "desc",
   page = 1,
   limit = 10
 ) => {
@@ -44,10 +44,7 @@ export const getComments = async (
   if (error) throw error;
 
   return {
-    data: data.map((comment) => ({
-      ...comment,
-      like_count: comment.like_count.length || 0,
-    })),
+    data,
     totalCount: count,
   };
 };
@@ -68,5 +65,3 @@ export const deleteComment = async (commentId) => {
   if (error) throw error;
   return "success";
 };
-
-

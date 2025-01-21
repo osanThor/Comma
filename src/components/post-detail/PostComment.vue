@@ -55,10 +55,6 @@ export default {
       await handleGetComments();
     });
 
-    watchEffect(async () => {
-      await handleGetComments();
-    });
-
     return {
       comments,
       totalCount,

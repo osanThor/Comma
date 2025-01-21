@@ -23,7 +23,6 @@ export const createNotification = async ({
 };
 
 export const realtimeNewNotifications = (userId, callback) => {
-  console.log("userId", userId);
   return supabase
     .channel("notifications")
     .on(
@@ -44,7 +43,7 @@ export const realtimeNewNotifications = (userId, callback) => {
 export const getNotifications = async (userId) => {
   const { data, error } = await supabase
     .from("notifications")
-    .select("*")
+    .select("*,sender:sender_id(id,name,profile_image)")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 

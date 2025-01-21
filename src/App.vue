@@ -1,6 +1,7 @@
 <script setup>
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 import EmptyLayout from "@/layouts/EmptyLayout.vue";
+import Toast from "./components/common/Toast.vue";
 const route = useRoute();
 const layout = computed(() => {
   const layout = route.meta.layout || "DefaultLayout";
@@ -12,4 +13,5 @@ const layout = computed(() => {
   <component :is="layout">
     <RouterView />
   </component>
+  <Toast />
 </template>

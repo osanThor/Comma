@@ -174,7 +174,7 @@ export default {
         <!-- 작성자 -->
         <div
           @click="navigateToProfile(post?.user?.id)"
-          class="flex flex-row items-center gap-2 bg-main-500/30 pl-4 pr-5 py-2 rounded-full"
+          class="flex flex-row items-center gap-2 cursor-pointer bg-main-500/30 pl-4 pr-5 py-2 rounded-full"
         >
           <div class="w-6 h-6 rounded-full">
             <img
@@ -200,7 +200,9 @@ export default {
                 : '/assets/images/icons/post-nolike-icon.png'
             "
           />
-          <p class="text-sm">{{ post?.likeCount }}</p>
+          <p v-if="post?.likeCount > 0" class="text-sm">
+            {{ post?.likeCount }}
+          </p>
         </div>
       </section>
     </article>

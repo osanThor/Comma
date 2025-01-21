@@ -139,9 +139,8 @@ export const usePostStore = defineStore("post", {
     //게시글 내용 불러오기
     async fetchPostById(postId) {
       try {
-        console.log("1", postId);
         const post = await getPost(postId);
-        console.log("2", post);
+
         this.id = post.id;
         this.setTitle(post.title);
         this.setContent(post.content);
@@ -157,6 +156,16 @@ export const usePostStore = defineStore("post", {
           profile_image:
             post.user.profile_image || "/assets/images/exProfile.png",
         };
+
+        const authStore = useAuthStore();
+        const userId = authStore.user.id;
+
+        const isLiked = await checkLike({
+          userId,
+          targetId: postId,
+          targetType: "post",
+        });
+        this.setHasLiked(isLiked);
       } catch (error) {
         console.error("게시글 불러오기 실패:", error);
       }
@@ -210,13 +219,24 @@ export const usePostStore = defineStore("post", {
       }
 
       try {
+        const uploadResults = await Promise.all(
+          this.images.map(async (image) => {
+            if (image.file) {
+              const uploadedUrl = await uploadImage(image.file);
+              return uploadedUrl;
+            } else {
+              return image;
+            }
+          })
+        );
+
         const postPayload = {
           postId: postId,
           userId: user.value.id,
           title: this.title,
           content: this.content,
-          images: this.images,
-          category: "free",
+          images: uploadResults,
+          category: this.category,
         };
 
         console.log("업데이트 게시글 데이터:", postPayload);

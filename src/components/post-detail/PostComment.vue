@@ -73,7 +73,7 @@ export default {
 </script>
 
 <template>
-  <section class="flex flex-col items-center w-[1000px] mx-auto">
+  <section class="flex flex-col items-center w-full md:w-[1000px] mx-auto">
     <!-- 댓글 상단 -->
     <header class="flex flex-row items-end justify-between w-full text-white">
       <p class="font-bold text-2xl">댓글 {{ totalCount }}개</p>

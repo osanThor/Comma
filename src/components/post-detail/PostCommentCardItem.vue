@@ -41,7 +41,7 @@ export default {
 
       setTimeout(() => {
         isAnimating.value = false;
-      }, 70);
+      }, 50);
     };
 
     const formatDate = (dateString) => {
@@ -66,7 +66,7 @@ export default {
     <!-- 작성자 프로필 이미지 -->
     <div
       @click="navigateToProfile(comment.user?.id)"
-      class="w-16 h-16 rounded-full"
+      class="w-16 h-16 rounded-full cursor-pointer"
     >
       <img
         class="w-full h-full object-cover object-center rounded-full"
@@ -92,7 +92,7 @@ export default {
     </div>
     <!-- 좋아요 -->
     <div
-      class="w-8 h-12 flex flex-col items-center justify-center font-medium text-white"
+      class="w-6 flex flex-col items-center justify-center font-medium text-white object-contain"
     >
       <img
         :class="['like-icon', { 'animate-like': isAnimating }]"
@@ -107,7 +107,7 @@ export default {
         v-if="comment.like_count > 0"
         :class="['text-sm', { 'text-point-500': comment.liked }]"
       >
-        {{ comment.like_count }}
+        {{ comment.like_count.toString().padStart(2, "0") }}
       </p>
     </div>
   </div>
@@ -118,7 +118,7 @@ export default {
   width: 26px;
   height: 26px;
   object-fit: contain;
-  transition: transform 0.07s ease-in-out;
+  transition: transform 0.05s ease-in-out;
 }
 
 .animate-like {

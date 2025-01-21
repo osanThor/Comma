@@ -1,5 +1,10 @@
-<script setup></script>
+<script setup>
+import { useAuthStore } from "@/stores/auth.js";
+import UserPage from "@/components/user-page/UserPage.vue";
+const uInfo = useAuthStore();
+</script>
 <template>
-  <h1 class="text-7xl font-bold font-dnf text-white">User</h1>
+  <UserPage />
 </template>
+
 <style scoped></style>

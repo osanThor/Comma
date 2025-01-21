@@ -1,6 +1,7 @@
 <script setup>
 import { useToastStore } from "@/stores/toast";
 import { twMerge } from "tailwind-merge";
+import CommaIcon from "./icons/CommaIcon.vue";
 
 const toastStore = useToastStore();
 const { toasts } = storeToRefs(toastStore);
@@ -14,20 +15,10 @@ const { toasts } = storeToRefs(toastStore);
     <div
       v-for="toast in toasts"
       :key="toast.id"
-      class="p-4 w-[calc(100vw-32px)] max-w-[300px] rounded-lg bg-white shadow-lg transition transform duration-300 flex items-center gap-4"
-      @click="removeToast(toast.id)"
+      class="w-[calc(100vw-32px)] max-w-[470px] rounded-xl bg-point-500/30 border-2 px-10 py-[30px] text-white font-dnf border-white shadow-lg transition transform duration-300 backdrop-blur-sm flex items-center gap-2"
     >
-      <span
-        :class="
-          twMerge(
-            'w-3 min-w-3 h-3 rounded-full',
-            toast.type === 'success' && 'bg-green-500 ',
-            toast.type === 'error' && 'bg-red-500 ',
-            toast.type === 'info' && 'bg-blue-500 '
-          )
-        "
-      />
-      {{ toast.message }}
+      <comma-icon />
+      : {{ toast.message + " ♡(*´ ˘ `*)♡" }}
     </div>
   </transition-group>
 </template>

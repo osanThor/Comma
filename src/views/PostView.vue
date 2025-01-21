@@ -8,12 +8,12 @@ const postId = route.params.postId;
 </script>
 <template>
   <main
-    class="contents-box min-h-screen w-[1440px] mx-auto flex items-center justify-center mt-32 py-36 px-44 mb-80"
+    class="contents-box mx-auto my-auto flex items-center mt-32 py-28 px-40 sm:px-8 lg:px-40 mb-80"
   >
-    <section class="overflow-x-auto">
+    <section class="overflow-x-auto overflow-y-auto">
       <PostContent :postId="postId" />
-      <PostCommentInput />
-      <PostComment />
+      <PostCommentInput :postId="postId" />
+      <PostComment :postId="postId" />
     </section>
   </main>
 </template>

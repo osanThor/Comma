@@ -11,6 +11,7 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
 import { defineStore } from "pinia";
+import { addLike, checkLike, removeLike } from "../services/like.service.js";
 import { uploadImage } from "../services/upload.service";
 
 export const usePostStore = defineStore("post", {
@@ -18,13 +19,14 @@ export const usePostStore = defineStore("post", {
     id: "",
     title: "",
     content: "",
-    author: "",
+    user: {},
     createdAt: "",
     updatedAt: null,
     images: [],
     category: "free",
     likeCount: 0,
     commentCount: 0,
+    hasLiked: false,
   }),
   getters: {
     isValidPost(state) {
@@ -47,10 +49,6 @@ export const usePostStore = defineStore("post", {
       this.images = newImages;
     },
 
-    setAuthor(newAuthor) {
-      this.author = newAuthor;
-    },
-
     setCreatedAt(newCreatedAt) {
       this.createdAt = newCreatedAt;
     },
@@ -69,6 +67,10 @@ export const usePostStore = defineStore("post", {
 
     setCommentCount(newCommentCount) {
       this.commentCount = newCommentCount;
+    },
+
+    setIsLiked(newHasLiked) {
+      this.hasLiked = newHasLiked;
     },
 
     addImage({ index, images }) {
@@ -98,6 +100,42 @@ export const usePostStore = defineStore("post", {
       }
     },
 
+    //좋아요 확인 및 추가 삭제
+    async toggleLike(postId) {
+      try {
+        console.log("Toggling like for postId:", postId);
+
+        const isLiked = await checkLike({
+          userId: user.value.id,
+          targetId: postId,
+          targetType: "post",
+        });
+
+        console.log("Is post liked?", isLiked);
+
+        if (isLiked) {
+          await removeLike({
+            userId: user.value.id,
+            targetId: postId,
+            targetType: "post",
+          });
+          this.setLikeCount(this.likeCount - 1);
+          this.setHasLiked(false);
+        } else {
+          await addLike({
+            userId: user.value.id,
+            targetId: postId,
+            targetType: "post",
+          });
+          this.setLikeCount(this.likeCount + 1);
+          this.setHasLiked(true);
+        }
+      } catch (error) {
+        console.error("게시글 좋아요 처리 실패:", error);
+        throw error;
+      }
+    },
+
     //게시글 내용 불러오기
     async fetchPostById(postId) {
       try {
@@ -106,12 +144,17 @@ export const usePostStore = defineStore("post", {
         this.setTitle(post.title);
         this.setContent(post.content);
         this.setImages(post.images);
-        this.setAuthor(post.user.name);
         this.setCreatedAt(post.created_at);
         this.setUpdatedAt(post.updated_at);
         this.setCategory(post.category);
         this.setLikeCount(post.like_count);
         this.setCommentCount(post.comment_count);
+
+        this.user = {
+          ...post.user,
+          profile_image:
+            post.user.profile_image || "/assets/images/exProfile.png",
+        };
       } catch (error) {
         console.error("게시글 불러오기 실패:", error);
       }

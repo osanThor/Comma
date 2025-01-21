@@ -1,6 +1,7 @@
 <script>
 import { useCommentStore } from "../../stores/comment";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "PostCommentCardItem",
@@ -9,10 +10,15 @@ export default {
       type: Object,
       required: true,
     },
+    navigateToProfile: {
+      type: Function,
+      required: true,
+    },
   },
   setup(props) {
     const commentStore = useCommentStore();
     const isAnimating = ref(false);
+    const router = useRouter();
 
     const toggleLike = async (commentId) => {
       if (isAnimating.value) return;
@@ -58,7 +64,10 @@ export default {
     class="flex flex-row items-center justify-between my-20 comment-card-item"
   >
     <!-- 작성자 프로필 이미지 -->
-    <div class="w-16 h-16 rounded-full">
+    <div
+      @click="navigateToProfile(comment.user?.id)"
+      class="w-16 h-16 rounded-full"
+    >
       <img
         class="w-full h-full object-cover object-center rounded-full"
         :src="comment.user?.profile_image || '/assets/images/exProfile.png'"

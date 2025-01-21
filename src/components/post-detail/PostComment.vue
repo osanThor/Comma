@@ -1,7 +1,7 @@
 <script>
 import { ref, onMounted, computed, watch } from "vue";
 import { useCommentStore } from "../../stores/comment.js";
-import PostCommentCard from "../post-detail/PostCommentCard.vue";
+import PostCommentCardItem from "../post-detail/PostCommentCardItem.vue";
 import Pagination from "../common/Pagination.vue";
 
 export default {
@@ -11,9 +11,13 @@ export default {
       type: String,
       required: true,
     },
+    navigateToProfile:{
+      type: Function,
+      required: true,
+    }
   },
   components: {
-    PostCommentCard,
+    PostCommentCardItem,
     Pagination,
   },
   setup(props) {
@@ -92,10 +96,11 @@ export default {
     </header>
     <main class="w-full">
       <!-- 댓글 목록 -->
-      <PostCommentCard
+      <PostCommentCardItem
         v-for="comment in comments"
         :key="comment.id"
         :comment="comment"
+        :navigateToProfile="navigateToProfile"
       />
     </main>
     <Pagination

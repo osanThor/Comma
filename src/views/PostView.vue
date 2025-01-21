@@ -5,15 +5,23 @@ import PostComment from "../components//post-detail/PostComment.vue";
 
 const route = useRoute();
 const postId = route.params.postId;
+const router = useRouter();
+
+const navigateToProfile = (userId) => {
+  if (userId) {
+    router.push(`/user/${userId}`);
+  }
+};
+
 </script>
 <template>
   <main
     class="contents-box mx-auto my-auto flex items-center mt-32 py-28 px-40 sm:px-8 lg:px-40 mb-80"
   >
     <section class="overflow-x-auto overflow-y-auto">
-      <PostContent :postId="postId" />
+      <PostContent :postId="postId" :navigateToProfile="navigateToProfile" />
       <PostCommentInput :postId="postId" />
-      <PostComment :postId="postId" />
+      <PostComment :postId="postId" :navigateToProfile="navigateToProfile" />
     </section>
   </main>
 </template>

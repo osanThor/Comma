@@ -18,7 +18,7 @@ const kakaoLogin = async () => await loginWithSocial("kakao");
 watch(user, () => {
   if (user.value) {
     router.push("/");
-    addToast("정상적으로 로그인 되었습니다.");
+    addToast("성공적으로 로그인 되었습니다");
   }
 });
 </script>

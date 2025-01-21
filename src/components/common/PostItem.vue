@@ -3,7 +3,7 @@ import Avatar from "@/components/common/Avatar.vue";
 import SmallLike from "@/components/common/icons/SmallLike.vue";
 import dayjs from "dayjs";
 
-const DEFAULT_THUMBNAIL = "/assets/images/examplepost.png";
+const DEFAULT_THUMBNAIL = "/assets/images/postDefaultImg.png";
 
 const props = defineProps({
   item: {

@@ -1,6 +1,7 @@
 <script>
 import { useCommentStore } from "../../stores/comment";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "PostCommentCardItem",
@@ -9,10 +10,15 @@ export default {
       type: Object,
       required: true,
     },
+    navigateToProfile: {
+      type: Function,
+      required: true,
+    },
   },
   setup(props) {
     const commentStore = useCommentStore();
     const isAnimating = ref(false);
+    const router = useRouter();
 
     const toggleLike = async (commentId) => {
       if (isAnimating.value) return;
@@ -35,7 +41,7 @@ export default {
 
       setTimeout(() => {
         isAnimating.value = false;
-      }, 70);
+      }, 50);
     };
 
     const formatDate = (dateString) => {
@@ -58,7 +64,10 @@ export default {
     class="flex flex-row items-center justify-between my-20 comment-card-item"
   >
     <!-- 작성자 프로필 이미지 -->
-    <div class="w-16 h-16 rounded-full">
+    <div
+      @click="navigateToProfile(comment.user?.id)"
+      class="w-16 h-16 rounded-full cursor-pointer"
+    >
       <img
         class="w-full h-full object-cover object-center rounded-full"
         :src="comment.user?.profile_image || '/assets/images/exProfile.png'"
@@ -83,7 +92,7 @@ export default {
     </div>
     <!-- 좋아요 -->
     <div
-      class="w-8 h-12 flex flex-col items-center justify-center font-medium text-white"
+      class="w-6 flex flex-col items-center justify-center font-medium text-white object-contain"
     >
       <img
         :class="['like-icon', { 'animate-like': isAnimating }]"
@@ -98,7 +107,7 @@ export default {
         v-if="comment.like_count > 0"
         :class="['text-sm', { 'text-point-500': comment.liked }]"
       >
-        {{ comment.like_count }}
+        {{ comment.like_count.toString().padStart(2, "0") }}
       </p>
     </div>
   </div>
@@ -109,7 +118,7 @@ export default {
   width: 26px;
   height: 26px;
   object-fit: contain;
-  transition: transform 0.07s ease-in-out;
+  transition: transform 0.05s ease-in-out;
 }
 
 .animate-like {

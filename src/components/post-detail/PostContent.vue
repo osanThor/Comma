@@ -1,13 +1,13 @@
 <script>
-import { Swiper, SwiperSlide} from 'swiper/vue';
-import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-import { useRouter } from 'vue-router';
-import { usePostStore } from '../../stores/post';
-import { onMounted, ref } from 'vue';
+import { useRouter } from "vue-router";
+import { usePostStore } from "../../stores/post";
+import { onMounted, ref } from "vue";
 
 export default {
   name: "PostContent",
@@ -20,67 +20,88 @@ export default {
       type: String,
       required: true,
     },
-},
-setup(props){
-  const postStore = usePostStore();
-  const router = useRouter();
-  const post = ref(null);
+    navigateToProfile: {
+      type: Function,
+      required: true,
+    },
+  },
+  setup(props) {
+    const postStore = usePostStore();
+    const router = useRouter();
+    const post = ref(null);
 
-  const fetchPost = async () => {
-    await postStore.fetchPostById(props.postId);
-    post.value = {
-      title: postStore.title,
+    const fetchPost = async () => {
+      await postStore.fetchPostById(props.postId);
+      post.value = {
+        title: postStore.title,
         content: postStore.content,
+        user: postStore.user,
         images: postStore.images,
-        author: postStore.author,
         createdAt: postStore.createdAt,
         updatedAt: postStore.updatedAt,
         category: postStore.category,
         likeCount: postStore.likeCount,
         commentCount: postStore.commentCount,
+        hasLiked: postStore.hasLiked,
+      };
     };
-  };
 
-  onMounted(fetchPost);
+    onMounted(fetchPost);
 
-  const editPost = () => {
-    router.push(`/post/edit/${props.postId}`);
-  };
+    const editPost = () => {
+      router.push(`/post/edit/${props.postId}`);
+    };
 
-  const deletePost = async () => {
-    try{
-      await postStore.deletePost(props.postId);
-      router.push('/');
-    } catch (error){
-      console.error('게시글 삭제 실패', error);
-    }
-  };
+    const deletePost = async () => {
+      try {
+        await postStore.deletePost(props.postId);
+        router.push("/");
+      } catch (error) {
+        console.error("게시글 삭제 실패", error);
+      }
+    };
 
-  const formatDate = (dateString) => {
+    const handleToggleLike = async () => {
+      console.log("toggleLike 호출됨");
+      try {
+        await postStore.toggleLike(props.postId);
+        post.value.likeCount = postStore.likeCount;
+        post.value.hasLiked = postStore.hasLiked;
+      } catch (error) {
+        console.error("게시글 좋아요 처리 실패:", error);
+      }
+    };
+
+    const formatDate = (dateString) => {
       if (!dateString) return "Invalid date";
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return "Invalid date";
-      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-      const formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(date);
-      const [year, month, day] = formattedDate.split('.').map(part => part.trim());
+      const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+      const formattedDate = new Intl.DateTimeFormat("ko-KR", options).format(
+        date
+      );
+      const [year, month, day] = formattedDate
+        .split(".")
+        .map((part) => part.trim());
       return `${year}년 ${month}월 ${day}일`;
     };
 
-  const swiperOptions = {
-    modules: [Navigation, Pagination],
-    slidesPerView: 1,
-    navigation: true,
-    pagination: { clickable: true },
-  };
+    const swiperOptions = {
+      modules: [Navigation, Pagination],
+      slidesPerView: 1,
+      navigation: true,
+      pagination: { clickable: true },
+    };
 
-  return {
-    post,
-    editPost,
-    deletePost,
-    formatDate,
-    swiperOptions,
-  };
-},
+    return {
+      post,
+      editPost,
+      deletePost,
+      formatDate,
+      swiperOptions,
+      handleToggleLike,
+    };
+  },
 };
 </script>
 
@@ -92,7 +113,7 @@ setup(props){
         class="bg-white w-[440px] h-[440px] rounded-xl flex items-center justify-center p-1"
       >
         <div class="w-[420px] h-[420px]">
-          <Swiper v-bind="swiperOptions" >
+          <Swiper v-bind="swiperOptions">
             <SwiperSlide v-for="(image, index) in post?.images" :key="index">
               <img
                 class="w-[420px] h-[420px] object-cover object-center rounded-xl"
@@ -119,17 +140,21 @@ setup(props){
           <!-- 제목 및 날짜 -->
           <div>
             <p class="font-medium text-white/70 mb-1">
-              {{ formatDate(post?.createdAt) }}</p>
-            <h1 class="font-dnf text-4xl">{{post?.title}}</h1>
+              {{ formatDate(post?.createdAt) }}
+            </p>
+            <h1 class="font-dnf text-4xl">{{ post?.title }}</h1>
           </div>
 
           <!-- 수정/삭제 버튼 -->
           <div class="flex flex-row gap-6 text-lg font-semibold text-white/50">
             <button @click="editPost" class="hover:text-white/100">수정</button>
-            <button @click="deletePost" class="hover:text-white/100">삭제</button>
+            <button @click="deletePost" class="hover:text-white/100">
+              삭제
+            </button>
           </div>
         </header>
         <hr class="border-2 opacity-30 w-full my-5 rounded-sm" />
+
         <!-- 게시글 내용 -->
         <section>
           <!-- 점수 및 플레이 타임 -->
@@ -140,42 +165,76 @@ setup(props){
             <p>SCORE | 999점</p>
           </div>
           <!-- 본문 -->
-          <p class="font-medium opacity-85">{{post?.content}}</p>
+          <p class="font-medium opacity-85">{{ post?.content }}</p>
         </section>
       </section>
-      <!-- 작성자 -->
-      <p class="text-lg font-medium opacity-70">작성자 : {{ post?.author }}</p>
+
+      <!-- 하단 -->
+      <section class="w-full flex flex-row items-center justify-between">
+        <!-- 작성자 -->
+        <div
+          @click="navigateToProfile(post?.user?.id)"
+          class="flex flex-row items-center gap-2 cursor-pointer bg-main-500/30 pl-4 pr-5 py-2 rounded-full"
+        >
+          <div class="w-6 h-6 rounded-full">
+            <img
+              class="w-full h-full object-cover object-center rounded-full"
+              :src="post?.user?.profile_image || '/assets/images/exProfile.png'"
+            />
+          </div>
+          <p class="text-lg font-medium opacity-9 pb-[2px]">
+            {{ post?.user?.name || "알 수 없음" }}
+          </p>
+        </div>
+
+        <!-- 게시글 좋아요 -->
+        <div
+          @click="handleToggleLike"
+          class="flex flex-row items-center gap-2 cursor-pointer hover:bg-point-500/60 bg-point-500/30 px-4 py-3 rounded-full"
+        >
+          <img
+            class="w-5 h-5 object-contain"
+            :src="
+              post?.hasLiked
+                ? '/assets/images/icons/post-like-icon.png'
+                : '/assets/images/icons/post-nolike-icon.png'
+            "
+          />
+          <p v-if="post?.likeCount > 0" class="text-sm">
+            {{ post?.likeCount }}
+          </p>
+        </div>
+      </section>
     </article>
   </main>
 </template>
 
 <style scoped>
-::v-deep .swiper-pagination-bullet {
-  background-color: #CE0A9C;
+:deep(.swiper-pagination-bullet) {
+  background-color: #ce0a9c;
 }
-::v-deep .swiper-pagination-bullet-active {
-  background-color: #CE0A9C;
+:deep(.swiper-pagination-bullet-active) {
+  background-color: #ce0a9c;
 }
-::v-deep .swiper-button-next:after,
-::v-deep .swiper-button-prev:after {
-  color: #CE0A9C;
+:deep(.swiper-button-next:after),
+:deep(.swiper-button-prev:after) {
+  color: #ce0a9c;
   display: block;
   opacity: 0.5;
   cursor: pointer;
 }
 
-::v-deep .swiper-button-next:hover::after,
-::v-deep .swiper-button-prev:hover::after {
+:deep(.swiper-button-next:hover::after),
+:deep(.swiper-button-prev:hover::after) {
   opacity: 0.7;
 }
-::v-deep .swiper-button-next:active::after,
-::v-deep .swiper-button-prev:active::after {
+:deep(.swiper-button-next:active::after),
+:deep(.swiper-button-prev:active::after) {
   opacity: 1;
 }
-::v-deep .swiper-button-next.swiper-button-disabled::after,
-::v-deep .swiper-button-prev.swiper-button-disabled::after {
-  color: #77748C;
+:deep(.swiper-button-next.swiper-button-disabled::after),
+:deep(.swiper-button-prev.swiper-button-disabled::after) {
+  color: #77748c;
   opacity: 0.5;
-  
 }
 </style>

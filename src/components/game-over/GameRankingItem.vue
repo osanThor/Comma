@@ -2,21 +2,30 @@
 defineProps({
   name: String,
   score: Number,
-  time: String,
+  time: Number,
   rank: Number,
   isHighlighted: {
     type: Boolean,
     default: false,
   },
 });
+
+function formatPlayTime(milliseconds) {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000);
+  const millis = milliseconds % 1000;
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
+}
 </script>
 <template>
   <div
     :class="[
-      'relative flex items-center px-6 rounded-[10px]',
+      'relative flex items-center rounded-[10px]',
       isHighlighted
-        ? 'bg-point-500 w-[362px] h-[62px]'
-        : 'bg-main-400 w-[326px] h-[56px]',
+        ? 'bg-point-500 w-[362px] h-[62px] px-[26px]'
+        : 'bg-main-400 w-[326px] h-14 px-6',
     ]"
   >
     <div
@@ -25,11 +34,16 @@ defineProps({
     ></div>
     <div
       :class="[
-        'flex-shrink-0',
-        isHighlighted ? 'w-[38px] h-[38px]' : 'w-[32px] h-[32px]',
+        'flex-shrink-0 flex justify-center items-center',
+        isHighlighted ? 'w-[38px] h-[38px]' : 'w-8 h-8',
       ]"
     >
-      <img :src="`/assets/images/medal${rank}.png`" alt="Medal Image" />
+      <template v-if="rank <= 3">
+        <img :src="`/assets/images/medal${rank}.png`" alt="Medal Image" />
+      </template>
+      <template v-else>
+        <span class="font-dnf text-white text-xl">{{ rank }}</span>
+      </template>
     </div>
     <div
       :class="[
@@ -37,10 +51,13 @@ defineProps({
         isHighlighted ? 'ml-12' : 'ml-10',
       ]"
     >
-      <span class="font-dnf text-white text-sm">{{ name }}</span>
+      <span class="font-dnf text-white text-sm">{{
+        name.length > 4 ? name.substring(0, 4) + ".." : name
+      }}</span>
       <span class="font-pretendard text-white text-xs">{{ score }}점</span>
-      <span class="font-pretendard text-white text-xs">{{ time }}</span>
+      <span class="font-pretendard text-white text-xs">{{
+        formatPlayTime(time)
+      }}</span>
     </div>
   </div>
 </template>
-<style scoped></style>

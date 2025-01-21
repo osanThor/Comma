@@ -1,7 +1,21 @@
-<script>
-export default {
-  name: "GameBanner",
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+const gameNameMap = {
+  mineSweeper: "지뢰 찾기",
+  tetris: "테트리스",
+  bounceBall: "바운스 볼",
+  flappyBird: "플래피 버드",
+  shooting: "슈팅게임",
 };
+
+const route = useRoute();
+const localizedGameName = computed(() => {
+  return gameNameMap[route.params.gameName] || route.params.gameName;
+});
+
+const playPath = computed(() => `/game/${route.params.gameName}/play`);
 </script>
 
 <template>
@@ -9,9 +23,11 @@ export default {
     class="w-[1075px] h-[404px] rounded-2xl mt-[160px] bg-main-500 flex flex-col relative"
   >
     <div class="absolute right-[56px] top-[126px]">
-      <h1 class="text-6xl font-bold font-dnf text-white mb-10">Flappy Bird</h1>
+      <h1 class="text-6xl font-bold font-dnf text-white mb-10 w-[389px]">
+        {{ localizedGameName }}
+      </h1>
       <RouterLink
-        to="/game/play"
+        :to="playPath"
         class="group rounded-[60px] w-[229px] h-[65px] bg-point-500 hover:bg-white flex items-center justify-center gap-[12px] mt-[27px] transition-transform hover:scale-105"
       >
         <svg

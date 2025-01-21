@@ -1,50 +1,44 @@
-<script>
+<script setup>
+import { computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useGameStore } from "@/stores/test-game";
 import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import PlayIcon from "@/components/common/icons/PlayIcon.vue";
 
-export default {
-  name: "GameList",
-  components: {
-    CommentIcon,
-    PlayIcon,
-  },
-  data() {
-    return {
-      games: [
-        {
-          id: 1,
-          name: "테트리스",
-          route: "tetris",
-          bestScore: 999,
-        },
-        {
-          id: 2,
-          name: "슈팅게임",
-          route: "shooting",
-          bestScore: 800,
-        },
-        {
-          id: 3,
-          name: "지뢰찾기",
-          route: "minesweeper",
-          bestScore: 750,
-        },
-        {
-          id: 4,
-          name: "바운스볼",
-          route: "bounce-ball",
-          bestScore: 600,
-        },
-      ],
-    };
-  },
+const gameNameMap = {
+  mineSweeper: "지뢰 찾기",
+  tetris: "테트리스",
+  bounceBall: "바운스 볼",
+  flappyBird: "플래피 버드",
+  shooting: "슈팅게임",
 };
+
+const route = useRoute();
+const gameStore = useGameStore();
+
+onMounted(async () => {
+  await gameStore.getGamesData();
+  await gameStore.getGameTopRankers();
+});
+
+const games = computed(() => {
+  return gameStore.games.map((game) => ({
+    id: game.id,
+    name: gameNameMap[game.name] || game.name,
+    route: game.name,
+    bestScore: gameStore.gameTopRankers[game.name]?.score || 0,
+  }));
+});
+
+const filteredGames = computed(() => {
+  return games.value.filter((game) => game.route !== route.params.gameName);
+});
 </script>
 
 <template>
   <div class="mt-[31px] w-[1075px] flex justify-between">
     <RouterLink
-      v-for="game in games"
+      v-for="game in filteredGames"
       :key="game.id"
       :to="`/game/${game.route}`"
       class="w-[244.8px] h-[129px] flex flex-col px-[30px] pt-[23.4px] pb-[17.1px] pl-[27px] pr-[19.8px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"

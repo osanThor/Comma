@@ -30,8 +30,10 @@ const animationMarquee = (selector, speed) => {
 watch(games, async () => {
   if (games.value.length) {
     await gameStore.getGameTopRankers();
-    animationMarquee("#marquee", 0.5);
   }
+});
+onMounted(() => {
+  animationMarquee("#marquee", 0.5);
 });
 </script>
 <template>

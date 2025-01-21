@@ -1,5 +1,9 @@
 <script setup>
 defineProps({
+  type: {
+    type: String,
+    default: "button",
+  },
   text: {
     type: String,
   },
@@ -11,10 +15,12 @@ defineProps({
 </script>
 <template>
   <button
-    class="font-dnf text-2xl text-white w-[174px] h-[64px] rounded-xl"
-    :class="[bgColor]"
+    :type="type"
+    :class="[
+      'font-dnf text-2xl text-white w-[174px] h-[64px] rounded-xl',
+      bgColor,
+    ]"
   >
     {{ text }}
   </button>
 </template>
-<style scoped></style>

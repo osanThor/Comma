@@ -61,7 +61,7 @@ export default {
       }
     };
 
-    const toggleLike = async () => {
+    const handleToggleLike = async () => {
       console.log("toggleLike 호출됨");
       try {
         await postStore.toggleLike(props.postId);
@@ -99,6 +99,7 @@ export default {
       deletePost,
       formatDate,
       swiperOptions,
+      handleToggleLike,
     };
   },
 };
@@ -188,7 +189,7 @@ export default {
 
         <!-- 게시글 좋아요 -->
         <div
-          @click="toggleLike"
+          @click="handleToggleLike"
           class="flex flex-row items-center gap-2 cursor-pointer hover:bg-point-500/60 bg-point-500/30 px-4 py-3 rounded-full"
         >
           <img
@@ -201,7 +202,6 @@ export default {
           />
           <p class="text-sm">{{ post?.likeCount }}</p>
         </div>
-        
       </section>
     </article>
   </main>

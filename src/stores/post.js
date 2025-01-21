@@ -69,7 +69,7 @@ export const usePostStore = defineStore("post", {
       this.commentCount = newCommentCount;
     },
 
-    setIsLiked(newHasLiked) {
+    setHasLiked(newHasLiked) {
       this.hasLiked = newHasLiked;
     },
 
@@ -139,7 +139,9 @@ export const usePostStore = defineStore("post", {
     //게시글 내용 불러오기
     async fetchPostById(postId) {
       try {
+        console.log("1", postId);
         const post = await getPost(postId);
+        console.log("2", post);
         this.id = post.id;
         this.setTitle(post.title);
         this.setContent(post.content);

@@ -5,10 +5,12 @@ import { useRouter } from "vue-router";
 import LogoutIcon from "./icons/LogoutIcon.vue";
 import { useGameStore } from "@/stores/test-game";
 import { useToastStore } from "@/stores/toast";
+import { useModalStore } from "@/stores/modal";
 
 const gameStore = useGameStore();
 const { games } = storeToRefs(gameStore);
 const { addToast } = useToastStore();
+const { openModal } = useModalStore();
 
 const router = useRouter();
 
@@ -39,6 +41,13 @@ function mouseDownItem(handler) {
 const handleLogout = async () => {
   await logout();
   addToast("정상적으로 로그아웃 되었습니다.");
+};
+const handleClickLogout = () => {
+  openModal(
+    "“아쉬워요...” \n 그래도 로그아웃 하시겠어요?",
+    "로그아웃",
+    handleLogout
+  );
 };
 </script>
 <template>
@@ -75,7 +84,7 @@ const handleLogout = async () => {
         class="text-main-300 hover:text-main-500 flex items-center text-sm gap-[2px]"
         aria-label="logout button"
         type="button"
-        @mousedown.prevent="mouseDownItem('logout')"
+        @mousedown.prevent="handleClickLogout"
       >
         <LogoutIcon />
         로그아웃

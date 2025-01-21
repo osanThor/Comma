@@ -1,5 +1,6 @@
 <script>
 import { useCommentStore } from "../../stores/comment";
+import { ref } from "vue";
 
 export default {
   name: "PostCommentCardItem",
@@ -9,11 +10,32 @@ export default {
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const commentStore = useCommentStore();
+    const isAnimating = ref(false);
 
-    const likeComment = async (commentId) => {
-      await commentStore.likeComment(commentId);
+    const toggleLike = async (commentId) => {
+      if (isAnimating.value) return;
+      isAnimating.value = true;
+
+      const updatedComment = { ...props.comment };
+
+      if (updatedComment.liked) {
+        updatedComment.like_count -= 1;
+        updatedComment.liked = false;
+        await commentStore.unlikeComment(commentId);
+      } else {
+        updatedComment.like_count += 1;
+        updatedComment.liked = true;
+        await commentStore.likeComment(commentId);
+      }
+
+      props.comment.like_count = updatedComment.like_count;
+      props.comment.liked = updatedComment.liked;
+
+      setTimeout(() => {
+        isAnimating.value = false;
+      }, 70);
     };
 
     const formatDate = (dateString) => {
@@ -23,8 +45,9 @@ export default {
     };
 
     return {
-      likeComment,
+      toggleLike,
       formatDate,
+      isAnimating,
     };
   },
 };
@@ -38,7 +61,7 @@ export default {
     <div class="w-16 h-16 rounded-full">
       <img
         class="w-full h-full object-cover object-center rounded-full"
-        :src="comment.user.profile_image || '/assets/images/exProfile.png'"
+        :src="comment.user?.profile_image || '/assets/images/exProfile.png'"
       />
     </div>
 
@@ -46,7 +69,9 @@ export default {
     <div>
       <!-- 닉네임 및 작성일시 -->
       <div class="flex flex-row items-center text-white gap-2">
-        <p class="font-bold text-xl leading-0">{{ comment.user.name }}</p>
+        <p class="font-bold text-xl leading-0">
+          {{ comment.user?.name || "알수없음" }}
+        </p>
         <p class="font-medium text-xs text-white/50 leading-0 pt-1">
           {{ formatDate(comment.created_at) }}
         </p>
@@ -57,18 +82,37 @@ export default {
       </p>
     </div>
     <!-- 좋아요 -->
-    <div class="flex flex-col items-center font-medium text-white">
+    <div
+      class="w-8 h-12 flex flex-col items-center justify-center font-medium text-white"
+    >
       <img
-        @click="likeComment(comment.id)"
+        :class="['like-icon', { 'animate-like': isAnimating }]"
+        @click="toggleLike(comment.id)"
         :src="
           comment.liked
             ? '/assets/images/icons/post-like-icon.png'
             : '/assets/images/icons/post-nolike-icon.png'
         "
       />
-      <p>{{ comment.like_count || 0 }}</p>
+      <p
+        v-if="comment.like_count > 0"
+        :class="['text-sm', { 'text-point-500': comment.liked }]"
+      >
+        {{ comment.like_count }}
+      </p>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.like-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  transition: transform 0.07s ease-in-out;
+}
+
+.animate-like {
+  transform: scale(1.3);
+}
+</style>

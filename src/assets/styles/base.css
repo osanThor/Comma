@@ -1,0 +1,5 @@
+@layer base {
+  img {
+    @apply inline-block;
+  }
+}

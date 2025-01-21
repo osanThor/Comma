@@ -47,15 +47,19 @@ export default {
       v-for="game in games"
       :key="game.id"
       :to="`/game/${game.route}`"
-      class="w-[244.8px] flex flex-col px-[30px] pt-[26px] pb-[19px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"
+      class="w-[244.8px] h-[129px] flex flex-col px-[30px] pt-[23.4px] pb-[17.1px] pl-[27px] pr-[19.8px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"
     >
-      <div class="font-dnf text-2xl mb-1 truncate">{{ game.name }}</div>
-      <div class="font-semibold text-sm">
+      <div class="font-dnf text-[21.6px] mb-[4.1px] truncate">
+        {{ game.name }}
+      </div>
+      <div class="font-semibold text-[12.6px]">
         BEST SCORE : {{ game.bestScore }}점
       </div>
       <div class="flex items-end justify-between">
-        <div class="text-xs flex items-center gap-1"><CommentIcon />999+</div>
-        <PlayIcon />
+        <div class="text-[10.8px] flex items-center gap-1">
+          <CommentIcon />999+
+        </div>
+        <PlayIcon class="w-[38.7px] h-[38.7px]" />
       </div>
     </RouterLink>
   </div>

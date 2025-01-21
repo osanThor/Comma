@@ -12,8 +12,8 @@ const postId = route.params.postId;
   >
     <section class="overflow-x-auto">
       <PostContent :postId="postId" />
-      <PostCommentInput />
-      <PostComment />
+      <PostCommentInput :postId="postId" />
+      <PostComment :postId="postId" />
     </section>
   </main>
 </template>

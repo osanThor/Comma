@@ -2,6 +2,12 @@
 import PostCommentCardItem from "../post-detail/PostCommentCardItem.vue";
 export default {
   name: "PostCommentCard",
+  props: {
+    comment: {
+      type: Object,
+      required: true,
+    },
+  },
   components:{
     PostCommentCardItem,
   }
@@ -9,14 +15,9 @@ export default {
 </script>
 
 <template>
-  <div>
-    <PostCommentCardItem />
-    <PostCommentCardItem />
-    <PostCommentCardItem />
-    <PostCommentCardItem />
-    <PostCommentCardItem />
-    <PostCommentCardItem />
-    <PostCommentCardItem />
+  <div class="comment-card">
+    <PostCommentCardItem 
+    :comment="comment" />
   </div>
 </template>
 

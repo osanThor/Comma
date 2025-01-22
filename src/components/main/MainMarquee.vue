@@ -35,7 +35,6 @@ watch(games, async () => {
   }
 });
 onMounted(() => {
-  console.log(rankItems.value);
   animationMarquee("#marquee", 0.5);
 });
 </script>

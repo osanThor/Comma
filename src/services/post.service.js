@@ -19,12 +19,14 @@ export const getPostsByCategory = async (
   category = "free",
   sort = "dec",
   page = 1,
-  limit = 10
+  limit = 10,
+  query = ""
 ) => {
   const { count, error: countError } = await supabase
     .from("posts_with_counts")
     .select("id", { count: "exact" })
-    .eq("category", category);
+    .eq("category", category)
+    .ilike("title", `%${query}%`);
 
   if (countError) throw countError;
 
@@ -37,6 +39,7 @@ export const getPostsByCategory = async (
     .from("posts_with_counts")
     .select("*,user:user_id(id, name, email, profile_image)")
     .eq("category", category)
+    .ilike("title", `%${query}%`)
     .order(sortBy, { ascending: sortType === "asc" })
     .range(start, end);
 

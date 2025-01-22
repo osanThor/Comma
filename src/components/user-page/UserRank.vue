@@ -9,7 +9,7 @@ import RankComponent from "./RankComponent.vue";
   <div class="space-y-3 mt-[74px]">
     <RankComponent name="플래피 버드" rank="1" playTime="360000" />
     <RankComponent name="슈팅게임" rank="5" playTime="3600000" />
-    s <RankComponent name="바운스 볼" rank="17" playTime="180000" />
+    <RankComponent name="바운스 볼" rank="17" playTime="180000" />
     <RankComponent name="테트리스" rank="9" playTime="452684531" />
     <RankComponent name="지뢰찾기" rank="245" playTime="3321875" />
     <!-- <RankComponent /> -->

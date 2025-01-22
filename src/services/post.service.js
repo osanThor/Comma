@@ -48,9 +48,10 @@ export const getPostsByCategory = async (
   return { data: data || [], totalCount: count };
 };
 
-export const getCommaPostsByUserId = async (
+export const getPostsByUserId = async (
   userId,
   sort = "dec",
+  isComma = false,
   page = 1,
   limit = 10
 ) => {
@@ -58,7 +59,7 @@ export const getCommaPostsByUserId = async (
     .from("posts_with_counts")
     .select("id", { count: "exact" })
     .eq("user_id", userId)
-    .eq("category", "free");
+    .filter("category", isComma ? "eq" : "neq", "free");
 
   if (countError) throw countError;
 
@@ -71,38 +72,7 @@ export const getCommaPostsByUserId = async (
     .from("posts_with_counts")
     .select("*,user:user_id(id, name, email, profile_image)")
     .eq("user_id", userId)
-    .eq("category", "free")
-    .order(sortBy, { ascending: sortType === "asc" })
-    .range(start, end);
-
-  if (error) throw error;
-
-  return { data: data || [], totalCount: count };
-};
-export const getGamePostsByUserId = async (
-  userId,
-  sort = "dec",
-  page = 1,
-  limit = 10
-) => {
-  const { count, error: countError } = await supabase
-    .from("posts_with_counts")
-    .select("id", { count: "exact" })
-    .eq("user_id", userId)
-    .neq("category", "free");
-
-  if (countError) throw countError;
-
-  const start = (page - 1) * limit;
-  const end = start + limit - 1;
-
-  const [sortBy, sortType] = formetSort(sort);
-
-  const { data, error } = await supabase
-    .from("posts_with_counts")
-    .select("*,user:user_id(id, name, email, profile_image)")
-    .eq("user_id", userId)
-    .neq("category", "free")
+    .filter("category", isComma ? "eq" : "neq", "free")
     .order(sortBy, { ascending: sortType === "asc" })
     .range(start, end);
 

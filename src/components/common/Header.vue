@@ -6,6 +6,7 @@ import Avatar from "./Avatar.vue";
 import SideMenu from "@/components/common/SideMenu.vue";
 import Notification from "./Notification.vue";
 import { useGameStore } from "@/stores/test-game";
+import { getPostsByUserId } from "@/services/post.service";
 
 const authStore = useAuthStore();
 const gameStore = useGameStore();
@@ -44,6 +45,13 @@ onMounted(() => {
 onUnmounted(() => {
   if (observer) {
     observer.disconnect();
+  }
+});
+
+watch(user, async () => {
+  if (user.value) {
+    const data = await getPostsByUserId(user.value.id);
+    console.log(data);
   }
 });
 </script>

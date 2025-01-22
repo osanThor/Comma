@@ -81,11 +81,18 @@ export const getPostsByUserId = async (
   return { data: data || [], totalCount: count };
 };
 
-export const getLikedPosts = async (userId) => {
+export const getLikedPosts = async (
+  userId,
+  sort = "dec",
+  isComma = false,
+  page = 1,
+  limit = 10
+) => {
   const { data: likedPost, error: likedPostError } = await supabase
     .from("likes")
     .select("post_id")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .filter("category", isComma ? "eq" : "neq", "free");
 
   if (likedPostError) throw likedPostError;
 
@@ -93,10 +100,16 @@ export const getLikedPosts = async (userId) => {
 
   if (postIds.length === 0) return { data: [], totalCount: 0 };
 
+  const start = (page - 1) * limit;
+  const end = start + limit - 1;
+
+  const [sortBy, sortType] = formetSort(sort);
+
   const { data, error } = await supabase
     .from("posts_with_counts")
     .select("*,user:user_id(id, name, email, profile_image)")
     .in("id", postIds)
+    .filter("category", isComma ? "eq" : "neq", "free")
     .order(sortBy, { ascending: sortType === "asc" })
     .range(start, end);
 

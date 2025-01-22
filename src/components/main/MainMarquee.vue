@@ -4,12 +4,14 @@ import { useGameStore } from "@/stores/test-game";
 const gameStore = useGameStore();
 const { games, gameTopRankers } = storeToRefs(gameStore);
 const rankItems = computed(() => {
-  return Object.values(gameTopRankers.value).map((item) => {
-    return {
-      user: item?.user ?? "Unknown User",
-      game: item?.game ?? { display_name: "Unknown Game" },
-    };
-  });
+  return Object.values(gameTopRankers.value)
+    .filter((ranker) => ranker !== null)
+    .map((item) => {
+      return {
+        user: item?.user ?? "Unknown User",
+        game: item?.game ?? { display_name: "Unknown Game" },
+      };
+    });
 });
 
 const animationMarquee = (selector, speed) => {

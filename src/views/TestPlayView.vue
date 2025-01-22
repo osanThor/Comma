@@ -9,7 +9,7 @@ const isGameOver = ref(false);
     class="w-full flex justify-center items-center h-screen pt-[16.666vh] pb-[11.111vh]"
   >
     <section
-      class="w-[1500px] h-[780px] bg-black flex items-center justify-center rounded-3xl capture"
+      class="w-[1500px] h-[780px] bg-black flex items-center justify-center rounded-3xl overflow-hidden capture"
     >
       <RouterView />
       <div

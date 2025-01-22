@@ -67,9 +67,50 @@ const router = createRouter({
           component: () => import("../views/GameView.vue"),
         },
         {
-          path: ":gameName/play",
+          path: "play/:gameName",
           name: "gamePlay",
           component: () => import("../views/GamePlayView.vue"),
+        },
+      ],
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      path: "/test",
+      name: "test",
+      children: [
+        {
+          path: "play",
+          name: "testPlay",
+          component: () => import("../views/TestPlayView.vue"),
+          children: [
+            {
+              path: "mineSweeper",
+              name: "mineSweeper",
+              component: () => import("../components/game/MineSweeper.vue"),
+            },
+            {
+              path: "shooting",
+              name: "shooting",
+              component: () => import("../components/game/Shooting.vue"),
+            },
+            {
+              path: "bounceBall",
+              name: "bounceBall",
+              component: () => import("../components/game/BounceBall.vue"),
+            },
+            {
+              path: "tetris",
+              name: "tetris",
+              component: () => import("../components/game/Tetris.vue"),
+            },
+            {
+              path: "flappyBird",
+              name: "flappyBird",
+              component: () => import("../components/game/FlappyBird.vue"),
+            },
+          ],
         },
       ],
       meta: {

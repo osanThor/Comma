@@ -17,12 +17,14 @@ function changePageSelected(page) {
 <template>
   <!-- Main Content -->
   <section
-    class="w-[calc(100%-40px)] max-w-[1640px] h-[calc(100vh-240px)] mt-[120px] flex flex-col contents-box py-[90px] mb-10"
+    class="w-full max-w-[1640px] h-screen mt-[120px] flex flex-col contents-box py-[90px] mb-10 px-4"
   >
     <!-- 전체 컨테이너를 flex로 만들고 좌우 정렬 -->
-    <div class="flex w-full pl-[80px]">
+    <div class="flex w-full h-full">
       <!-- Sidebar - 왼쪽 고정 -->
-      <div class="w-[210px] h-[calc(100vh-420px)] border-white border-r-2">
+      <div
+        class="w-[210px] h-full border-white border-r-2 flex-shrink-0 mr-[135px]"
+      >
         <h2
           v-on:click="changePageSelected('post')"
           :class="{
@@ -62,31 +64,53 @@ function changePageSelected(page) {
             'text-point-500 font-bold': pageSelected === 'comment',
             'text-white': pageSelected !== 'comment',
           }"
-          class="block hover:text-point-500 cursor-pointer mb-[33px] text-2xl font-bold lh-[110%]"
+          class="block hover:text-point-500 cursor-pointer mb-[33px] text-2xl font-bold"
         >
           작성한 댓글
         </h2>
       </div>
 
       <!-- Main Content Area - 오른쪽, 남은 공간 채움 -->
-      <div class="flex-1 ml-32">
-        <div class="">
+      <div class="flex-1 ml-8">
+        <div>
           <!-- Conditionally Render Components -->
-          <div class="">
-            <UserPost v-if="pageSelected === 'post'" />
-            <UserLike v-if="pageSelected === 'like'" />
-            <UserRank v-if="pageSelected === 'rank'" />
-            <UserComment v-if="pageSelected === 'comment'" />
-          </div>
+          <UserPost v-if="pageSelected === 'post'" />
+          <UserLike v-if="pageSelected === 'like'" />
+          <UserRank v-if="pageSelected === 'rank'" />
+          <UserComment v-if="pageSelected === 'comment'" />
         </div>
       </div>
     </div>
     <img
       src="/assets/images/singleGhost.png"
       alt="ghost"
-      class="absolute bottom-[-27px] -left-[40px] w-[129px] h-[118px] z-10 overflow-visible"
+      class="absolute bottom-[-27px] -left-8 w-[129px] h-[118px] z-10 overflow-visible"
     />
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 640px) {
+  .contents-box {
+    padding: 60px;
+  }
+}
+
+@media (min-width: 768px) {
+  .contents-box {
+    padding: 80px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contents-box {
+    padding: 90px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .contents-box {
+    padding: 100px;
+  }
+}
+</style>

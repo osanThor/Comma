@@ -61,6 +61,7 @@ export default {
 
 <template>
   <div
+    v-if="comment && comment.user"
     class="flex flex-row items-center justify-between my-20 comment-card-item"
   >
     <!-- 작성자 프로필 이미지 -->

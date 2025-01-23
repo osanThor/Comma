@@ -184,7 +184,7 @@ onMounted(async () => {
           RANKING
         </h2>
         <div class="mt-[18px] space-y-[10px] flex flex-col items-center">
-          <template v-for="(rankData, index) in filteredRankings" :key="index">
+          <template v-for="rankData in filteredRankings" :key="rankData.id">
             <game-ranking-item
               v-if="!rankData.isLastPlace"
               :name="rankData.user.name"

@@ -7,11 +7,17 @@ import { storeToRefs } from "pinia";
 import { createPost } from "@/services/post.service";
 import { useRoute, useRouter } from "vue-router";
 
-const { imageBlobs, score, playTime } = defineProps([
-  "imageBlobs",
-  "score",
-  "playTime",
-]);
+const { imageBlobs, score, playTime } = defineProps({
+  imageBlobs: {
+    type: Array,
+  },
+  score: {
+    type: Number,
+  },
+  playTime: {
+    type: Number,
+  },
+});
 
 const emit = defineEmits(["removeImage", "uploadImage"]);
 

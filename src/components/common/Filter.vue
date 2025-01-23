@@ -51,6 +51,7 @@ const handleChangeSort = (value) => {
         v-for="option in otherSortOptions"
         @click="handleChangeSort(option.value)"
         :class="twMerge('transition-all overflow-hidden', open ? 'h-9' : 'h-0')"
+        :key="option.value"
       >
         <div
           class="flex items-center h-9 pl-10 pr-3 relative cursor-pointer font-semibold opacity-70 hover:opacity-100"

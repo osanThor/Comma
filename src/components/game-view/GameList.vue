@@ -1,7 +1,8 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useGameStore } from "@/stores/test-game";
+import { getPostsByCategory } from "@/services/post.service";
 import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import PlayIcon from "@/components/common/icons/PlayIcon.vue";
 
@@ -16,9 +17,36 @@ const gameNameMap = {
 const route = useRoute();
 const gameStore = useGameStore();
 
+const postCounts = ref({
+  bounceBall: 0,
+  mineSweeper: 0,
+  flappyBird: 0,
+  tetris: 0,
+  shooting: 0,
+});
+
+const getPostCount = async (category) => {
+  try {
+    const data = await getPostsByCategory(category, "desc", 1, 1);
+    if (data) {
+      postCounts.value[category] = data.totalCount;
+    }
+  } catch (err) {
+    console.error(`${category} 게시글 수 로딩 실패:`, err);
+  }
+};
+
 onMounted(async () => {
   await gameStore.getGamesData();
   await gameStore.getGameTopRankers();
+  // 각 게임별 게시글 수 로드
+  await Promise.all([
+    getPostCount("bounceBall"),
+    getPostCount("mineSweeper"),
+    getPostCount("flappyBird"),
+    getPostCount("tetris"),
+    getPostCount("shooting"),
+  ]);
 });
 
 const games = computed(() => {
@@ -51,7 +79,7 @@ const filteredGames = computed(() => {
       </div>
       <div class="flex items-end justify-between">
         <div class="text-[10.8px] flex items-center gap-1">
-          <CommentIcon />999+
+          <CommentIcon />{{ postCounts[game.route] }}
         </div>
         <PlayIcon class="w-[38.7px] h-[38.7px]" />
       </div>

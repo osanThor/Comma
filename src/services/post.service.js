@@ -124,10 +124,22 @@ export const createPost = async ({
   category,
   content,
   images,
+  score, // string | null
+  playTime, // string | null
 }) => {
   const { data, error } = await supabase
     .from("posts")
-    .insert([{ title, category, content, images, user_id: userId }])
+    .insert([
+      {
+        title,
+        category,
+        content,
+        images,
+        user_id: userId,
+        score,
+        play_time: playTime,
+      },
+    ])
     .select("id");
   if (error) throw error;
   if (data && data.length > 0)

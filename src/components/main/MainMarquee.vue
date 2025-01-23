@@ -1,15 +1,19 @@
 <script setup>
 import { useGameStore } from "@/stores/test-game";
 
+const section = ref(null);
+
 const gameStore = useGameStore();
 const { games, gameTopRankers } = storeToRefs(gameStore);
 const rankItems = computed(() => {
-  return Object.values(gameTopRankers.value).map((item) => {
-    return {
-      user: item?.user ?? "Unknown User",
-      game: item?.game ?? { display_name: "Unknown Game" },
-    };
-  });
+  return Object.values(gameTopRankers.value)
+    .filter((ranker) => ranker !== null)
+    .map((item) => {
+      return {
+        user: item?.user ?? "Unknown User",
+        game: item?.game ?? { display_name: "Unknown Game" },
+      };
+    });
 });
 
 const animationMarquee = (selector, speed) => {
@@ -34,13 +38,14 @@ watch(games, async () => {
     await gameStore.getGameTopRankers();
   }
 });
-onMounted(() => {
-  animationMarquee("#marquee", 0.5);
+watch(section, () => {
+  if (section.value) animationMarquee("#marquee", 0.5);
 });
 </script>
 <template>
   <div
     v-if="rankItems.length"
+    ref="section"
     id="marquee"
     class="w-full bg-main-500/50 h-[50px] flex items-center"
   >

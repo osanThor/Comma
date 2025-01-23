@@ -59,7 +59,7 @@ const formatedDate = (D) => {
         <div
           class="text-[10px] leading-3 flex items-center gap-1 text-point-500"
         >
-          <SmallLike />
+          <small-like></small-like>
           {{ item.like_count > 999 ? "999+" : item.like_count }}
         </div>
       </div>

@@ -161,7 +161,7 @@ const handleClickTarget = async (idx) => {
         </swiper>
       </div>
     </div>
-    <main-marquee />
+    <main-marquee></main-marquee>
   </section>
 </template>
 <style scoped>

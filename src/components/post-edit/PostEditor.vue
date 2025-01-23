@@ -77,19 +77,19 @@ export default {
 <template>
   <main class="flex flex-row items-start justify-center gap-12">
     <!-- 이미지 업로드 -->
-    <PostEditImg
+    <post-edit-img
       :images="postStore.images"
       @addImage="addImage"
       @removeImage="removeImage"
-    />
+    ></post-edit-img>
     <!-- 게시글 내용 작성 -->
     <section class="flex flex-col items-end gap-12">
-      <PostEditContent
+      <post-edit-content
         :title="postStore.title"
         :content="postStore.content"
         @setTitle="setTitle"
         @setContent="setContent"
-      />
+      ></post-edit-content>
       <button
         @click="handleSave"
         class="bg-white w-28 h-10 rounded-xl font-dnf text-main-500 disabled:opacity-50 hover:bg-point-500 ml-auto transition-all duration-60 transform hover:scale-110 hover:shadow-xl"

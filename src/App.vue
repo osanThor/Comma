@@ -12,8 +12,8 @@ const layout = computed(() => {
 
 <template>
   <component :is="layout">
-    <RouterView />
+    <router-view></router-view>
   </component>
-  <Toast />
-  <Modal />
+  <toast></toast>
+  <modal></modal>
 </template>

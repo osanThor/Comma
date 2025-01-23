@@ -14,13 +14,13 @@ const gameName = route.params.gameName;
   <div class="max-w-[1920px] h-[2458px] mx-auto px-[240px]">
     <div class="grid grid-cols-4 gap-10">
       <div class="col-span-3">
-        <GameBanner :game-name="gameName" />
-        <GameList :game-name="gameName" />
-        <GamePosts :game-name="gameName" />
+        <game-banner :game-name="gameName"></game-banner>
+        <game-list :game-name="gameName"></game-list>
+        <game-posts :game-name="gameName"></game-posts>
       </div>
       <div class="flex flex-col">
-        <GameDetail :game-name="gameName" />
-        <GameRank :game-name="gameName" />
+        <game-detail :game-name="gameName"></game-detail>
+        <game-rank :game-name="gameName"></game-rank>
       </div>
     </div>
   </div>

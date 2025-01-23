@@ -37,14 +37,15 @@ const handleChangeSort = (value) => {
       <div
         class="flex items-center h-9 pl-10 pr-3 relative cursor-pointer font-semibold"
       >
-        <FilterArrow
+        <filter-arrow
           :class="
             twMerge(
               'absolute top-[5px] left-3 transition-all',
               open && 'rotate-180'
             )
           "
-        />{{ currentSort }}
+        ></filter-arrow>
+        {{ currentSort }}
       </div>
       <div
         v-for="option in otherSortOptions"

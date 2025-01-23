@@ -5,9 +5,9 @@ import MainCommunitySection from "@/components/main/MainCommunitySection.vue";
 </script>
 
 <template>
-  <MainCardSection />
-  <MainGameCommunitySection />
-  <MainCommunitySection />
+  <main-card-section></main-card-section>
+  <main-game-community-section></main-game-community-section>
+  <main-community-section></main-community-section>
 </template>
 
 <style scoped></style>

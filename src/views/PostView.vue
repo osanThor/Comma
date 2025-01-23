@@ -12,16 +12,21 @@ const navigateToProfile = (userId) => {
     router.push(`/user/${userId}`);
   }
 };
-
 </script>
 <template>
   <main
     class="contents-box mx-auto my-auto flex items-center mt-32 py-28 px-40 sm:px-8 lg:px-40 mb-80"
   >
     <section class="">
-      <PostContent :postId="postId" :navigateToProfile="navigateToProfile" />
-      <PostCommentInput :postId="postId" />
-      <PostComment :postId="postId" :navigateToProfile="navigateToProfile" />
+      <post-content
+        :postId="postId"
+        :navigateToProfile="navigateToProfile"
+      ></post-content>
+      <post-comment-input :postId="postId"></post-comment-input>
+      <post-comment
+        :postId="postId"
+        :navigateToProfile="navigateToProfile"
+      ></post-comment>
     </section>
   </main>
 </template>

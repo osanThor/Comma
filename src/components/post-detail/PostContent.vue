@@ -62,13 +62,13 @@ export default {
       } catch (error) {
         console.error("게시글 삭제 실패", error);
       }
-    }
+    };
 
     const handleDelete = async () => {
       openModal(
         `"나 아직 갈 준비가 안 됐어요..."\n그래도 삭제하시겠어요?`,
         "삭제하기",
-        deletePost,
+        deletePost
       );
     };
 
@@ -123,20 +123,20 @@ export default {
         class="bg-white w-[440px] h-[440px] rounded-xl flex items-center justify-center p-1"
       >
         <div class="w-[420px] h-[420px]">
-          <Swiper v-bind="swiperOptions">
-            <SwiperSlide v-for="(image, index) in post?.images" :key="index">
+          <swiper v-bind="swiperOptions">
+            <swiper-slide v-for="(image, index) in post?.images" :key="index">
               <img
                 class="w-[420px] h-[420px] object-cover object-center rounded-xl"
                 :src="image"
               />
-            </SwiperSlide>
-            <SwiperSlide v-if="!post?.images?.length">
+            </swiper-slide>
+            <swiper-slide v-if="!post?.images?.length">
               <img
                 src="/assets/images/postDefaultImg.png"
                 class="w-[420px] h-[420px] object-cover object-center rounded-xl"
               />
-            </SwiperSlide>
-          </Swiper>
+            </swiper-slide>
+          </swiper>
         </div>
       </div>
     </section>

@@ -11,10 +11,10 @@ export default {
       type: String,
       required: true,
     },
-    navigateToProfile:{
+    navigateToProfile: {
       type: Function,
       required: true,
-    }
+    },
   },
   components: {
     PostCommentCardItem,
@@ -96,18 +96,18 @@ export default {
     </header>
     <main class="w-full">
       <!-- 댓글 목록 -->
-      <PostCommentCardItem
+      <post-comment-card-item
         v-for="comment in comments"
         :key="comment.id"
         :comment="comment"
         :navigateToProfile="navigateToProfile"
-      />
+      ></post-comment-card-item>
     </main>
-    <Pagination
+    <pagination
       :page="currentPage"
       :total="totalCount"
       @page-change="handleChangePage"
-    />
+    ></pagination>
   </section>
 </template>
 

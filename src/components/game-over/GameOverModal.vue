@@ -47,6 +47,7 @@ function getCurrentUserRanking(gameRankingData, userId) {
 }
 
 function filterRankingsForDisplay(rankings, latestRanking) {
+  console.log(rankings, latestRanking);
   if (!latestRanking) return [];
 
   const rankMinusOne = rankings.find(
@@ -184,7 +185,7 @@ onMounted(async () => {
         </h2>
         <div class="mt-[18px] space-y-[10px] flex flex-col items-center">
           <template v-for="(rankData, index) in filteredRankings" :key="index">
-            <GameRankingItem
+            <game-ranking-item
               v-if="!rankData.isLastPlace"
               :name="rankData.user.name"
               :score="rankData.score"
@@ -192,28 +193,31 @@ onMounted(async () => {
               :rank="rankData.rank"
               :key="rankData.rank"
               :isHighlighted="rankData.isHighlighted"
-            />
-            <GameRankingItemLastPlace v-else />
+            ></game-ranking-item>
+            <game-ranking-item-last-place v-else></game-ranking-item-last-place>
           </template>
         </div>
       </section>
     </main>
     <footer class="flex justify-between mx-[82px] mt-[56px]">
-      <AfterGameOverButton
+      <after-game-over-button
         text="REPLAY"
         bg-color="bg-[#0A58CE]"
         @click="replayGame"
-      />
-      <AfterGameOverButton text="SHARE" @click="openGameShareModal" />
+      ></after-game-over-button>
+      <after-game-over-button
+        text="SHARE"
+        @click="openGameShareModal"
+      ></after-game-over-button>
     </footer>
   </div>
   <div v-if="isGameShareModalOpen">
-    <GameShareModal
+    <game-share-modal
       :imageBlobs="imageBlobs"
       :playTime="playTime"
       :score="score"
       @uploadImage="handleUploadImage"
       @removeImage="handleRemoveImage"
-    />
+    ></game-share-modal>
   </div>
 </template>

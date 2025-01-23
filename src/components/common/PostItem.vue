@@ -52,13 +52,13 @@ const formatedDate = (D) => {
       </div>
       <div class="w-full flex justify-between items-center">
         <div class="text-xs flex items-center gap-1">
-          <Avatar :src="item.user.profile_image" size="xs" />
+          <avatar :src="item.user.profile_image" size="xs"></avatar>
           {{ item.user.name }}
         </div>
         <div
           class="text-[10px] leading-3 flex items-center gap-1 text-point-500"
         >
-          <SmallLike />
+          <small-like></small-like>
           {{ item.like_count > 999 ? "999+" : item.like_count }}
         </div>
       </div>

@@ -67,10 +67,10 @@ onUnmounted(() => {
       </h1>
       <div class="flex items-center gap-4">
         <RouterLink :to="`/user/${user?.id}`">
-          <Avatar v-show="user" :src="user?.profile_image" size="sm" />
+          <avatar v-show="user" :src="user?.profile_image" size="sm"></avatar>
         </RouterLink>
-        <Notification />
-        <SideMenu />
+        <notification></notification>
+        <side-menu></side-menu>
       </div>
     </div>
   </header>

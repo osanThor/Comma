@@ -78,8 +78,17 @@ onBeforeMount(async () => {
   await handleGetPosts(1);
 });
 
-// watch 수정 - page와 gameName만 감시
-watch([page, () => route.params.gameName], async () => {
+// route.params.gameName 변경을 독립적으로 감시
+watch(
+  () => route.params.gameName,
+  async (newGame) => {
+    page.value = 1;
+    await handleGetPosts(1);
+  }
+);
+
+// page만 따로 감시
+watch(page, async () => {
   await handleGetPosts(page.value);
 });
 

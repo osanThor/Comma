@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+const props = defineProps({
   name: String,
   score: Number,
   time: Number,
@@ -18,6 +18,10 @@ function formatPlayTime(milliseconds) {
     .toString()
     .padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
 }
+
+const formatedName = computed(() => {
+  return props.name.length > 4 ? props.name.substring(0, 4) + ".." : props.name;
+});
 </script>
 <template>
   <div
@@ -51,9 +55,7 @@ function formatPlayTime(milliseconds) {
         isHighlighted ? 'ml-12' : 'ml-10',
       ]"
     >
-      <span class="font-dnf text-white text-sm">{{
-        name.length > 4 ? name.substring(0, 4) + ".." : name
-      }}</span>
+      <span class="font-dnf text-white text-sm">{{ formatedName() }}</span>
       <span class="font-pretendard text-white text-xs">{{ score }}점</span>
       <span class="font-pretendard text-white text-xs">{{
         formatPlayTime(time)

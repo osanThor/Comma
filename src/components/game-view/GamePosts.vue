@@ -147,7 +147,7 @@ const handleInput = (e) => {
       <pagination
         :page="page"
         :total="postData.total"
-        :pageSize="16"
+        :page-size="16"
         @page-change="handleChangePage"
       ></pagination>
     </div>

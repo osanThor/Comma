@@ -1,8 +1,12 @@
 <script>
 import { useRoute, useRouter } from "vue-router";
-import { usePostStore } from "../../stores/post";
+
 import PostEditContent from "./PostEditContent.vue";
 import PostEditImg from "./PostEditImg.vue";
+
+import { usePostStore } from "../../stores/post";
+import { useModalStore } from "@/stores/modal";
+const { openModal } = useModalStore();
 
 export default {
   name: "PostEditor",
@@ -47,7 +51,8 @@ export default {
     removeImage({ index }) {
       this.postStore.removeImage({ index });
     },
-    async handleSave() {
+
+    async savePost() {
       try {
         let response;
         const postId = this.route.params.postId;
@@ -56,13 +61,14 @@ export default {
         } else {
           response = await this.postStore.savePost();
         }
-        console.log(response);
-        alert("게시글이 저장되었습니다.");
         this.router.push(`/post/${response.postId}`);
       } catch (err) {
         console.error("게시글 저장 실패:", err);
-        alert("게시글 저장에 실패했습니다.");
       }
+    },
+
+    async handleSave() {
+      openModal("이대로 저장하시겠어요?", "저장하기", this.savePost);
     },
   },
 };

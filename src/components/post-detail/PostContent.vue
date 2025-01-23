@@ -9,6 +9,9 @@ import { useRouter } from "vue-router";
 import { usePostStore } from "../../stores/post";
 import { onMounted, ref } from "vue";
 
+import { useModalStore } from "@/stores/modal";
+const { openModal } = useModalStore();
+
 export default {
   name: "PostContent",
   components: {
@@ -59,10 +62,17 @@ export default {
       } catch (error) {
         console.error("게시글 삭제 실패", error);
       }
+    }
+
+    const handleDelete = async () => {
+      openModal(
+        `"나 아직 갈 준비가 안 됐어요..."\n그래도 삭제하시겠어요?`,
+        "삭제하기",
+        deletePost,
+      );
     };
 
     const handleToggleLike = async () => {
-      console.log("toggleLike 호출됨");
       try {
         await postStore.toggleLike(props.postId);
         post.value.likeCount = postStore.likeCount;
@@ -96,7 +106,7 @@ export default {
     return {
       post,
       editPost,
-      deletePost,
+      handleDelete,
       formatDate,
       swiperOptions,
       handleToggleLike,
@@ -148,7 +158,7 @@ export default {
           <!-- 수정/삭제 버튼 -->
           <div class="flex flex-row gap-6 text-lg font-semibold text-white/50">
             <button @click="editPost" class="hover:text-white/100">수정</button>
-            <button @click="deletePost" class="hover:text-white/100">
+            <button @click="handleDelete" class="hover:text-white/100">
               삭제
             </button>
           </div>

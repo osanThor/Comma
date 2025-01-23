@@ -15,7 +15,7 @@ const localizedGameName = computed(() => {
   return gameNameMap[route.params.gameName] || route.params.gameName;
 });
 
-const playPath = computed(() => `/game/${route.params.gameName}/play`);
+const playPath = computed(() => `/game/play/${route.params.gameName}`);
 </script>
 
 <template>

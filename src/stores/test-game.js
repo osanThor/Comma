@@ -7,7 +7,7 @@ export const useGameStore = defineStore(
     const gameTopRankers = reactive({
       flappyBird: null,
       mineSweeper: null,
-      ballBounce: null,
+      bounceBall: null,
       tetris: null,
       shooting: null,
     });

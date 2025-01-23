@@ -19,7 +19,6 @@ const newAlarm = ref(false);
 const handleGetNotifications = async (userId) => {
   try {
     const data = await getNotifications(userId);
-    console.log(data);
     if (data) items.value = data;
   } catch (err) {
     console.error(err);

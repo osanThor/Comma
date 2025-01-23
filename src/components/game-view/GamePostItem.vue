@@ -1,40 +1,66 @@
-<script>
+<script setup>
 import Avatar from "@/components/common/Avatar.vue";
 import SmallLike from "@/components/common/icons/SmallLike.vue";
+import dayjs from "dayjs";
 
-export default {
-  name: "GamePostItem",
-  components: {
-    Avatar,
-    SmallLike,
+const DEFAULT_THUMBNAIL = "/assets/images/postDefaultImg.png";
+
+const props = defineProps({
+  item: {
+    type: Object,
+    required: true,
   },
+});
+
+const imageLoaded = ref(false);
+
+const formatedDate = (D) => {
+  const date = dayjs(D);
+  return date.format("YYYY.MM.DD");
 };
 </script>
+
 <template>
-  <RouterLink to="/post/1" class="text-white rounded-lg overflow-hidden">
+  <RouterLink
+    :to="`/post/${item.id}`"
+    class="text-white rounded-lg overflow-hidden flex flex-col"
+  >
     <div
-      class="w-full h-[130px] flex items-center justify-center overflow-hidden"
+      class="w-full h-[130px] relative flex items-center justify-center overflow-hidden"
     >
+      <span
+        v-if="!imageLoaded"
+        class="absolute top-0 left-0 bottom-0 right-0 bg-main-200 animate-pulse"
+      ></span>
       <img
         class="object-cover min-w-full min-h-full"
-        src="/assets/images/examplepost.png"
+        :src="item.images[0] || DEFAULT_THUMBNAIL"
         alt="post thumbnail"
+        @load="imageLoaded = true"
       />
     </div>
-    <div class="p-4 bg-main-500">
-      <div class="text-sm font-dnf mb-3">신기록 달성!</div>
-      <div class="line-clamp-2 text-xs opacity-70 mb-3">
-        여러분은 최근에 어떤 기록을 달성하셨나요? 같이 공유하고 공략에 대해
-        이야기해보면 좋겠습니다. 😃 읽어주셔서 감사합니다! 다음 목표는 [새로운
-        목표, 랭크 등]를 달성하는 겁니다. 응원 부탁드려요!
-      </div>
-      <div class="w-full flex justify-between">
-        <div class="text-xs flex items-center gap-1">
-          <Avatar size="xs" /> 싹싹김치
+    <div class="p-4 bg-main-500 flex-grow flex flex-col">
+      <div class="flex gap-2 items-end mb-3 justify-between">
+        <div class="text-sm font-dnf line-clamp-1">
+          {{ item.title }}
         </div>
-        <div class="text-[10px] flex items-center gap-1 text-point-500">
+        <div class="text-[10px] text-white/70">
+          {{ formatedDate(item.created_at) }}
+        </div>
+      </div>
+      <div class="line-clamp-2 text-xs opacity-70 mb-3 break-words flex-grow">
+        {{ item.content }}
+      </div>
+      <div class="w-full flex justify-between items-center">
+        <div class="text-xs flex items-center gap-1">
+          <Avatar :src="item.user.profile_image" size="xs" />
+          {{ item.user.name }}
+        </div>
+        <div
+          class="text-[10px] leading-3 flex items-center gap-1 text-point-500"
+        >
           <SmallLike />
-          999+
+          {{ item.like_count > 999 ? "999+" : item.like_count }}
         </div>
       </div>
     </div>

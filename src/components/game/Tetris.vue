@@ -10,39 +10,228 @@ import {
   ROTATION,
 } from "@/constants/tetris.js";
 import Board from "@/classes/tetris/board.js";
+import Piece from "@/classes/tetris/piece.js";
+import Sound from "@/classes/tetris/sound.js";
+const account = reactive({
+  score: 0,
+  level: 0,
+  lines: 0,
+  time: {},
+});
 
-const boardIns = ref(null);
-// peice
+const isPlaying = ref(false);
+const isPaused = ref(false);
 
-// main
-const play = () => {
-  boardIns.value.reset();
+const requestId = ref(null);
+const time = ref(null);
+
+const ctx = ref(null);
+const board = ref(null);
+const moves = {
+  [KEY.LEFT]: (p) => ({ ...p, x: p.x - 1 }),
+  [KEY.RIGHT]: (p) => ({ ...p, x: p.x + 1 }),
+  [KEY.DOWN]: (p) => ({ ...p, y: p.y + 1 }),
+  [KEY.SPACE]: (p) => ({ ...p, y: p.y + 1 }),
+  [KEY.UP]: (p) => board.value.rotate(p, ROTATION.RIGHT),
+  [KEY.Q]: (p) => board.value.rotate(p, ROTATION.LEFT),
 };
+
+const sound = ref(null);
+const backgroundSound = ref(null);
+const movesSound = ref(null);
+const dropSound = ref(null);
+const pointsSound = ref(null);
+const finishSound = ref(null);
+
+function addEventListener() {
+  document.removeEventListener("keydown", handleKeyPress);
+  document.addEventListener("keydown", handleKeyPress);
+}
+
+function handleKeyPress(event) {
+  if (event.keyCode === KEY.P) {
+    pause();
+  }
+  if (event.keyCode === KEY.ESC) {
+    gameOver();
+  } else if (moves[event.keyCode]) {
+    event.preventDefault();
+    // Get new state
+    let p = moves[event.keyCode](board.value.piece);
+    if (event.keyCode === KEY.SPACE) {
+      // Hard drop
+      if (isPlaying.value) {
+        dropSound.value.play();
+      } else {
+        return;
+      }
+
+      while (board.value.valid(p)) {
+        account.score += POINTS.HARD_DROP;
+        board.value.piece.move(p);
+        p = moves[KEY.DOWN](board.value.piece);
+      }
+      board.value.piece.hardDrop();
+    } else if (board.value.valid(p)) {
+      if (isPlaying) {
+        movesSound.value.play();
+      }
+      board.value.piece.move(p);
+      if (event.keyCode === KEY.DOWN && isPlaying.value) {
+        account.score += POINTS.SOFT_DROP;
+      }
+    }
+  }
+}
+function resetGame() {
+  account.score = 0;
+  account.lines = 0;
+  account.level = 0;
+  board.value.reset();
+  time.value = {
+    start: performance.now(),
+    elapsed: 0,
+    level: LEVEL[account.level],
+  };
+}
+
+const play = () => {
+  addEventListener();
+  if (!isPlaying.value && !isPaused.value) {
+    resetGame();
+  }
+
+  if (requestId.value) {
+    cancelAnimationFrame(requestId);
+  }
+
+  animate();
+  isPlaying.value = true;
+  if (isPaused.value) isPaused.value = false;
+  backgroundSound.value.play();
+};
+
+function animate(now = 0) {
+  time.value.elapsed = now - time.value.start;
+  if (time.value.elapsed > time.value.level) {
+    time.value.start = now;
+    if (!board.value.drop(moves, account, time, pointsSound)) {
+      gameOver();
+      return;
+    }
+  }
+
+  // Clear board before drawing new state.
+  ctx.value.clearRect(0, 0, ctx.value.canvas.width, ctx.value.canvas.height);
+
+  board.value.draw();
+  requestId.value = requestAnimationFrame(animate);
+}
+
+function gameOver() {
+  cancelAnimationFrame(requestId);
+
+  ctx.value.fillStyle = "black";
+  ctx.value.fillRect(1, 3, 8, 1.2);
+  ctx.value.font = "1px Arial";
+  ctx.value.fillStyle = "red";
+  ctx.value.fillText("GAME OVER", 1.8, 4);
+
+  sound.value.pause();
+  finishSound.value.play();
+  // checkHighScore(account.score);
+
+  isPlaying.value = false;
+}
+
+function pause() {
+  if (!requestId || !requestId.value) {
+    isPlaying.value = true;
+    animate();
+    backgroundSound.value.play();
+    return;
+  }
+
+  cancelAnimationFrame(requestId.value);
+  requestId.value = null;
+
+  ctx.value.fillStyle = "black";
+  ctx.value.fillRect(0, 2.8, 10, 2);
+  ctx.value.font = "1px DNFBitBitv2";
+  ctx.value.fillStyle = "yellow";
+  ctx.value.fillText("PAUSED", 2.7, 4.1);
+  isPlaying.value = false;
+  isPaused.value = true;
+  sound.value.pause();
+}
+
+const handleClickPlay = computed(() => (isPlaying.value ? pause() : play()));
 
 onMounted(() => {
   const canvas = document.getElementById("board");
-  const ctx = canvas.getContext("2d");
+  const ctxIns = canvas.getContext("2d");
   const canvasNext = document.getElementById("next");
   const ctxNext = canvasNext.getContext("2d");
 
-  ctx.canvas.width = COLS * BLOCK_SIZE;
-  ctx.canvas.height = ROWS * BLOCK_SIZE;
+  ctxIns.canvas.width = COLS * BLOCK_SIZE;
+  ctxIns.canvas.height = ROWS * BLOCK_SIZE;
+  ctxIns.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-  ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
+  ctxNext.canvas.width = 4 * BLOCK_SIZE;
+  ctxNext.canvas.height = 4 * BLOCK_SIZE;
+  ctxNext.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-  const board = new Board(ctx, ctxNext);
-  boardIns.value = board;
+  const boardIns = new Board(ctxIns, ctxNext);
+  ctx.value = ctxIns;
+  board.value = boardIns;
+
+  const soundEl = new Sound(document.querySelector("#sound-div"));
+  (backgroundSound.value = soundEl.create(
+    "/assets/sounds/Dungeon_Theme.mp3",
+    "background_sound",
+    true
+  )),
+    (movesSound.value = soundEl.create(
+      "/assets/sounds/moves.mp3",
+      "moves_sound"
+    )),
+    (dropSound.value = soundEl.create("/assets/sounds/drop.mp3", "drop_sound")),
+    (pointsSound.value = soundEl.create(
+      "/assets/sounds/points.mp3",
+      "points_sound"
+    )),
+    (finishSound.value = soundEl.create(
+      "/assets/sounds/finish.mp3",
+      "finish_sound"
+    ));
+  soundEl.muteToggle();
+  soundEl.soundSetting();
+  sound.value = soundEl;
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyPress);
 });
 </script>
 <template>
   <div class="grid bg-white p-10 font-dnf">
     <canvas id="board" class="game-board"></canvas>
     <div class="right-column">
-      <div>
+      <div class="flex flex-col gap-1">
         <h2 class="text-2xl mb-4">TETRIS</h2>
-        <p>Score: <span id="score">0</span></p>
-        <p>Lines: <span id="lines">0</span></p>
-        <p>Level: <span id="level">0</span></p>
+        <p>
+          Score: <span id="score">{{ account.score }}</span>
+        </p>
+        <p>
+          Lines: <span id="lines">{{ account.lines }}</span>
+        </p>
+        <p>
+          Level: <span id="level">{{ account.level }}</span>
+        </p>
+        <div id="sound-div">
+          <span class="sound-item" id="sound-speaker"></span>
+          <span class="sound-item" id="sound-description"></span>
+        </div>
         <canvas id="next" class="next"></canvas>
       </div>
       <div id="sound-div">
@@ -50,10 +239,10 @@ onMounted(() => {
         <span class="sound-item" id="sound-description"></span>
       </div>
       <button
-        @click="play"
+        @click="handleClickPlay"
         class="play-button text-white bg-point-500 rounded-full"
       >
-        Play
+        {{ isPlaying ? "Pause" : "Play" }}
       </button>
     </div>
   </div>

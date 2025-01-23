@@ -1,6 +1,11 @@
 import { COLORS, SHAPES } from "@/constants/tetris.js";
-
 export default class Piece {
+  x;
+  y;
+  color;
+  shape;
+  ctx;
+
   constructor(ctx) {
     this.ctx = ctx;
     this.spawn();

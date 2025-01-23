@@ -17,7 +17,6 @@ export default class Board {
     this.ctxNext = ctxNext;
     this.init();
   }
-
   init() {
     // Calculate size of canvas from constants.
     this.ctx.canvas.width = COLS * BLOCK_SIZE;
@@ -27,6 +26,7 @@ export default class Board {
     this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
   }
 
+  // 새 게임이 시작되면 보드를 초기화한다.
   reset() {
     this.grid = this.getEmptyGrid();
     this.piece = new Piece(this.ctx);
@@ -46,13 +46,13 @@ export default class Board {
     this.drawBoard();
   }
 
-  drop() {
+  drop(moves, account, time, pointsSound) {
     let p = moves[KEY.DOWN](this.piece);
     if (this.valid(p)) {
       this.piece.move(p);
     } else {
       this.freeze();
-      this.clearLines();
+      this.clearLines(account, time, pointsSound);
       if (this.piece.y === 0) {
         // Game over
         return false;
@@ -64,8 +64,7 @@ export default class Board {
     }
     return true;
   }
-
-  clearLines() {
+  clearLines(account, time, pointsSound) {
     let lines = 0;
 
     this.grid.forEach((row, y) => {
@@ -84,7 +83,7 @@ export default class Board {
     if (lines > 0) {
       // Calculate points from cleared lines and level.
 
-      account.score += this.getLinesClearedPoints(lines);
+      account.score += this.getLinesClearedPoints(lines, account, pointsSound);
       account.lines += lines;
 
       // If we have reached the lines for next level
@@ -96,7 +95,7 @@ export default class Board {
         account.lines -= LINES_PER_LEVEL;
 
         // Increase speed of game
-        time.level = LEVEL[account.level];
+        time.value.level = LEVEL[account.level];
       }
     }
   }
@@ -134,6 +133,7 @@ export default class Board {
     });
   }
 
+  // 0으로 채워진 행렬을 얻는다.
   getEmptyGrid() {
     return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
   }
@@ -141,7 +141,6 @@ export default class Board {
   isInsideWalls(x, y) {
     return x >= 0 && x < COLS && y <= ROWS;
   }
-
   notOccupied(x, y) {
     return this.grid[y] && this.grid[y][x] === 0;
   }
@@ -166,8 +165,7 @@ export default class Board {
 
     return p;
   }
-
-  getLinesClearedPoints(lines, level) {
+  getLinesClearedPoints(lines, account, pointsSound) {
     const lineClearPoints =
       lines === 1
         ? POINTS.SINGLE
@@ -178,7 +176,7 @@ export default class Board {
         : lines === 4
         ? POINTS.TETRIS
         : 0;
-    pointsSound.play();
+    pointsSound.value.play();
     return (account.level + 1) * lineClearPoints;
   }
 }

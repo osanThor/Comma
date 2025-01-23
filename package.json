@@ -10,6 +10,12 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.12",
+    "@tiptap/extension-color": "^2.11.2",
+    "@tiptap/extension-placeholder": "^2.11.2",
+    "@tiptap/extension-text-style": "^2.11.2",
+    "@tiptap/pm": "^2.11.2",
+    "@tiptap/starter-kit": "^2.11.2",
+    "@tiptap/vue-3": "^2.11.2",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "html2canvas": "^1.4.1",

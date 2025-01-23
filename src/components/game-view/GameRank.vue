@@ -92,7 +92,7 @@ const getRankImage = (rank) => {
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
     <!-- 랭킹 리스트 표시 -->
     <div v-else class="mt-[20px] flex flex-col gap-[12px]">
-      <RouterLink
+      <router-link
         v-for="item in rankData"
         :key="item.id"
         :to="`/user/${item.user_id}`"
@@ -142,7 +142,7 @@ const getRankImage = (rank) => {
             <span class="text-sm text-white">{{ item.score }}점</span>
           </div>
         </div>
-      </RouterLink>
+      </router-link>
     </div>
   </div>
 </template>

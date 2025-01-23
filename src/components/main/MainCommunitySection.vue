@@ -1,7 +1,7 @@
 <script setup>
 import TitleLeft from "@/components/common/icons/TitleLeft.vue";
 import TitleRight from "@/components/common/icons/TitleRight.vue";
-import Filter from "@/components/common/Filter.vue";
+import BaseFilter from "@/components/common/Filter.vue";
 import Pagination from "@/components/common/Pagination.vue";
 import PostItem from "../common/PostItem.vue";
 import { getPostsByCategory } from "@/services/post.service";
@@ -19,7 +19,7 @@ const sortOption = [
 
 const handleGetPosts = async (page) => {
   try {
-    const data = await getPostsByCategory("free", "desc", page, 12);
+    const data = await getPostsByCategory("free", sort.value, page, 12);
     if (data) {
       postData.posts = data.data;
       postData.total = data.totalCount;
@@ -72,11 +72,11 @@ watch(page, async () => {
     </router-link>
     <div class="w-[calc(100%-40px)] max-w-[970px] flex flex-col">
       <div class="w-full flex items-center justify-end mb-5">
-        <filter
+        <base-filter
           :sort="sort"
           :sortOption="sortOption"
           @change-sort="handleChangeSort"
-        ></filter>
+        ></base-filter>
       </div>
       <div class="grid grid-cols-4 gap-x-5 gap-y-[30px] mb-[70px]">
         <post-item

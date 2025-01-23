@@ -26,7 +26,7 @@ const playPath = computed(() => `/game/play/${route.params.gameName}`);
       <h1 class="text-6xl font-bold font-dnf text-white mb-10 w-[389px]">
         {{ localizedGameName }}
       </h1>
-      <RouterLink
+      <router-link
         :to="playPath"
         class="group rounded-[60px] w-[229px] h-[65px] bg-point-500 hover:bg-white flex items-center justify-center gap-[12px] mt-[27px] transition-transform hover:scale-105"
       >
@@ -47,7 +47,7 @@ const playPath = computed(() => `/game/play/${route.params.gameName}`);
         <p class="font-dnf text-main-500 text-2xl group-hover:text-point-500">
           Play Game
         </p>
-      </RouterLink>
+      </router-link>
     </div>
   </div>
 </template>

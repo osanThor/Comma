@@ -65,7 +65,7 @@ const filteredGames = computed(() => {
 
 <template>
   <div class="mt-[31px] w-[1075px] flex justify-between">
-    <RouterLink
+    <router-link
       v-for="game in filteredGames"
       :key="game.id"
       :to="`/game/${game.route}`"
@@ -81,8 +81,8 @@ const filteredGames = computed(() => {
         <div class="text-[10.8px] flex items-center gap-1">
           <comment-icon></comment-icon>{{ postCounts[game.route] }}
         </div>
-        <PlayIcon class="w-[38.7px] h-[38.7px]" />
+        <play-icon class="w-[38.7px] h-[38.7px]"></play-icon>
       </div>
-    </RouterLink>
+    </router-link>
   </div>
 </template>

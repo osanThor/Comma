@@ -25,7 +25,7 @@ const formatedLikeCount = computed(() =>
 </script>
 
 <template>
-  <RouterLink
+  <router-link
     :to="`/post/${item.id}`"
     class="text-white rounded-lg overflow-hidden flex flex-col"
   >
@@ -68,5 +68,5 @@ const formatedLikeCount = computed(() =>
         </div>
       </div>
     </div>
-  </RouterLink>
+  </router-link>
 </template>

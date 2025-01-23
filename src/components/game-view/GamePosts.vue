@@ -147,6 +147,8 @@ const handleInput = (e) => {
       <Pagination
         :page="page"
         :total="postData.total"
+        :pageSize="16"
+        :limit="16"
         @page-change="handleChangePage"
       />
     </div>

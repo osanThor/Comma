@@ -48,7 +48,7 @@ const totalLikes = computed(() => {
         {{ date }}
       </div>
       <div class="flex items-center text-point-500 text-base min-w-12">
-        <SmallLike width="15" height="15" />
+        <small-like width="15" height="15"></small-like>
         <span class="ml-1">{{ totalLikes }}</span>
       </div>
     </div>

@@ -41,7 +41,7 @@ watch(user, () => {
           aria-label="kakao login"
           @click="kakaoLogin"
         >
-          <KakaoIcon class="mr-3" />
+          <kakao-icon class="mr-3"></kakao-icon>
           카카오로 시작하기
         </button>
         <button

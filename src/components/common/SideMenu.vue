@@ -86,7 +86,7 @@ const handleClickLogout = () => {
         type="button"
         @mousedown.prevent="handleClickLogout"
       >
-        <LogoutIcon />
+        <logout-icon></logout-icon>
         로그아웃
       </button>
     </div>

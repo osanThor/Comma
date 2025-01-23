@@ -55,42 +55,42 @@ watch(page, async () => {
     <h2
       class="flex flex-col items-center text-4xl font-dnf text-white relative mb-[30px]"
     >
-      <TitleLeft
+      <title-left
         class="w-[184px] h-10 absolute right-[calc(100%+28px)] bottom-0"
-      />
+      ></title-left>
       <span class="text-3xl">GAME</span>
       COMMUNITY
-      <TitleRight
+      <title-right
         class="w-[184px] h-10 absolute left-[calc(100%+28px)] bottom-0"
-      />
+      ></title-right>
     </h2>
-    <RouterLink
+    <router-link
       to="/post/write?category=free"
       class="w-[258px] h-12 flex items-center justify-center bg-white hover:bg-point-500 rounded-full text-xl font-dnf transition-all mb-2"
     >
       글 쓰러 가기
-    </RouterLink>
+    </router-link>
     <div class="w-[calc(100%-40px)] max-w-[970px] flex flex-col">
       <div class="w-full flex items-center justify-end mb-5">
-        <Filter
+        <filter
           :sort="sort"
           :sortOption="sortOption"
           @change-sort="handleChangeSort"
-        />
+        ></filter>
       </div>
       <div class="grid grid-cols-4 gap-x-5 gap-y-[30px] mb-[70px]">
-        <PostItem
+        <post-item
           v-for="value in postData.posts"
           :key="value.id"
           :item="value"
-        />
+        ></post-item>
       </div>
       <div class="w-full flex justify-center">
-        <Pagination
+        <pagination
           :page="page"
           :total="postData.total"
           @page-change="handleChangePage"
-        />
+        ></pagination>
       </div>
     </div>
   </section>

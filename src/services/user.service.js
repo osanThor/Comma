@@ -41,6 +41,7 @@ export const upsertUser = async (user) => {
     .single();
 
   if (error && error.code === "PGRST116") {
+    const { addToast } = useToastStore();
     const { data: newUser, error: insertError } = await supabase
       .from("users")
       .insert([
@@ -57,6 +58,7 @@ export const upsertUser = async (user) => {
     if (insertError) {
       throw insertError;
     }
+    addToast("성공적으로 회원가입 되었어요");
     return newUser;
   }
 

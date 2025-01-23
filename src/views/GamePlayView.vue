@@ -11,7 +11,7 @@ const isGameOver = ref(true);
         v-if="isGameOver"
         class="fixed inset-0 flex justify-center items-center z-50"
       >
-        <GameOverModal />
+        <game-over-modal></game-over-modal>
       </div>
     </section>
   </div>

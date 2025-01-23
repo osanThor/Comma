@@ -7,11 +7,17 @@ import { storeToRefs } from "pinia";
 import { createPost } from "@/services/post.service";
 import { useRoute, useRouter } from "vue-router";
 
-const { imageBlobs, score, playTime } = defineProps([
-  "imageBlobs",
-  "score",
-  "playTime",
-]);
+const { imageBlobs, score, playTime } = defineProps({
+  imageBlobs: {
+    type: Array,
+  },
+  score: {
+    type: Number,
+  },
+  playTime: {
+    type: Number,
+  },
+});
 
 const emit = defineEmits(["removeImage", "uploadImage"]);
 
@@ -180,12 +186,15 @@ watch(
         </section>
       </main>
       <footer class="flex justify-between mx-[82px] mt-[32px]">
-        <AfterGameOverButton
+        <after-game-over-button
           text="CANCEL"
           bg-color="bg-main-400"
           @click="closeGameShareModal"
-        />
-        <AfterGameOverButton text="SHARE" type="submit" />
+        ></after-game-over-button>
+        <after-game-over-button
+          text="SHARE"
+          type="submit"
+        ></after-game-over-button>
       </footer>
     </form>
   </div>

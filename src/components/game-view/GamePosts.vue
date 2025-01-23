@@ -148,7 +148,6 @@ const handleInput = (e) => {
         :page="page"
         :total="postData.total"
         :pageSize="16"
-        :limit="16"
         @page-change="handleChangePage"
       />
     </div>

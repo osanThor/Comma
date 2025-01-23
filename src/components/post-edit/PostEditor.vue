@@ -68,7 +68,7 @@ export default {
     },
 
     async handleSave() {
-      openModal("정말 수정하시겠어요?", "수정하기", this.savePost);
+      openModal("이대로 저장하시겠어요?", "저장하기", this.savePost);
     },
   },
 };

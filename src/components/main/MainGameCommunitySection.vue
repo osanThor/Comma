@@ -69,7 +69,8 @@ onMounted(async () => {
           </div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">
-              <comment-icon></comment-icon>{{ postCounts[game.name] }}
+              <comment-icon></comment-icon>
+              {{ postCounts[game.name] > 999 ? "999+" : postCounts[game.name] }}
             </div>
             <play-icon></play-icon>
           </div>

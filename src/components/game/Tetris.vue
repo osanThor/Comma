@@ -3,16 +3,16 @@ import {
   COLS,
   BLOCK_SIZE,
   ROWS,
-  NO_OF_HIGH_SCORES,
   KEY,
   POINTS,
   LEVEL,
   ROTATION,
 } from "@/constants/tetris.js";
 import Board from "@/classes/tetris/board.js";
-import Piece from "@/classes/tetris/piece.js";
 import Sound from "@/classes/tetris/sound.js";
 import { useTimer } from "@/hooks/useTimer.js";
+
+const emits = defineEmits(["open-game-over"]);
 
 const { currentTime, start, stop, reset } = useTimer();
 
@@ -151,6 +151,7 @@ function gameOver() {
 
   isPlaying.value = false;
   isGameOver.value = true;
+  emits("open-game-over");
 }
 
 function pause() {

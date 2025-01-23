@@ -4,9 +4,36 @@ import TitleRight from "@/components/common/icons/TitleRight.vue";
 import PlayIcon from "@/components/common/icons/PlayIcon.vue";
 import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import { useGameStore } from "@/stores/test-game";
+import { getPostsByCategory } from "@/services/post.service";
 
 const gameStore = useGameStore();
 const { games, gameTopRankers } = storeToRefs(gameStore);
+
+const postCounts = ref({
+  bounceBall: 0,
+  mineSweeper: 0,
+  flappyBird: 0,
+  tetris: 0,
+  shooting: 0,
+});
+
+const getPostCount = async (category) => {
+  try {
+    const data = await getPostsByCategory(category, "desc", 1, 1);
+    if (data) {
+      postCounts.value[category] = data.totalCount;
+    }
+  } catch (err) {
+    console.error(`${category} 게시글 수 로딩 실패:`, err);
+  }
+};
+
+onMounted(async () => {
+  // 각 게임별 게시글 수 로드
+  await Promise.all(
+    Object.keys(postCounts.value).map((name) => getPostCount(name))
+  );
+});
 </script>
 <template>
   <section
@@ -42,7 +69,7 @@ const { games, gameTopRankers } = storeToRefs(gameStore);
           </div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">
-              <comment-icon></comment-icon>999+
+              <comment-icon></comment-icon>{{ postCounts[game.name] }}
             </div>
             <play-icon></play-icon>
           </div>

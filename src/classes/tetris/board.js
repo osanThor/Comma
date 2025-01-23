@@ -141,6 +141,7 @@ export default class Board {
   isInsideWalls(x, y) {
     return x >= 0 && x < COLS && y <= ROWS;
   }
+
   notOccupied(x, y) {
     return this.grid[y] && this.grid[y][x] === 0;
   }

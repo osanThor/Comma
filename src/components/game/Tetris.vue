@@ -12,15 +12,19 @@ import {
 import Board from "@/classes/tetris/board.js";
 import Piece from "@/classes/tetris/piece.js";
 import Sound from "@/classes/tetris/sound.js";
+import { useTimer } from "@/hooks/useTimer.js";
+
+const { currentTime, start, stop, reset } = useTimer();
+
 const account = reactive({
   score: 0,
   level: 0,
   lines: 0,
-  time: {},
 });
 
 const isPlaying = ref(false);
 const isPaused = ref(false);
+const isGameOver = ref(false);
 
 const requestId = ref(null);
 const time = ref(null);
@@ -99,16 +103,18 @@ const play = () => {
   addEventListener();
   if (!isPlaying.value && !isPaused.value) {
     resetGame();
+    reset();
   }
 
   if (requestId.value) {
-    cancelAnimationFrame(requestId);
+    cancelAnimationFrame(requestId.value);
   }
 
   animate();
   isPlaying.value = true;
   if (isPaused.value) isPaused.value = false;
   backgroundSound.value.play();
+  start();
 };
 
 function animate(now = 0) {
@@ -129,7 +135,7 @@ function animate(now = 0) {
 }
 
 function gameOver() {
-  cancelAnimationFrame(requestId);
+  cancelAnimationFrame(requestId.value);
 
   ctx.value.fillStyle = "black";
   ctx.value.fillRect(1, 3, 8, 1.2);
@@ -139,9 +145,12 @@ function gameOver() {
 
   sound.value.pause();
   finishSound.value.play();
-  // checkHighScore(account.score);
+  stop();
+
+  console.log(account.score, currentTime.value, formatTime(currentTime.value));
 
   isPlaying.value = false;
+  isGameOver.value = true;
 }
 
 function pause() {
@@ -163,9 +172,23 @@ function pause() {
   isPlaying.value = false;
   isPaused.value = true;
   sound.value.pause();
+  stop();
 }
 
 const handleClickPlay = computed(() => (isPlaying.value ? pause() : play()));
+
+function formatTime(milliseconds) {
+  const totalSeconds = Math.floor(milliseconds / 1000); // 총 초
+  const hours = Math.floor(totalSeconds / 3600); // 시간
+  const minutes = Math.floor((totalSeconds % 3600) / 60); // 분
+  const seconds = totalSeconds % 60; // 초
+  const millis = Math.floor(milliseconds % 1000); // 밀리초
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(2, "0")}:${String(millis).padStart(3, "0")}`;
+}
 
 onMounted(() => {
   const canvas = document.getElementById("board");
@@ -227,6 +250,9 @@ onUnmounted(() => {
         </p>
         <p>
           Level: <span id="level">{{ account.level }}</span>
+        </p>
+        <p v-if="currentTime">
+          Play Time: <span id="time">{{ formatTime(currentTime) }}</span>
         </p>
         <div id="sound-div">
           <span class="sound-item" id="sound-speaker"></span>

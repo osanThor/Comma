@@ -6,7 +6,7 @@ const isGameOver = ref(true);
 </script>
 <template>
   <div class="flex justify-center items-center h-screen">
-    <section class="w-[1500px] h-[780px] bg-black rounded-3xl capture">
+    <section class="w-[1300px] h-[700px] bg-black rounded-3xl capture">
       <div
         v-if="isGameOver"
         class="fixed inset-0 flex justify-center items-center z-50"

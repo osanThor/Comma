@@ -68,13 +68,14 @@ const handleSubmit = async () => {
     const images = await Promise.all(
       imageBlobs.map((file) => handleGetImageURL(file.file))
     );
-    const combinedContent = `TIME | ${playTime} SCORE | ${score}점 \n${content.value}`;
     const data = await createPost({
       userId: user.value.id,
       category: category.value,
       title: title.value,
-      content: combinedContent,
+      content: content.value,
       images,
+      score,
+      playTime,
     });
 
     if (data && data.postId) {
@@ -178,7 +179,7 @@ watch(
           ></textarea>
         </section>
       </main>
-      <footer class="flex justify-between mx-[82px] mt-[30px]">
+      <footer class="flex justify-between mx-[82px] mt-[32px]">
         <AfterGameOverButton
           text="CANCEL"
           bg-color="bg-main-400"

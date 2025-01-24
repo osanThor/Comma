@@ -17,9 +17,9 @@ const sortOption = [
   { name: "최신순", value: "desc" },
 ];
 
-const handleGetPosts = async (page) => {
+const handleGetPosts = async (page, sort) => {
   try {
-    const data = await getPostsByCategory("free", sort.value, page, 12);
+    const data = await getPostsByCategory("free", sort, page, 12);
     if (data) {
       postData.posts = data.data;
       postData.total = data.totalCount;
@@ -41,7 +41,7 @@ const handleChangeSort = async (currentSort) => {
 };
 
 onBeforeMount(async () => {
-  await handleGetPosts(1);
+  await handleGetPosts(1, sort.value);
 });
 
 watch(page, async () => {
@@ -78,7 +78,13 @@ watch(page, async () => {
           @change-sort="handleChangeSort"
         ></base-filter>
       </div>
-      <div class="grid grid-cols-4 gap-x-5 gap-y-[30px] mb-[70px]">
+      <div
+        v-if="!postData.posts.length"
+        class="w-full flex items-center justify-center py-[200px] text-white/50 text-2xl font-bold"
+      >
+        포스트가 존재하지 않습니다.
+      </div>
+      <div v-else class="grid grid-cols-4 gap-x-5 gap-y-[30px] mb-[70px]">
         <post-item
           v-for="value in postData.posts"
           :key="value.id"

@@ -22,6 +22,29 @@ const router = createRouter({
           path: ":userId",
           name: "userProfile",
           component: () => import("../views/UserView.vue"),
+          redirect: { name: "userPost" },
+          children: [
+            {
+              path: "post",
+              name: "userPost",
+              component: () => import("../components/user/UserPost.vue"),
+            },
+            {
+              path: "like",
+              name: "userLike",
+              component: () => import("../components/user/UserLike.vue"),
+            },
+            {
+              path: "rank",
+              name: "userRank",
+              component: () => import("../components/user/UserRank.vue"),
+            },
+            {
+              path: "comment",
+              name: "userComment",
+              component: () => import("../components/user/UserComment.vue"),
+            },
+          ],
         },
         {
           path: "edit",

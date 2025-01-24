@@ -28,17 +28,17 @@ export default {
       height: 700,
       letterbox: true,
       global: true,
-      background: "#BFE8FF",
     });
-    console.log("KAPLAY initialized:", k);
 
     let audioEnabled = true;
     const gameStore = useGameStore();
     let isGameStarted = false;
 
+    k.loadSprite("sky", "/assets/flappy/2.png");
+    k.loadSprite("field", "/assets/flappy/3.png");
+
     k.loadSprite("kriby", "/assets/flappy/kriby.png");
-    k.loadSprite("background", "/assets/flappy/background.png");
-    k.loadSprite("obstacle", "/assets/flappy/obstacles.png");
+    k.loadSprite("obstacles", "/assets/flappy/obstacles.png");
     k.loadSprite("clouds", "/assets/flappy/clouds.png");
     k.loadSound("jump", "/assets/flappy/jump.wav");
     k.loadSound("hurt", "/assets/flappy/hurt.wav");
@@ -55,23 +55,41 @@ export default {
       });
     };
 
-    let score = 0;
-    let playTime = 0;
-
     // 시작 화면 씬
-    k.scene("start", () => {
-      makeBackground(k, SCALE_FACTOR);
+    k.scene("start", async () => {
+      makeBackground(k);
+
+      //배경 추가
+      const map = k.add([k.pos(0, 0), k.scale(SCALE_FACTOR)]);
+
+      const clouds = map.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
+
+      clouds.onUpdate(() => {
+        clouds.move(clouds.speed, 0);
+        if (clouds.pos.x > 700) clouds.pos.x = -500;
+      });
+
+      map.add([k.sprite("obstacles"), k.pos(), k.area(), { speed: 100 }]);
+
+      await saveSystem.load();
+      if (!saveSystem.data.maxScore) {
+        saveSystem.data.maxScore = 0;
+        await saveSystem.save();
+      }
+
+      const player = makePlayer(k);
+      player.pos = k.vec2(k.center().x - 350, k.center().y + 65); // 0,350
 
       const playBtn = k.add([
-        k.rect(200, 50, { radius: 100 }), 
+        k.rect(200, 50, { radius: 100 }),
         k.color(k.Color.fromHex("#14638e")),
         k.area(),
         k.anchor("center"),
-        k.pos(k.center().x + 30, k.center().y - 0), 
+        k.pos(k.center().x + 30, k.center().y - 0),
       ]);
 
       playBtn.add([
-        k.text("Play", { size: 24 }), 
+        k.text("Play", { size: 24 }),
         k.color(k.Color.fromHex("#d7f2f7")),
         k.area(),
         k.anchor("center"),
@@ -95,20 +113,88 @@ export default {
 
     // 메인 게임 씬
     k.scene("main", async () => {
-      debug.inspect = true;
-
+      debug.inspect = true; // 디버깅 코드
       let score = 0;
+      let playTime = 0;
+
+      isGameStarted = false;
+
+      makeBackground(k);
+
+      const map = k.add([k.pos(0, 0), k.scale(SCALE_FACTOR)]);
+
+      const clouds = map.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
+      clouds.onUpdate(() => {
+        if (isGameStarted) {
+          clouds.move(clouds.speed, 0);
+          if (clouds.pos.x > 700) {
+            clouds.pos.x = -500;
+          }
+        }
+      });
 
       const colliders = await (
         await fetch("/assets/flappy/collidersData.json")
       ).json();
       const collidersData = colliders.data;
 
-      makeBackground(k, SCALE_FACTOR);
+      const IMAGE_WIDTH = 480 * SCALE_FACTOR;
+      const obstaclesLayer = {
+        speed: -100,
+        parts: [
+          k.add([
+            k.sprite("obstacles"),
+            k.pos(0, 0),
+            k.area(),
+            k.scale(SCALE_FACTOR),
+          ]),
+          k.add([
+            k.sprite("obstacles"),
+            k.pos(IMAGE_WIDTH, 0),
+            k.area(),
+            k.scale(SCALE_FACTOR),
+          ]),
+        ],
+      };
 
-      const player = makePlayer(k);
-      player.pos = k.vec2(0, 350); 
-      player.setControls();
+      k.onUpdate(() => {
+        if (!isGameStarted) return;
+
+        for (let i = 0; i < obstaclesLayer.parts.length; i++) {
+          const currentPart = obstaclesLayer.parts[i];
+          const nextPart =
+            obstaclesLayer.parts[(i + 1) % obstaclesLayer.parts.length];
+
+          if (currentPart.pos.x < -IMAGE_WIDTH) {
+            currentPart.pos.x = nextPart.pos.x + IMAGE_WIDTH;
+          }
+
+          currentPart.move(obstaclesLayer.speed, 0);
+        }
+        if (isGameStarted) {
+          obstaclesLayer.speed -= 0.1;
+        }
+      });
+
+      k.loop(1, () => {
+        score += 1;
+      });
+
+      for (const collider of collidersData) {
+        for (const part of obstaclesLayer.parts) {
+          part.add([
+            k.area({
+              shape: new k.Rect(k.vec2(0), collider.width, collider.height),
+            }),
+            k.body({ isStatic: true }),
+            k.pos(collider.x, collider.y),
+            "obstacle",
+          ]);
+        }
+      }
+
+      k.add([k.rect(k.width(), 50), k.pos(0, -50), k.area(), "obstacle"]);
+      k.add([k.rect(k.width(), 50), k.pos(0, 1000), k.area(), "obstacle"]);
 
       k.onKeyPress("space", () => {
         if (!isGameStarted) {
@@ -119,106 +205,50 @@ export default {
         }
       });
 
-      const clouds = k.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
-      clouds.scale = SCALE_FACTOR;
-
-      clouds.onUpdate(() => {
-        clouds.move(clouds.speed, 0);
-        if (clouds.pos.x > 700) clouds.pos.x = -500;
-      });
-
-      const platforms = [];
-
-      for (const collider of collidersData) {
-        const platform = k.add([
-          k.sprite("obstacle"),
-          k.scale(SCALE_FACTOR),
-          k.pos(collider.x * SCALE_FACTOR, collider.y * SCALE_FACTOR),
-          k.area({
-            shape: new k.Rect(
-              k.vec2(0),
-              collider.width * SCALE_FACTOR,
-              collider.height * SCALE_FACTOR
-            ),
-          }),
-          k.body({ isStatic: true }),
-          { speed: 100 },
-          "obstacle",
-        ]);
-        platforms.push(platform);
-      }
-
-      k.loop(1, () => {
-        score += 1;
-      });
-
-      platforms.forEach((platform) => {
-        if (platform.onUpdate) {
-          platform.onUpdate(() => {
-            if (!isGameStarted) return;
-
-            platform.move(-platform.speed, 0);
-
-            if (platform.pos.x < -1300) {
-              platform.pos.x = 1300;
-              platform.speed += 30;
-            }
-          });
-        } else {
-          console.error("Platform does not have an onUpdate method:", platform);
-        }
-      });
+      const player = makePlayer(k);
+      player.pos = k.vec2(k.center().x - 100, k.center().y);
+      player.setControls();
 
       // 충돌
-      player.onCollide("obstacle", async (obstacle) => {
-        if (!obstacle) {
-          console.error("Invalid obstacle:", obstacle);
-          return;
-        }
-
-        // 디버깅: 충돌 발생 확인
-        console.log("충돌 발생!", {
-          playerPosition: player.pos,
-          obstaclePosition: obstacle.pos,
-          obstacleSpeed: obstacle.speed,
-        });
-
+      player.onCollide("obstacle", async () => {
         if (player.isDead) return;
         if (audioEnabled) k.play("hurt");
 
-        // 게임 상태 업데이트
-        platforms.forEach((platform) => {
-          platform.speed = 0;
-        });
-        player.isDead = true;
-        player.disableControls();
+        isGameStarted = false;
 
+        obstaclesLayer.speed = 0;
+        map.speed = 0;
+        player.disableControls();
         makeScoreBox(k, k.center(), score);
+        player.isDead = true;
 
         // 최고 점수 갱신 및 저장
         gameStore.updateMaxScore(score);
 
         // 점수 저장
-        await saveSystem.load();
-        if (score > saveSystem.data.maxScore) {
-          saveSystem.data.maxScore = score;
-          await saveSystem.save();
+        try {
+          gameStore.updateMaxScore(score);
+          await saveSystem.load();
+          if (score > saveSystem.data.maxScore) {
+            saveSystem.data.maxScore = score;
+            await saveSystem.save();
+          }
+          gameStore.saveDataToServer();
+        } catch (error) {
+          console.error("Error saving score:", error);
         }
-
-        // 서버로 데이터 저장
-        gameStore.saveDataToServer();
       });
+
       k.setCamScale(k.vec2(1.2));
       player.onUpdate(() => {
-        if (isGameStarted) {
-          k.setCamPos(player.pos.x, 400);
+        if (isGameStarted && !player.isDead) {
+          k.setCamPos(player.pos.x + 100, 400);
         }
       });
     });
 
     // 게임 시작
     k.go("start");
-    console.log("Start scene loaded");
   },
 };
 </script>

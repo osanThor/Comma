@@ -1,1 +1,1 @@
-export const SCALE_FACTOR = 3;
+export const SCALE_FACTOR = 4;

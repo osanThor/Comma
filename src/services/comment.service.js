@@ -72,7 +72,8 @@ export const getCommentsByUserId = async (
     .select(
       `
       *,
-      user:user_id(id, name, email, profile_image)
+      user:user_id(id, name, email, profile_image),
+      post:post_id(id, title)
       `
     )
     .eq("user_id", userId)

@@ -37,7 +37,7 @@ onMounted(async () => {
 </script>
 <template>
   <section
-    class="w-[calc(100%-40px)] max-w-[1440px] flex flex-col items-center"
+    class="w-[calc(100%-40px)] max-w-[1440px] overflow-x-hidden flex flex-col items-center"
   >
     <h2
       class="flex flex-col items-center text-5xl font-dnf text-point-500 relative mb-[62px]"

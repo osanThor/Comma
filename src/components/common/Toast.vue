@@ -15,10 +15,18 @@ const { toasts } = storeToRefs(toastStore);
     <div
       v-for="toast in toasts"
       :key="toast.id"
-      class="w-[calc(100vw-32px)] max-w-[470px] rounded-xl bg-point-500/30 border-2 px-10 py-[30px] text-white font-dnf border-white shadow-lg transition transform duration-300 backdrop-blur-sm flex items-center gap-2"
+      :class="
+        twMerge(
+          'w-[calc(100vw-32px)] max-w-[470px] rounded-xl border-2 px-10 py-[24px] text-white font-dnf border-white shadow-lg transition transform duration-300 backdrop-blur-sm flex items-center gap-2',
+          toast.type === 'success' && 'bg-point-500/30',
+          toast.type === 'error' && 'bg-[#0A90CE]/30'
+        )
+      "
     >
       <comma-icon></comma-icon>
-      : {{ toast.message + " ♡(*´ ˘ `*)♡" }}
+      :
+      {{ toast.message
+      }}{{ toast.type === "success" ? " ♡(*´ ˘ `*)♡" : " (っ°´o`°ｃ)" }}
     </div>
   </transition-group>
 </template>

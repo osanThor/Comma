@@ -68,7 +68,7 @@ export const upsertUser = async (user) => {
 
 // 정보 업뎃
 export const updateUserProfile = async (userId, updates) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("users")
     .update({
       ...updates,
@@ -78,7 +78,7 @@ export const updateUserProfile = async (userId, updates) => {
 
   if (error) throw error;
 
-  return data;
+  return "success";
 };
 
 supabase.auth.onAuthStateChange((event, session) => {

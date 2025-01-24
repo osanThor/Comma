@@ -76,7 +76,7 @@ const handleClickTarget = async (idx) => {
 
 <template>
   <section
-    class="relative w-full flex flex-col items-center h-screen mb-[152px]"
+    class="relative w-full max-w-screen overflow-x-hidden flex flex-col items-center h-screen mb-[152px]"
   >
     <img
       class="w-[31.927vw] max-w-[613px] absolute -scale-x-100 top-[1.1vw] -left-[148px] pointer-events-none"

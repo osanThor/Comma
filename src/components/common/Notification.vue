@@ -73,7 +73,6 @@ const mouseDownItem = async (handler, targetId) => {
 watch(user, () => {
   if (!user.value || !user.value.id) return;
   realtimeNewNotifications(user.value.id, (noti) => {
-    console.log("new notification", noti);
     if (!noti.is_read) newAlarm.value = true;
   });
 });

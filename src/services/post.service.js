@@ -91,14 +91,23 @@ export const getLikedPosts = async (
   const { data: likedPost, error: likedPostError } = await supabase
     .from("likes")
     .select("post_id")
-    .eq("user_id", userId)
-    .filter("category", isComma ? "eq" : "neq", "free");
+    .eq("user_id", userId);
 
   if (likedPostError) throw likedPostError;
 
-  const postIds = likedPost.map((like) => like.post_id);
+  const postIds = likedPost
+    .filter((like) => like.post_id)
+    .map((like) => like.post_id);
 
   if (postIds.length === 0) return { data: [], totalCount: 0 };
+
+  const { count, error: countError } = await supabase
+    .from("posts_with_counts")
+    .select("id", { count: "exact" })
+    .in("id", postIds)
+    .filter("category", isComma ? "eq" : "neq", "free");
+
+  if (countError) throw countError;
 
   const start = (page - 1) * limit;
   const end = start + limit - 1;
@@ -115,7 +124,7 @@ export const getLikedPosts = async (
 
   if (error) throw error;
 
-  return { data: data || [], totalCount: postIds.length };
+  return { data: data || [], totalCount: count };
 };
 
 export const createPost = async ({

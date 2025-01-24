@@ -38,7 +38,7 @@ const changePage = (page) => {
       :disabled="page === 1"
       class="disabled:opacity-50 text-poin-500"
     >
-      <PaginArrow />
+      <pagin-arrow></pagin-arrow>
     </button>
 
     <button
@@ -60,7 +60,7 @@ const changePage = (page) => {
       :disabled="page === totalPages"
       class="disabled:opacity-50 text-poin-500"
     >
-      <PaginArrow class="-scale-x-100" />
+      <pagin-arrow class="-scale-x-100"></pagin-arrow>
     </button>
   </div>
 </template>

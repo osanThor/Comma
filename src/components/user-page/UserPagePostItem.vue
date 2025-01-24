@@ -18,14 +18,9 @@ const formatedDate = (D) => {
   const date = dayjs(D);
   return date.format("YYYY.MM.DD");
 };
-
-const formatedLikeCount = computed(() =>
-  props.item.like_count > 999 ? "999+" : props.item.like_count
-);
 </script>
-
 <template>
-  <router-link
+  <RouterLink
     :to="`/post/${item.id}`"
     class="text-white rounded-lg overflow-hidden flex flex-col"
   >
@@ -57,16 +52,17 @@ const formatedLikeCount = computed(() =>
       </div>
       <div class="w-full flex justify-between items-center">
         <div class="text-xs flex items-center gap-1">
-          <avatar :src="item.user.profile_image" size="xs"></avatar>
+          <Avatar :src="item.user.profile_image" size="xs" />
           {{ item.user.name }}
         </div>
         <div
           class="text-[10px] leading-3 flex items-center gap-1 text-point-500"
         >
-          <small-like></small-like>
-          {{ formatedLikeCount }}
+          <SmallLike />
+          {{ item.like_count > 999 ? "999+" : item.like_count }}
         </div>
       </div>
     </div>
-  </router-link>
+  </RouterLink>
 </template>
+<style scoped></style>

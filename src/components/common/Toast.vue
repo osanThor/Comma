@@ -17,7 +17,7 @@ const { toasts } = storeToRefs(toastStore);
       :key="toast.id"
       class="w-[calc(100vw-32px)] max-w-[470px] rounded-xl bg-point-500/30 border-2 px-10 py-[30px] text-white font-dnf border-white shadow-lg transition transform duration-300 backdrop-blur-sm flex items-center gap-2"
     >
-      <comma-icon />
+      <comma-icon></comma-icon>
       : {{ toast.message + " ♡(*´ ˘ `*)♡" }}
     </div>
   </transition-group>

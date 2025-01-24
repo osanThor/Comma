@@ -3,7 +3,7 @@ import { ref, reactive, onBeforeMount, watch } from "vue";
 import { useRoute } from "vue-router";
 import { debounce } from "lodash";
 import GamePostItem from "@/components/game-view/GamePostItem.vue";
-import Filter from "@/components/common/Filter.vue";
+import BaseFilter from "@/components/common/Filter.vue";
 import Pagination from "@/components/common/Pagination.vue";
 import { getPostsByCategory } from "@/services/post.service";
 
@@ -110,11 +110,11 @@ const handleInput = (e) => {
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-[26px]">
         <span class="font-dnf text-white text-[42px]">게시글</span>
-        <Filter
+        <base-filter
           :sort="sort"
           :sortOption="sortOption"
           @change-sort="handleChangeSort"
-        />
+        ></base-filter>
       </div>
       <div
         class="w-[295px] h-[40px] bg-main-500 rounded-3xl opacity-50 relative hover:opacity-100 focus-within:opacity-100"
@@ -137,19 +137,19 @@ const handleInput = (e) => {
     <div
       class="mt-[35px] grid grid-cols-4 grid-rows-4 gap-x-[25px] gap-y-[33.17px] mb-[59px]"
     >
-      <GamePostItem
+      <game-post-item
         v-for="value in postData.posts"
         :key="value.id"
         :item="value"
-      />
+      ></game-post-item>
     </div>
     <div class="flex justify-center">
-      <Pagination
+      <pagination
         :page="page"
         :total="postData.total"
-        :pageSize="16"
+        :page-size="16"
         @page-change="handleChangePage"
-      />
+      ></pagination>
     </div>
   </div>
 </template>

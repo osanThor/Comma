@@ -61,16 +61,16 @@ onUnmounted(() => {
       class="w-[calc(100%-40px)] max-w-[1660px] flex items-center justify-between"
     >
       <h1 class="max-w-[120px]">
-        <RouterLink to="/">
+        <router-link to="/">
           <img src="/assets/images/logo.png" alt="logo" />
-        </RouterLink>
+        </router-link>
       </h1>
       <div class="flex items-center gap-4">
-        <RouterLink :to="`/user/${user?.id}`">
-          <Avatar v-show="user" :src="user?.profile_image" size="sm" />
-        </RouterLink>
-        <Notification />
-        <SideMenu />
+        <router-link :to="`/user/${user?.id}`">
+          <avatar v-show="user" :src="user?.profile_image" size="sm"></avatar>
+        </router-link>
+        <notification></notification>
+        <side-menu></side-menu>
       </div>
     </div>
   </header>

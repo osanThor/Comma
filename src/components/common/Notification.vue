@@ -155,10 +155,10 @@ watch([isOpenMenu, user], async () => {
             :key="item.id"
             @click="mouseDownItem(`/user/${item.sender.id}`, item.id)"
           >
-            <Avatar :src="item.sender.profile_image" />
+            <avatar :src="item.sender.profile_image"></avatar>
             <div class="font-medium text-sm text-main-500/70 break-keep">
               <span class="font-bold">{{ item.sender.name }}</span> 님이
-              {{ item.message }}<span class="ml-1" />
+              {{ item.message }}<span class="ml-1"></span>
               <span class="text-xs">2025년 1월 13일</span>
             </div>
           </li>

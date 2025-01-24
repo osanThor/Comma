@@ -67,23 +67,9 @@ const router = createRouter({
           component: () => import("../views/GameView.vue"),
         },
         {
-          path: "play/:gameName",
+          path: "play",
           name: "gamePlay",
           component: () => import("../views/GamePlayView.vue"),
-        },
-      ],
-      meta: {
-        requireAuth: true,
-      },
-    },
-    {
-      path: "/test",
-      name: "test",
-      children: [
-        {
-          path: "play",
-          name: "testPlay",
-          component: () => import("../views/TestPlayView.vue"),
           children: [
             {
               path: "mineSweeper",

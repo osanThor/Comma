@@ -1,8 +1,32 @@
 <script setup>
 import { useAuthStore } from "@/stores/auth.js";
 import { useRouter } from "vue-router";
+import { getUserById } from "@/services/user.service";
 const uInfo = useAuthStore();
 const router = useRouter();
+
+const props = defineProps({
+  targetId: {
+    type: String,
+    default: "",
+  },
+});
+
+const handleGetUserById = async (targetId) => {
+  try {
+    console.log(props.targetId);
+    const data = await getUserById(targetId);
+    console.log(data);
+    if (data) {
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+onBeforeMount(async () => {
+  await handleGetUserById(props.targetId);
+});
 
 const name = ref(uInfo.user.name);
 const email = ref(uInfo.user.email);
@@ -11,8 +35,6 @@ const bio = ref(
     ? "아직 자기소개를 작성하지 않으셨습니다. 자기소개를 작성해주세요"
     : uInfo.user.bio
 );
-
-console.log(uInfo);
 
 function navigateToEdit() {
   router.push("/user/edit"); // Navigate to /user/edit
@@ -61,5 +83,16 @@ function navigateToEdit() {
       </div>
     </div>
   </div>
+  <button
+    @click="
+      {
+        {
+          targetId;
+        }
+      }
+    "
+  >
+    버튼
+  </button>
 </template>
 <style scoped></style>

@@ -10,7 +10,6 @@ export function makeScoreBox(k, position, score) {
     k.layer("ui"),
   ]);
 
-  // 텍스트를 별도로 추가
   const text = k.add([
     k.text(`Score: ${score}`, { size: 32, align: "center" }),
     k.pos(position.x - 100, position.y - 50),

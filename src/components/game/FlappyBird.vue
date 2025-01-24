@@ -1,18 +1,21 @@
 <template>
   <div class="game-scene">
     <!-- 게임화면 렌더링 -->
-    <canvas ref="gameCanvas" width="1300" height="700"></canvas>
+    <canvas ref="gameCanvas" width="1300" height="750"></canvas>
   </div>
 </template>
 
 <script>
 import kaplay from "kaplay";
 import { useGameStore } from "../../stores/gameStore.js";
-import { SCALE_FACTOR } from "./flappyBird/utils/constants.js";
-import { makeBackground } from "./flappyBird/utils/makeBackground.js";
-import { makePlayer } from "./flappyBird/utils/makePlayer.js";
-import { makeScoreBox } from "./flappyBird/utils/makeScoreBox.js";
-import { saveSystem } from "./flappyBird/utils/save.js";
+import { SCALE_FACTOR } from "../../constants/flappy.js";
+import { makeBackground } from "../../classes/flappy/makeBackground.js";
+import { makePlayer } from "../../classes/flappy/makePlayer.js";
+import { makeScoreBox } from "../../classes/flappy/makeScoreBox.js";
+import { saveSystem } from "../../classes/flappy/save.js";
+
+import { useTimer } from "@/hooks/useTimer.js";
+const { currentTime, start, stop, reset } = useTimer();
 
 export default {
   name: "GameScene",
@@ -23,11 +26,13 @@ export default {
     }
     window.__kaplayInitialized = true;
 
+    const canvas = this.$refs.gameCanvas;
     const k = kaplay({
       width: 1300,
-      height: 700,
+      height: 750,
       letterbox: true,
       global: true,
+      canvas: canvas,
     });
 
     let audioEnabled = true;
@@ -37,8 +42,9 @@ export default {
     k.loadSprite("sky", "/assets/flappy/2.png");
     k.loadSprite("field", "/assets/flappy/3.png");
 
-    k.loadSprite("kriby", "/assets/flappy/kriby.png");
+    k.loadSprite("boo", "/assets/flappy/Boo.png");
     k.loadSprite("obstacles", "/assets/flappy/obstacles.png");
+    k.loadSprite("playBtn", "/assets/flappy/playBtn.png");
     k.loadSprite("clouds", "/assets/flappy/clouds.png");
     k.loadSound("jump", "/assets/flappy/jump.wav");
     k.loadSound("hurt", "/assets/flappy/hurt.wav");
@@ -78,21 +84,14 @@ export default {
       }
 
       const player = makePlayer(k);
-      player.pos = k.vec2(k.center().x - 350, k.center().y + 65); // 0,350
+      player.pos = k.vec2(k.center().x - 350, k.center().y + 40); // 0,350
 
       const playBtn = k.add([
-        k.rect(200, 50, { radius: 100 }),
-        k.color(k.Color.fromHex("#14638e")),
+        k.sprite("playBtn"),
+        k.scale(0.2),
         k.area(),
         k.anchor("center"),
         k.pos(k.center().x + 30, k.center().y - 0),
-      ]);
-
-      playBtn.add([
-        k.text("Play", { size: 24 }),
-        k.color(k.Color.fromHex("#d7f2f7")),
-        k.area(),
-        k.anchor("center"),
       ]);
 
       const goToGame = () => {
@@ -109,11 +108,12 @@ export default {
     function startGame() {
       isGameStarted = true;
       k.setGravity(2500);
+      start();
     }
 
     // 메인 게임 씬
     k.scene("main", async () => {
-      debug.inspect = true; // 디버깅 코드
+      // debug.inspect = true; // 디버깅 코드
       let score = 0;
       let playTime = 0;
 
@@ -206,10 +206,10 @@ export default {
       });
 
       const player = makePlayer(k);
-      player.pos = k.vec2(k.center().x - 100, k.center().y);
+      player.pos = k.vec2(k.center().x - 200, k.center().y);
       player.setControls();
 
-      // 충돌
+      // 충돌한 후 게임 점수/타임 기록
       player.onCollide("obstacle", async () => {
         if (player.isDead) return;
         if (audioEnabled) k.play("hurt");
@@ -219,21 +219,27 @@ export default {
         obstaclesLayer.speed = 0;
         map.speed = 0;
         player.disableControls();
-        makeScoreBox(k, k.center(), score);
+        makeScoreBox(k, k.center(), score, currentTime);
         player.isDead = true;
 
         // 최고 점수 갱신 및 저장
         gameStore.updateMaxScore(score);
 
+        const playTime = currentTime;
+        gameStore.updatePlayTime(playTime);
+
         // 점수 저장
         try {
-          gameStore.updateMaxScore(score);
+          // gameStore.updateMaxScore(score);
           await saveSystem.load();
           if (score > saveSystem.data.maxScore) {
             saveSystem.data.maxScore = score;
-            await saveSystem.save();
+            // await saveSystem.save();
           }
-          gameStore.saveDataToServer();
+          saveSystem.data.playTime = playTime;
+          await saveSystem.save();
+
+          await gameStore.saveDataToServer();
         } catch (error) {
           console.error("Error saving score:", error);
         }
@@ -246,6 +252,10 @@ export default {
         }
       });
     });
+
+    function resetGame(){
+      reset();
+    }
 
     // 게임 시작
     k.go("start");

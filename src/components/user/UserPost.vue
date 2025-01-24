@@ -3,7 +3,17 @@ import UserPagePostItem from "./UserPagePostItem.vue";
 import UserProfile from "./UserProfile.vue";
 import Filter from "@/components/common/Filter.vue";
 import { getPostsByCategory } from "@/services/post.service";
-import { ref, onMounted, reactive } from "vue";
+
+const props = defineProps({
+  userId: {
+    type: String,
+    default: "",
+  },
+  user: {
+    type: Object,
+    require: true,
+  },
+});
 
 const channelSelected = ref("game");
 
@@ -18,13 +28,6 @@ const sortOption = [
   { name: "인기순", value: "likes" },
   { name: "최신순", value: "desc" },
 ];
-
-const props = defineProps({
-  targetId: {
-    type: String,
-    default: "",
-  },
-});
 
 const postData = reactive({
   posts: [],
@@ -61,7 +64,7 @@ watch(page, async () => {
 </script>
 
 <template>
-  <UserProfile :targetId="props.targetId" />
+  <user-profile :user="user"></user-profile>
   <div class="mt-16">
     <h2
       class="text-lg font-bold cursor-pointer inline mr-8 pb-2 hover:text-point-500 hover:border-point-500"
@@ -73,7 +76,7 @@ watch(page, async () => {
       }"
       @click="changeChannelSelected('game')"
     >
-      　GAME　
+      GAME
     </h2>
     <h2
       class="text-lg font-bold cursor-pointer inline mr-8 pb-2 hover:text-point-500 hover:border-point-500"
@@ -85,9 +88,8 @@ watch(page, async () => {
       }"
       @click="changeChannelSelected('comma')"
     >
-      　COMMA　
+      COMMA
     </h2>
-    <!-- Todo 게시글 있을때만 보이도록 분기처리 -->
 
     <div class="flex float-right my-2">
       <Filter
@@ -104,20 +106,6 @@ watch(page, async () => {
       />
     </div>
   </div>
-  <!-- 게시글 없을 시 -->
-  <!-- <div
-    class="text-center flex align-middle justify-center h-[45vh] place-items-center"
-  >
-    <nav class="text-white/50 text-2xl font-bold">
-      작성한 포스트가 존재하지 않습니다.
-    </nav>
-  </div> -->
-  <!-- 게시글 있을 시  post item 무한스크롤-->
-
-  <!-- <div>
-  
-    <PostItem item="" />
-  </div> -->
 </template>
 
 <style scoped></style>

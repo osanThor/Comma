@@ -1,13 +1,56 @@
 <script setup>
-import { useAuthStore } from "@/stores/auth.js";
-const userStore = useAuthStore();
-const { user } = storeToRefs(userStore);
+import { getUserById } from "@/services/user.service";
+import { useToastStore } from "@/stores/toast";
+
+const { addToast } = useToastStore();
+
+const route = useRoute();
+const router = useRouter();
+
+const loading = ref(true);
+const userId = ref(null);
+const user = ref(null);
+
+const handleGetUser = async (id) => {
+  try {
+    loading.value = true;
+    const data = await getUserById(id);
+    if (data) {
+      user.value = data;
+      userId.value = id;
+    } else {
+      addToast("사용자를 찾을 수 없어요");
+      router.push("/");
+    }
+  } catch (err) {
+    addToast("사용자를 찾을 수 없어요");
+    router.push("/");
+  } finally {
+    loading.value = false;
+  }
+};
+
+onBeforeMount(() => {
+  const id = route.params.userId;
+  handleGetUser(id);
+});
+
+watch(route, () => {
+  const id = route.params.userId;
+  handleGetUser(id);
+});
 </script>
 <template>
   <section
     class="w-full max-w-[1640px] min-h-screen mt-[120px] flex flex-col contents-box py-[90px] mb-10 px-20"
   >
-    <div class="flex w-full h-full flex-grow gap-[7vw]">
+    <div
+      v-if="loading"
+      class="w-full h-full flex-grow flex justify-center items-center"
+    >
+      <div class="loader"></div>
+    </div>
+    <div v-else class="flex w-full h-full flex-grow gap-[7vw]">
       <div class="w-[210px] border-white border-r-2 flex flex-col relative">
         <div class="w-full flex flex-col gap-[33px] sticky top-[100px] left-0">
           <router-link
@@ -41,7 +84,7 @@ const { user } = storeToRefs(userStore);
       </div>
       <div class="flex-1">
         <div>
-          <router-view></router-view>
+          <router-view :user="user" :user-id="userId"></router-view>
         </div>
       </div>
     </div>

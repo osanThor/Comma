@@ -6,6 +6,7 @@ import { getUserById } from "@/services/user.service";
 const router = useRouter();
 const authStore = useAuthStore();
 const { user: userInfo } = storeToRefs(authStore);
+import { getGameRanking, getGameScoreByUser } from "@/services/game.service";
 
 const props = defineProps({
   user: {
@@ -23,6 +24,59 @@ const formatedBio = computed(
     props.user.bio ||
     "아직 자기소개를 작성하지 않으셨습니다. 자기소개를 작성해주세요"
 );
+
+const userGames = ref([]);
+
+const handleGetGameScoreByUser = async (userId) => {
+  try {
+    const data = await getGameScoreByUser(userId);
+    if (data) {
+      userGames.value = data;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+onBeforeMount(async () => {
+  await handleGetGameScoreByUser(props.user.id);
+});
+
+const playTime = ref(0);
+
+const fetchRankings = async () => {
+  try {
+    const data = await Promise.all(
+      userGames.value.map((game) => getGameRanking(game.game_id))
+    );
+    const ranks = data.map((rankingArr) =>
+      rankingArr.find((ranking) => ranking.user_id === props.user.id)
+    );
+    ranks.forEach((rank) => {
+      playTime.value = playTime.value + rank.total_play_time;
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+function formatTime(milliseconds) {
+  const totalSeconds = Math.floor(milliseconds / 1000); // 총 초
+  const hours = Math.floor(totalSeconds / 3600); // 시간
+  const minutes = Math.floor((totalSeconds % 3600) / 60); // 분
+  const seconds = totalSeconds % 60; // 초
+  const millis = Math.floor(milliseconds % 1000); // 밀리초
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(2, "0")}:${String(millis).padStart(3, "0")}`;
+}
+
+watch(userGames, async () => {
+  await fetchRankings();
+});
+
+const totalPlayTime = computed(() => formatTime(playTime.value));
 </script>
 <template>
   <!-- Profile Section -->
@@ -56,7 +110,7 @@ const formatedBio = computed(
       <div
         class="mt-2 bg-main-600 text-point-500 h-[38px] px-3.5 rounded-xl text-base font-semibold flex items-center justify-center text-center"
       >
-        총 플레이 시간 | 00:00:00
+        총 플레이 시간 | {{ totalPlayTime }}
       </div>
     </div>
   </div>

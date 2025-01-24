@@ -1,22 +1,14 @@
 <script setup>
 const props = defineProps({
-  name: {
-    type: String,
-    default: "",
-  },
-  playTime: {
-    type: Number,
-    default: 0,
-  },
-  rank: {
-    type: Number,
-    default: 0,
+  item: {
+    type: Object,
+    required: true,
   },
 });
 
 // milisecond 로 오는 플레이타임을 hh:mm:ss 로 변경해서 미리 변수로 저장
 const formattedTime = computed(() => {
-  const totalSeconds = Math.floor(props.playTime / 1000);
+  const totalSeconds = Math.floor(props.item.play_time / 1000);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
@@ -36,13 +28,13 @@ const formattedTime = computed(() => {
         class="w-[60px] h-[60px]"
       />
       <div class="flex-1 flex justify-center text-white text-2xl font-semibold">
-        {{ name }}
+        {{ item.game.display_name }}
       </div>
       <div class="flex-1 flex justify-center text-white text-lg font-semibold">
         {{ formattedTime }}
       </div>
       <div class="flex-1 flex justify-center text-white text-lg font-semibold">
-        {{ rank }}등
+        {{ item.rank }}등
       </div>
     </div>
   </div>

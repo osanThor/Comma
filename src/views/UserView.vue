@@ -54,7 +54,7 @@ watch(
       <div class="loader text-4xl font-bold text-white">Loading..</div>
     </div>
     <div v-else class="flex w-full h-full flex-grow gap-[7vw]">
-      <div class="w-[210px] border-white border-r-2 flex flex-col relative">
+      <div class="min-w-[212px] border-white border-r-2 flex flex-col relative">
         <div class="w-full flex flex-col gap-[33px] sticky top-[100px] left-0">
           <router-link
             :to="`/user/${user.id}/post`"

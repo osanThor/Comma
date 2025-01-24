@@ -1,7 +1,8 @@
 <script setup>
 import UserProfile from "./UserProfile.vue";
 import RankComponent from "./RankComponent.vue";
-import { getGameScoreByUser } from "@/services/game.service";
+import { getGameRanking, getGameScoreByUser } from "@/services/game.service";
+
 const props = defineProps({
   userId: {
     type: String,
@@ -12,12 +13,14 @@ const props = defineProps({
     required: true,
   },
 });
-const handleGetGameScoreByUser = async (targetId) => {
+
+const userGames = ref([]);
+
+const handleGetGameScoreByUser = async (userId) => {
   try {
-    const data = await getGameScoreByUser(targetId);
-    console.log(data);
+    const data = await getGameScoreByUser(userId);
     if (data) {
-      // console.log(345);
+      userGames.value = data;
     }
   } catch (err) {
     console.error(err);
@@ -25,17 +28,38 @@ const handleGetGameScoreByUser = async (targetId) => {
 };
 
 onBeforeMount(async () => {
-  await handleGetGameScoreByUser("7dfc8ce0-9678-4b15-aace-54b57e052b12");
+  await handleGetGameScoreByUser(props.userId);
+});
+
+const rankings = ref([]);
+
+const fetchRankings = async () => {
+  try {
+    const data = await Promise.all(
+      userGames.value.map((game) => getGameRanking(game.game_id))
+    );
+    rankings.value = data.map((rankingArr) =>
+      rankingArr.find((ranking) => ranking.user_id === props.userId)
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+watch(userGames, async () => {
+  await fetchRankings();
 });
 </script>
 <template>
   <user-profile :user="user"></user-profile>
-  <div class="space-y-3 mt-[74px]">
-    <RankComponent name="플래피 버드" rank="1" playTime="360000" />
-    <RankComponent name="슈팅게임" rank="5" playTime="3600000" />
-    <RankComponent name="바운스 볼" rank="17" playTime="180000" />
-    <RankComponent name="테트리스" rank="9" playTime="452684531" />
-    <RankComponent name="지뢰찾기" rank="245" playTime="3321875" />
+  <div
+    v-if="!rankings.length"
+    class="w-full flex items-center justify-center py-[200px] text-white/50 text-2xl font-bold"
+  >
+    플레이된 게임이 없습니다.
+  </div>
+  <div v-else class="flex-grow space-y-3 mt-[74px]">
+    <rank-component v-for="item in rankings" :item="item"></rank-component>
   </div>
 </template>
 <style scoped></style>

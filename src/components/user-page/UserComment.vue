@@ -1,37 +1,41 @@
 <script setup>
 import Filter from "@/components/common/Filter.vue";
 import CommentComponent from "./CommentComponent.vue";
+import { getCommentsByUserId } from "@/services/comment.service";
+import Pagination from "@/components/common/Pagination.vue";
 const channelSelected = ref("game");
+const comments = ref([]);
+const page = ref(1);
+
+const handleGetComments = async (postId) => {
+  try {
+    if (!postId) return alert("post id 입력");
+    const commentsData = await getCommentsByUserId(postId, "desc", "1", "7");
+    console.log(commentsData);
+    if (commentsData) comments.value = commentsData;
+  } catch (err) {
+    console.error(err);
+    alert(err);
+  }
+};
+
+const commentsData = reactive({
+  comments: [],
+  total: 0,
+});
+// const handleChangePage = (currentPage) => {
+//   page.value = currentPage;
+// };
+
+onBeforeMount(async () => {
+  await handleGetComments("759dc524-84fb-40a8-81c5-d6758c286827");
+});
 
 function changeChannelSelected(channel) {
   channelSelected.value = channel; // Use .value to update ref
 }
 </script>
 <template>
-  <h2
-    class="text-lg font-bold cursor-pointer inline mr-8 pb-2 hover:text-point-500 hover:border-point-500"
-    :class="{
-      'text-point-500 border-point-500 border-b-4': channelSelected === 'game',
-      'text-white': channelSelected !== 'game',
-      'border-b-2': channelSelected === 'game',
-    }"
-    @click="changeChannelSelected('game')"
-  >
-    　GAME　
-  </h2>
-  <h2
-    class="text-lg font-bold cursor-pointer inline mr-8 pb-2 hover:text-point-500 hover:border-point-500"
-    :class="{
-      'text-point-500 font-bold border-point-500 border-b-4':
-        channelSelected === 'comma',
-      'text-white': channelSelected !== 'comma',
-      'border-b-2': channelSelected === 'comma',
-    }"
-    @click="changeChannelSelected('comma')"
-  >
-    　COMMA　
-  </h2>
-
   <!-- 게시글 없을 시  -->
   <!-- <div
     class="text-center flex align-middle justify-center h-[60vh] grid place-items-center font-bold"
@@ -42,15 +46,15 @@ function changeChannelSelected(channel) {
   </div> -->
   <!-- 게시글 있을 시 -->
   <div>
-    <div class="float-right mb-5 mt-[60px] mr-[124px]">
+    <div class="float-right mb-5">
       <Filter
         :sort="sort"
         :sortOption="sortOption"
         @change-sort="handleChangeSort"
       />
     </div>
-
-    <CommentComponent
+    <CommentComponent v-for="value in comments.data" :item="value" />
+    <!-- <CommentComponent
       title="Title"
       comment="test"
       date="2025-01-20"
@@ -73,9 +77,13 @@ function changeChannelSelected(channel) {
       comment="test123"
       date="2025-01-20"
       like="0"
-    />
+    /> -->
   </div>
-
-  <!-- <PostItem v-for="value in postData.posts" :key="value.id" :item="value" /> -->
+  <Pagination
+    :page="page"
+    :total="commentsData.totalCount"
+    @page-change="handleChangePage"
+  />
+  <div class="w-full flex justify-center"></div>
 </template>
 <style scoped></style>

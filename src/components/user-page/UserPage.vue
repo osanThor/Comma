@@ -5,7 +5,9 @@ import UserLike from "./UserLike.vue";
 import UserPost from "./UserPost.vue";
 import UserRank from "./UserRank.vue";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const uInfo = useAuthStore();
 const pageSelected = ref("post");
 

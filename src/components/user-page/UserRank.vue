@@ -1,9 +1,26 @@
 <script setup>
 import UserProfile from "./UserProfile.vue";
 import RankComponent from "./RankComponent.vue";
+import { getGameScoreByUser } from "@/services/game.service";
+
+const handleGetGameScoreByUser = async (targetId) => {
+  try {
+    const data = await getGameScoreByUser(targetId);
+    console.log(data);
+    if (data) {
+      // console.log(345);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+onBeforeMount(async () => {
+  await handleGetGameScoreByUser("7dfc8ce0-9678-4b15-aace-54b57e052b12");
+});
 </script>
 <template>
-  <UserProfile />
+  <UserProfile targetId="7dfc8ce0-9678-4b15-aace-54b57e052b12" />
   <!-- Main Content -->
   <!-- Game List 추후 컴포넌트화-->
   <div class="space-y-3 mt-[74px]">

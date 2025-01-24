@@ -1,10 +1,14 @@
 <script setup>
+import router from "@/router";
 import { useAuthStore } from "@/stores/auth.js";
 import { ref } from "vue";
+//import { updateProfilePicture } from "@/services/user.service"; // 서버로 업로드하기 위한 API 함수 (가정)
+
 const uInfo = useAuthStore();
-const router = useRouter();
+const charCount = ref(uInfo.user.bio?.length || 0);
 const name = ref(uInfo.user.name);
 const email = ref(uInfo.user.email);
+const profilePicture = ref(""); // 프로필 사진 경로를 저장하는 ref
 const bio = ref(
   uInfo.user.bio === null
     ? "아직 자기소개를 작성하지 않으셨습니다. 자기소개를 작성해주세요"
@@ -12,14 +16,41 @@ const bio = ref(
 );
 
 function navigateToUserPage() {
-  router.push(`/user/${uInfo.user.id}`); // Navigate to /user/edit
+  router.push(`/user/${uInfo.user.id}`); // Navigate to user page
 }
-function updateCharCount() {
+
+const updateCharCount = () => {
   charCount.value = bio.value.length;
-  console.log(charCount.value);
-}
-const charCount = ref(bio.value.length);
+};
+
+const updateProfilePictureHandler = async () => {
+  const fileInput = document.getElementById("profile-picture-input");
+  if (fileInput) fileInput.click(); // Trigger file input click
+};
+
+// 파일 선택 시 호출되는 함수
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    // 로컬 URL을 생성하여 이미지를 미리보기
+    profilePicture.value = URL.createObjectURL(file);
+  }
+};
+
+const updateUserProfileHandler = async () => {
+  try {
+    console.log(123);
+    const data = await updateUserProfiles(targetId, "dec", true, 1, 10);
+    console.log(data);
+    if (data) {
+      console.log(1);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
 </script>
+
 <template>
   <!-- Main Content -->
   <section
@@ -37,7 +68,7 @@ const charCount = ref(bio.value.length);
             class="w-[216px] h-[216px] bg-gray-800 rounded-full flex items-center justify-center overflow-hidden"
           >
             <img
-              :src="uInfo.user.profile_image"
+              :src="profilePicture || uInfo.user.profile_image"
               class="w-full h-full object-cover"
               @error="handleImageError"
             />
@@ -45,7 +76,8 @@ const charCount = ref(bio.value.length);
 
           <!-- 에딧 버튼 -->
           <div
-            class="absolute bottom-20 right-4 bg-point-500 rounded-full w-[45px] h-[45px] flex items-center justify-center text-white text-xs overflow-hidden transform transition-transform duration-100 ease-in-out hover:scale-125"
+            class="absolute bottom-2 right-4 bg-point-500 rounded-full w-[45px] h-[45px] flex items-center justify-center text-white text-xs overflow-hidden transform transition-transform duration-100 ease-in-out hover:scale-125"
+            @click="updateProfilePictureHandler"
           >
             <img
               class="w-[22px]"
@@ -54,15 +86,14 @@ const charCount = ref(bio.value.length);
             />
           </div>
 
-          <!-- 사용자 정보 -->
-          <div class="py-2 mt-2 text-center">
-            <h2 class="text-white text-2xl font-bold">
-              {{ uInfo.user.name }}
-            </h2>
-            <h2 class="text-white text-sm font-medium">
-              {{ uInfo.user.email }}
-            </h2>
-          </div>
+          <!-- 숨겨진 파일 입력 -->
+          <input
+            id="profile-picture-input"
+            type="file"
+            accept="image/*"
+            class="hidden"
+            @change="handleFileChange"
+          />
         </div>
       </div>
 
@@ -74,7 +105,6 @@ const charCount = ref(bio.value.length);
           type="text"
           class="w-[624px] h-[56px] rounded-[12px] px-7 mt-2.5 text-lg font-medium"
           name="name"
-          id=""
           v-model="name"
         />
 
@@ -85,23 +115,20 @@ const charCount = ref(bio.value.length);
           name="email"
           disabled
           v-model="email"
-          id=""
         />
         <h2 class="text-white text-xl font-bold mt-[29px]">자기소개</h2>
         <div class="flex flex-col">
           <textarea
-            class="w-[624px] h-32 rounded-[12px] py-5 px-6 resize-none mt-2.5 mr-[150px] text-lg font-medium float-left"
+            class="w-[624px] h-32 rounded-[12px] py-5 px-6 resize-none mt-2.5 text-lg font-medium"
             name="bio"
-            id=""
             maxlength="150"
             v-model="bio"
             @input="updateCharCount"
-          >
-          </textarea>
+          ></textarea>
           <h2
             class="float-left text-sm text-white py-2 pl-2"
             :class="{
-              'text-point-500/ font-medium': charCount >= 150,
+              'text-point-500 font-medium': charCount >= 150,
               'text-white/50': charCount < 150,
             }"
           >
@@ -115,7 +142,10 @@ const charCount = ref(bio.value.length);
           >
             취소
           </button>
-          <button class="w-[66px] h-[32px] bg-point-500 rounded-lg text-white">
+          <button
+            class="w-[66px] h-[32px] bg-point-500 rounded-lg text-white"
+            @click="updateUserProfileHandler()"
+          >
             저장
           </button>
         </div>
@@ -123,4 +153,3 @@ const charCount = ref(bio.value.length);
     </div>
   </section>
 </template>
-<style scoped></style>

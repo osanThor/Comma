@@ -28,6 +28,13 @@ const commentsData = reactive({
   total: 0,
 });
 
+const trigger = ref(false);
+
+const handleCommentTrigger = () => {
+  console.log("?");
+  trigger.value = !trigger.value;
+};
+
 const handleGetComments = async (page, sort) => {
   try {
     const data = await getCommentsByUserId(props.userId, sort, page);
@@ -43,17 +50,14 @@ const handleGetComments = async (page, sort) => {
 
 const handleChangePage = (currentPage) => {
   page.value = currentPage;
+  trigger.value = !trigger.value;
 };
 
 const handleChangeSort = async (currentSort) => {
   if (sort.value !== currentSort) {
     sort.value = currentSort;
     page.value = 1;
-    await handleGetPosts(
-      page.value,
-      sort.value,
-      channelSelected.value === "comma"
-    );
+    trigger.value = !trigger.value;
   }
 };
 
@@ -61,8 +65,8 @@ onBeforeMount(async () => {
   await handleGetComments(1, sort.value);
 });
 
-watch(page, async () => {
-  await handleGetPosts(page.value, sort.value);
+watch(trigger, async () => {
+  await handleGetComments(page.value, sort.value);
 });
 </script>
 <template>
@@ -84,6 +88,7 @@ watch(page, async () => {
       <comment-component
         v-for="item in commentsData.comments"
         :item="item"
+        @comment-trigger="handleCommentTrigger"
       ></comment-component>
     </div>
     <div class="w-full flex justify-center">

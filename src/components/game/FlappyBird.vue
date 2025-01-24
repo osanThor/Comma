@@ -13,18 +13,18 @@ import { makeBackground } from "../../classes/flappy/makeBackground.js";
 import { makePlayer } from "../../classes/flappy/makePlayer.js";
 import { makeScoreBox } from "../../classes/flappy/makeScoreBox.js";
 import { saveSystem } from "../../classes/flappy/save.js";
-
 import { useTimer } from "@/hooks/useTimer.js";
-const { currentTime, start, stop, reset } = useTimer();
 
 export default {
   name: "GameScene",
   async mounted() {
-    if (window.__kaplayInitialized) {
-      console.warn("KAPLAY already initialized!");
-      return;
-    }
-    window.__kaplayInitialized = true;
+    const { currentTime, start, stop, reset } = useTimer();
+
+    // if (window.__kaplayInitialized) {
+    //   console.warn("KAPLAY already initialized!");
+    //   return;
+    // }
+    // window.__kaplayInitialized = true;
 
     const canvas = this.$refs.gameCanvas;
     const k = kaplay({
@@ -38,18 +38,6 @@ export default {
     let audioEnabled = true;
     const gameStore = useGameStore();
     let isGameStarted = false;
-
-    k.loadSprite("sky", "/assets/flappy/2.png");
-    k.loadSprite("field", "/assets/flappy/3.png");
-
-    k.loadSprite("boo", "/assets/flappy/Boo.png");
-    k.loadSprite("obstacles", "/assets/flappy/obstacles.png");
-    k.loadSprite("playBtn", "/assets/flappy/playBtn.png");
-    k.loadSprite("clouds", "/assets/flappy/clouds.png");
-    k.loadSound("jump", "/assets/flappy/jump.wav");
-    k.loadSound("hurt", "/assets/flappy/hurt.wav");
-    k.loadSound("confirm", "/assets/flappy/poka02.mp3");
-
     let audioContext;
 
     const resumeAudioContext = () => {
@@ -61,15 +49,22 @@ export default {
       });
     };
 
+    k.loadSprite("sky", "/assets/flappy/2.png");
+    k.loadSprite("field", "/assets/flappy/3.png");
+    k.loadSprite("boo", "/assets/flappy/Boo.png");
+    k.loadSprite("obstacles", "/assets/flappy/obstacles.png");
+    k.loadSprite("playBtn", "/assets/flappy/playBtn.png");
+    k.loadSprite("clouds", "/assets/flappy/clouds.png");
+    k.loadSound("jump", "/assets/flappy/jump.wav");
+    k.loadSound("hurt", "/assets/flappy/hurt.wav");
+    k.loadSound("confirm", "/assets/flappy/poka02.mp3");
+
     // 시작 화면 씬
     k.scene("start", async () => {
       makeBackground(k);
-
       //배경 추가
       const map = k.add([k.pos(0, 0), k.scale(SCALE_FACTOR)]);
-
       const clouds = map.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
-
       clouds.onUpdate(() => {
         clouds.move(clouds.speed, 0);
         if (clouds.pos.x > 700) clouds.pos.x = -500;
@@ -88,10 +83,10 @@ export default {
 
       const playBtn = k.add([
         k.sprite("playBtn"),
-        k.scale(0.2),
+        k.scale(0.35),
         k.area(),
         k.anchor("center"),
-        k.pos(k.center().x + 30, k.center().y - 0),
+        k.pos(k.center().x + 20, k.center().y + 40),
       ]);
 
       const goToGame = () => {
@@ -103,6 +98,7 @@ export default {
 
       playBtn.onClick(goToGame);
       k.onKeyPress("space", goToGame);
+
     });
 
     function startGame() {
@@ -127,8 +123,8 @@ export default {
       clouds.onUpdate(() => {
         if (isGameStarted) {
           clouds.move(clouds.speed, 0);
-          if (clouds.pos.x > 700) {
-            clouds.pos.x = -500;
+          if (clouds.pos.x > 500) {
+            clouds.pos.x = -100;
           }
         }
       });
@@ -253,7 +249,7 @@ export default {
       });
     });
 
-    function resetGame(){
+    function resetGame() {
       reset();
     }
 

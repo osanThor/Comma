@@ -35,10 +35,13 @@ onBeforeMount(() => {
   handleGetUser(id);
 });
 
-watch(route, () => {
-  const id = route.params.userId;
-  handleGetUser(id);
-});
+watch(
+  () => route.params.userId,
+  () => {
+    const id = route.params.userId;
+    handleGetUser(id);
+  }
+);
 </script>
 <template>
   <section
@@ -48,7 +51,7 @@ watch(route, () => {
       v-if="loading"
       class="w-full h-full flex-grow flex justify-center items-center"
     >
-      <div class="loader"></div>
+      <div class="loader text-4xl font-bold text-white">Loading..</div>
     </div>
     <div v-else class="flex w-full h-full flex-grow gap-[7vw]">
       <div class="w-[210px] border-white border-r-2 flex flex-col relative">
@@ -82,10 +85,8 @@ watch(route, () => {
           </router-link>
         </div>
       </div>
-      <div class="flex-1">
-        <div>
-          <router-view :user="user" :user-id="userId"></router-view>
-        </div>
+      <div class="w-full flex flex-col">
+        <router-view :user="user" :user-id="userId"></router-view>
       </div>
     </div>
     <img

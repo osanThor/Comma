@@ -123,7 +123,7 @@ watch(page, async () => {
       v-if="!postData.posts.length"
       class="w-full flex items-center justify-center py-[200px] text-white/50 text-2xl font-bold"
     >
-      작성한 포스트가 존재하디 않습니다.
+      작성한 포스트가 존재하지 않습니다.
     </div>
     <div
       v-else

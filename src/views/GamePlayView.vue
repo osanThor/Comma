@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 const isGameOver = ref(false);
 
-const openGameOver = () => {
+const openGameOver = (score, playTime) => {
   isGameOver.value = true;
 };
 const closeGameOver = () => {

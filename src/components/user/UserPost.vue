@@ -13,7 +13,7 @@ const props = defineProps({
   },
   user: {
     type: Object,
-    require: true,
+    required: true,
   },
 });
 

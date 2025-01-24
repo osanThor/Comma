@@ -24,12 +24,15 @@ const dateFormed = computed(() => {
 
 <template>
   <!-- Main content area -->
-  <div class="clear-right mt-3">
-    <div
-      class="h-[70px] w-[1000px] ml-[30px] rounded-2xl bg-main-600 flex items-center px-[33px] mt-3"
+  <div class="w-full relative">
+    <router-link
+      :to="`/post/${item.post_id}`"
+      class="h-[70px] w-full rounded-2xl bg-main-600 flex items-center px-[33px] mt-3"
     >
-      <div class="flex-1 text-white text-base font-dnf max-w-32 truncate mr-10">
-        {{ item.content }}
+      <div
+        class="min-w-[128px] flex-1 text-white text-base font-dnf max-w-32 truncate mr-10"
+      >
+        {{ item.post.title }}
       </div>
       <div
         class="flex-[1.8] text-white/70 text-base font-medium max-w-[612px] truncate pr-8"
@@ -45,7 +48,7 @@ const dateFormed = computed(() => {
         <small-like width="15" height="15"></small-like>
         <span class="ml-1">{{ totalLikes }}</span>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 

@@ -10,7 +10,7 @@ const { user: userInfo } = storeToRefs(authStore);
 const props = defineProps({
   user: {
     type: Object,
-    require: true,
+    required: true,
   },
 });
 

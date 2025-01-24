@@ -9,7 +9,7 @@ const props = defineProps({
   },
   user: {
     type: Object,
-    require: true,
+    required: true,
   },
 });
 const handleGetGameScoreByUser = async (targetId) => {

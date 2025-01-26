@@ -15,9 +15,9 @@ const navigateToProfile = (userId) => {
 </script>
 <template>
   <main
-    class="contents-box mx-auto my-auto flex items-center mt-32 py-28 px-40 sm:px-8 lg:px-40 mb-80"
+    class="contents-box mx-auto flex flex-col items-center justify-start mt-24 md:py-16 md:px-20 lg:py-24 lg:px-28 mb-80 max-w-[1440px] px-10 py-10 h-auto"
   >
-    <section class="">
+    <section class="w-full flex flex-col gap-8">
       <post-content
         :postId="postId"
         :navigateToProfile="navigateToProfile"

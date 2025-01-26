@@ -73,28 +73,28 @@ export default {
 </script>
 
 <template>
-  <section class="flex flex-col items-center w-full md:w-[1000px] mx-auto">
+  <section class="flex flex-col items-center w-full mx-auto">
     <!-- 댓글 상단 -->
-    <header class="flex flex-row items-end justify-between w-full text-white">
-      <p class="font-bold text-2xl">댓글 {{ totalCount }}개</p>
-      <div class="flex flex-row items gap-5 font-bold text-lg">
+    <header class="flex flex-row items-end justify-between w-full text-white mb-12">
+      <p class="font-semibold text-2xl">댓글 {{ totalCount }}개</p>
+      <div class="flex flex-row items gap-5 font-semibold text-lg">
         <button
           :class="{ 'text-point-500': sortType === 'desc' }"
           @click="handleChangeSort('desc')"
-          class="hover:text-point-300"
+          class="hover:text-point-500"
         >
           최신순
         </button>
         <button
           :class="{ 'text-point-500': sortType === 'likes' }"
           @click="handleChangeSort('likes')"
-          class="hover:text-point-300"
+          class="hover:text-point-500"
         >
           인기순
         </button>
       </div>
     </header>
-    <main class="w-full">
+    <main class="flex flex-col items-center w-full">
       <!-- 댓글 목록 -->
       <post-comment-card-item
         v-for="comment in comments"

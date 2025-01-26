@@ -75,7 +75,7 @@ export default {
 </script>
 
 <template>
-  <main class="flex flex-row items-start justify-center gap-12">
+  <main class="flex flex-col h-auto lg:flex-row items-center lg:items-start justify-center gap-8 px-20">
     <!-- 이미지 업로드 -->
     <post-edit-img
       :images="postStore.images"
@@ -83,7 +83,7 @@ export default {
       @removeImage="removeImage"
     ></post-edit-img>
     <!-- 게시글 내용 작성 -->
-    <section class="flex flex-col items-end gap-12">
+    <section class="flex flex-col items-end justify-between gap-4 w-full ">
       <post-edit-content
         :title="postStore.title"
         :content="postStore.content"

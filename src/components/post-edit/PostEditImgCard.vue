@@ -24,7 +24,7 @@ export default {
       return { opacity: this.opacity / 100};
     },
     logImgSrc() {
-      console.log("Image source:", this.imgSrc);  // computed 속성에서 출력
+      console.log("Image source:", this.imgSrc); 
       return this.imgSrc;
     }
   },

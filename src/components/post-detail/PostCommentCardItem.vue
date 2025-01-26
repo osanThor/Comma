@@ -62,35 +62,38 @@ export default {
 <template>
   <div
     v-if="comment && comment.user"
-    class="flex flex-row items-center justify-between my-20 comment-card-item"
+    class="flex flex-row items-center justify-between mb-8 lg:mb-12 w-full"
   >
-    <!-- 작성자 프로필 이미지 -->
-    <div
-      @click="navigateToProfile(comment.user?.id)"
-      class="w-16 h-16 rounded-full cursor-pointer"
-    >
-      <img
-        class="w-full h-full object-cover object-center rounded-full"
-        :src="comment.user?.profile_image || '/assets/images/exProfile.png'"
-      />
-    </div>
+    <section class="flex flex-row items-center gap-4">
+      <!-- 작성자 프로필 이미지 -->
+      <div
+        @click="navigateToProfile(comment.user?.id)"
+        class="md:w-8 md:h-8 lg:w-16 lg:h-16 rounded-full cursor-pointer"
+      >
+        <img
+          class="w-full h-full object-cover object-center rounded-full"
+          :src="comment.user?.profile_image || '/assets/images/defaultProfile.png'"
+        />
+      </div>
 
-    <!-- 댓글 콘텐츠 -->
-    <div>
-      <!-- 닉네임 및 작성일시 -->
-      <div class="flex flex-row items-center text-white gap-2">
-        <p class="font-bold text-xl leading-0">
-          {{ comment.user?.name || "알수없음" }}
-        </p>
-        <p class="font-medium text-xs text-white/50 leading-0 pt-1">
-          {{ formatDate(comment.created_at) }}
+      <!-- 댓글 콘텐츠 -->
+      <div>
+        <!-- 닉네임 및 작성일시 -->
+        <div class="flex flex-row items-center text-white gap-2">
+          <p class="font-semibold text-lg leading-0">
+            {{ comment.user?.name || "알수없음" }}
+          </p>
+          <p class="font-medium text-xs text-white/50 leading-0 pt-1">
+            {{ formatDate(comment.created_at) }}
+          </p>
+        </div>
+        <!-- 댓글 본문 -->
+        <p class="w-full max-w-[700px] h-auto text-white/70 font-medium text-sm mr-16">
+          {{ comment.content }}
         </p>
       </div>
-      <!-- 댓글 본문 -->
-      <p class="w-[790px] h-auto text-white/70 font-semibold mr-16">
-        {{ comment.content }}
-      </p>
-    </div>
+    </section>
+    
     <!-- 좋아요 -->
     <div
       class="w-6 flex flex-col items-center justify-center font-medium text-white object-contain"

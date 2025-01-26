@@ -63,7 +63,7 @@ export default {
     <div>
       <!-- 기본 이미지 영역 -->
       <post-edit-img-card
-        v-if="images.length > 0"
+        v-if="images.length > 0 && images[0] && images[0].preview"
         :imgSrc="images[0].preview || images[0]"
         :size="'w-[440px] h-[440px]'"
         :opacity="100"

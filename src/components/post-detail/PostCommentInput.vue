@@ -64,22 +64,22 @@ export default {
 </script>
 
 <template>
-  <section class="relative w-[1090px] h-[104px] mt-16">
+  <section class="relative mx-auto w-full h-full mt-8">
     <img
       @click="submitComment"
-      class="absolute bottom-0 right-0 m-4 cursor-pointer opacity-70 hover:opacity-100 transition-opacity duration-300"
+      class="absolute bottom-4 right-2 cursor-pointer opacity-70 hover:opacity-100 transition-opacity duration-300"
       src="/assets/images/icons/post-send-icon.svg"
     />
     <textarea
       v-model="commentContent"
       @keypress="handleKeyPress"
       name="PostComment"
-      class="w-full h-full bg-white/20 border-2 focus:outline-none focus:placeholder:opacity-0 font-medium rounded-xl p-5 placeholder:text-white/50 text-white resize-none overflow-auto"
+      class="w-full h-full min-h-28 bg-white/20 border-2 focus:placeholder:opacity-0 font-medium rounded-xl p-5 placeholder:text-white/50 text-white resize-none overflow-auto focus:outline-4 focus:outline-point-500/30 "
       placeholder="댓글을 입력해주세요 φ(゜▽゜*)♪"
       id=""
     ></textarea>
   </section>
-  <hr class="border-dashed border-2 my-16 opacity-30" />
+  <hr class="border-dashed border-2 mt-8 mb-8 opacity-30 w-full" />
 </template>
 
 <style scoped></style>

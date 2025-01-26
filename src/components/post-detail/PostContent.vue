@@ -116,24 +116,24 @@ export default {
 </script>
 
 <template>
-  <main class="flex flex-row items-center gap-12">
+  <main class="flex flex-col md:flex-row items-start md:gap-6 lg:gap-8">
     <!-- 게시글 이미지 -->
-    <section>
+    <section class="flex flex-shrink-0">
       <div
-        class="bg-white w-[440px] h-[440px] rounded-xl flex items-center justify-center p-1"
+        class="bg-white md:w-[400px] lg:w-[440px] md:h-[400px] lg:h-[440px] rounded-xl flex items-center justify-center p-1"
       >
-        <div class="w-[420px] h-[420px]">
+        <div class="md:w-[380px] lg:w-[420px] md:h-[380px] lg:h-[420px]">
           <swiper v-bind="swiperOptions">
             <swiper-slide v-for="(image, index) in post?.images" :key="index">
               <img
-                class="w-[420px] h-[420px] object-cover object-center rounded-xl"
+                class="md:w-[380px] lg:w-[420px] md:h-[380px] lg:h-[420px] object-cover object-center rounded-lg lg:rounded-xl"
                 :src="image"
               />
             </swiper-slide>
             <swiper-slide v-if="!post?.images?.length">
               <img
                 src="/assets/images/postDefaultImg.png"
-                class="w-[420px] h-[420px] object-cover object-center rounded-xl"
+                class="w-full object-cover object-center rounded-lg lg:rounded-xl"
               />
             </swiper-slide>
           </swiper>
@@ -142,21 +142,21 @@ export default {
     </section>
     <!-- 컨텐츠 -->
     <article
-      class="flex flex-col items-start justify-between text-white w-[601px] h-[440px]"
+      class="flex flex-col justify-between text-white flex-grow md:h-[410px] lg:h-[448px] w-full min-w-[500px] "
     >
       <section class="w-full">
         <!-- 상단 -->
-        <header class="flex flex-row items-end justify-between w-full">
+        <header class="flex flex-row items-end justify-between w-full ">
           <!-- 제목 및 날짜 -->
-          <div>
-            <p class="font-medium text-white/70 mb-1">
+          <div class="flex-grow">
+            <p class="font-medium text-sm text-white/70 mb-2">
               {{ formatDate(post?.createdAt) }}
             </p>
             <h1 class="font-dnf text-4xl">{{ post?.title }}</h1>
           </div>
 
           <!-- 수정/삭제 버튼 -->
-          <div class="flex flex-row gap-6 text-lg font-semibold text-white/50">
+          <div class="flex flex-row gap-3 text-sm font-semibold text-white/50">
             <button @click="editPost" class="hover:text-white/100">수정</button>
             <button @click="handleDelete" class="hover:text-white/100">
               삭제

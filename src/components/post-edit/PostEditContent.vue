@@ -16,7 +16,6 @@ export default {
 </script>
 
 <template>
-  <!-- todo: 스크롤 수정하기 -->
   <section class="relative w-[600px] h-auto flex flex-col justify-between">
     <div>
       <!-- 제목 -->

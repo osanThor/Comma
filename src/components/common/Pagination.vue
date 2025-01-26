@@ -32,7 +32,7 @@ const changePage = (page) => {
 };
 </script>
 <template>
-  <div v-if="total" class="flex items-center text-sm font-dnf text-white gap-4">
+  <div v-if="total" class="flex items-center text-sm  text-white gap-4">
     <button
       @click="changePage(page - 1)"
       :disabled="page === 1"

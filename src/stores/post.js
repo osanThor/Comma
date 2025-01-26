@@ -13,7 +13,6 @@ const { user } = storeToRefs(authStore);
 import { defineStore } from "pinia";
 import { addLike, checkLike, removeLike } from "../services/like.service.js";
 import { uploadImage } from "../services/upload.service";
-import { useToastStore } from "./toast.js";
 
 export const usePostStore = defineStore("post", {
   state: () => ({
@@ -75,30 +74,25 @@ export const usePostStore = defineStore("post", {
     },
 
     addImage({ index, images }) {
-      const toastStore = useToastStore();
-
       if (this.images.length + images.length > 4) {
-        toastStore.addToast("이미지는 최대 4개까지 업로드 할 수 있어요!");
+        alert("이미지는 최대 4개까지 업로드 할 수 있습니다.");
         return;
       }
       this.images.splice(index, 0, ...images);
       if (this.images.length > 4) {
         this.images.splice(4);
       }
-      toastStore.addToast("이미지가 업로드되었어요!");
+      console.log("이미지 업로드:", this.images);
     },
 
     removeImage({ index }) {
-      const toastStore = useToastStore();
       this.images.splice(index, 1);
-      toastStore.addToast("이미지가 삭제되었어요!");
+      console.log("삭제되었습니다:", this.images);
     },
 
     async deletePost(postId) {
-      const toastStore = useToastStore();
       try {
         const response = await deletePost(postId);
-        toastStore.addToast("작별 인사를 건네요");
         return response;
       } catch (error) {
         console.error("게시글 삭제 실패:", error);
@@ -109,11 +103,15 @@ export const usePostStore = defineStore("post", {
     //좋아요 확인 및 추가 삭제
     async toggleLike(postId) {
       try {
+        console.log("Toggling like for postId:", postId);
+
         const isLiked = await checkLike({
           userId: user.value.id,
           targetId: postId,
           targetType: "post",
         });
+
+        console.log("Is post liked?", isLiked);
 
         if (isLiked) {
           await removeLike({
@@ -175,10 +173,8 @@ export const usePostStore = defineStore("post", {
 
     // 게시글 저장
     async savePost() {
-      const toastStore = useToastStore();
-
       if (!this.isValidPost) {
-        toastStore.addToast("제목과 내용을 모두 입력해주세요.");
+        alert("제목과 내용을 모두 입력해주세요.");
         return;
       }
 
@@ -191,7 +187,7 @@ export const usePostStore = defineStore("post", {
           .map((result) => result.value);
 
         if (successfulUploads.length !== this.images.length) {
-          toastStore.addToast("일부 이미지를 업로드하지 못했어요");
+          alert("일부 이미지를 업로드하지 못했습니다.");
         }
 
         const postPayload = {
@@ -202,13 +198,14 @@ export const usePostStore = defineStore("post", {
           category: "free",
         };
 
+        console.log("게시글 데이터:", postPayload);
+
         const response = await createPost(postPayload);
-        toastStore.addToast("성공적으로 저장되었어요!");
+        console.log("게시글 저장 성공!", response);
 
         this.resetPost();
         return response;
       } catch (error) {
-        toastStore.addToast("저장에 오류가 발생했어요..");
         console.error("게시글 저장 중 오류 발생:", error);
         throw error;
       }
@@ -216,10 +213,8 @@ export const usePostStore = defineStore("post", {
 
     // 게시글 수정하기
     async editPost(postId) {
-      const toastStore = useToastStore();
-
       if (!this.isValidPost) {
-        toastStore.addToast("제목과 내용 모두 입력해주세요");
+        alert("제목과 내용을 모두 입력해주세요.");
         return;
       }
 
@@ -244,12 +239,14 @@ export const usePostStore = defineStore("post", {
           category: this.category,
         };
 
+        console.log("업데이트 게시글 데이터:", postPayload);
+
         const response = await updatePost(postPayload);
-        toastStore.addToast("성공적으로 수정되었어요!");
+        console.log("게시글 업데이트 성공!", response);
+
         this.resetPost();
         return response;
       } catch (error) {
-        toastStore.addToast("수정 중 오류가 발생했어요..");
         console.error("게시글 업데이트 중 오류 발생:", error);
         throw error;
       }

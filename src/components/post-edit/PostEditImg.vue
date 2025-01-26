@@ -65,7 +65,7 @@ export default {
       <post-edit-img-card
         v-if="images.length > 0"
         :imgSrc="images[0].preview || images[0]"
-        :size="'w-[440px] h-[440px]'"
+        :size="'w-[400px] h-[400px] lg:w-[440px] lg:h-[440px]'"
         :opacity="100"
         @click="handleRemoveImage(0)"
       ></post-edit-img-card>
@@ -79,7 +79,7 @@ export default {
       <post-edit-img-card
         v-if="images.length > 1"
         :imgSrc="images[1].preview || images[1]"
-        :size="'w-[140px] h-[140px]'"
+        :size="'w-[130px] h-[130px] lg:w-[140px] lg:h-[140px]'"
         :opacity="70"
         @click="handleRemoveImage(1)"
       ></post-edit-img-card>
@@ -87,13 +87,13 @@ export default {
         v-else
         @click="triggerFileSelect(1)"
         :opacity="70"
-        :size="'w-[140px] h-[140px]'"
+        :size="'w-[130px] h-[130px] lg:w-[140px] lg:h-[140px]'"
       ></post-edit-img-card>
 
       <post-edit-img-card
         v-if="images.length > 2"
         :imgSrc="images[2].preview || images[2]"
-        :size="'w-[140px] h-[140px]'"
+        :size="'w-[130px] h-[130px] lg:w-[140px] lg:h-[140px]'"
         :opacity="50"
         @click="handleRemoveImage(2)"
       ></post-edit-img-card>
@@ -101,13 +101,13 @@ export default {
         v-else
         @click="triggerFileSelect(2)"
         :opacity="50"
-        :size="'w-[140px] h-[140px]'"
+        :size="'w-[130px] h-[130px] lg:w-[140px] lg:h-[140px]'"
       ></post-edit-img-card>
 
       <post-edit-img-card
         v-if="images.length > 3"
         :imgSrc="images[3].preview || images[3]"
-        :size="'w-[140px] h-[140px]'"
+        :size="'w-[130px] h-[130px] lg:w-[140px] lg:h-[140px]'"
         :opacity="30"
         @click="handleRemoveImage(3)"
       ></post-edit-img-card>
@@ -115,7 +115,7 @@ export default {
         v-else
         @click="triggerFileSelect(3)"
         :opacity="30"
-        :size="'w-[140px] h-[140px]'"
+        :size="'w-[130px] h-[130px] lg:w-[140px] lg:h-[140px]'"
       ></post-edit-img-card>
     </div>
   </section>

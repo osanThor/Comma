@@ -72,7 +72,7 @@ export default {
       >
         <img
           class="w-full h-full object-cover object-center rounded-full"
-          :src="comment.user?.profile_image || '/assets/images/exProfile.png'"
+          :src="comment.user?.profile_image || '/assets/images/defaultProfile.png'"
         />
       </div>
 

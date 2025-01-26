@@ -3,7 +3,7 @@ import PostEditor from "../components/post-edit/PostEditor.vue";
 </script>
 <template>
   <main
-    class="contents-box w-[1440px] mx-auto flex items-center justify-center mt-32 py-24 px-44 mb-80"
+    class="contents-box mx-auto flex flex-col items-center justify-start mt-20 md:py-24 md:px-8 lg:py-20 lg:px-20 mb-80 max-w-[1440px] px-10 py-20 h-auto"
   >
     <section>
       <post-editor :isEdit="true"></post-editor>

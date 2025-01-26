@@ -189,7 +189,7 @@ export default {
           <div class="w-6 h-6 rounded-full">
             <img
               class="w-full h-full object-cover object-center rounded-full"
-              :src="post?.user?.profile_image || '/assets/images/exProfile.png'"
+              :src="post?.user?.profile_image || '/assets/images/defaultProfile.png'"
             />
           </div>
           <p class="text-lg font-medium opacity-9 pb-[2px]">

@@ -15,9 +15,9 @@ export default {
     const commentStore = useCommentStore();
     const authStore = useAuthStore();
     const commentContent = ref("");
+    const maxCharacters = 420;
 
     const submitComment = async () => {
-      console.log("submitComment 호출됨");
       if (commentContent.value.trim() === "") return;
 
       const user = authStore.user;
@@ -54,8 +54,19 @@ export default {
       }
     };
 
+    const handleInput = (event) => {
+      const input = event.target.value;
+      if (input.length > maxCharacters) {
+        commentContent.value = input.slice(0, maxCharacters);
+      } else {
+        commentContent.value = input;
+      }
+    };
+
     return {
       commentContent,
+      maxCharacters,
+      handleInput,
       submitComment,
       handleKeyPress,
     };
@@ -73,8 +84,9 @@ export default {
     <textarea
       v-model="commentContent"
       @keypress="handleKeyPress"
+      @input="handleInput"
       name="PostComment"
-      class="w-full h-full min-h-28 bg-white/20 border-2 focus:placeholder:opacity-0 font-medium rounded-xl p-5 placeholder:text-white/50 text-white resize-none overflow-auto focus:outline-4 focus:outline-point-500/30 "
+      class="w-full h-full min-h-28 bg-white/20 border-2 focus:placeholder:opacity-0 font-medium rounded-xl p-5 placeholder:text-white/50 text-white resize-none overflow-auto focus:outline-4 focus:outline-point-500/30"
       placeholder="댓글을 입력해주세요 φ(゜▽゜*)♪"
       id=""
     ></textarea>
@@ -82,4 +94,9 @@ export default {
   <hr class="border-dashed border-2 mt-8 mb-8 opacity-30 w-full" />
 </template>
 
-<style scoped></style>
+<style scoped>
+textarea {
+  scrollbar-width: none;
+}
+
+</style>

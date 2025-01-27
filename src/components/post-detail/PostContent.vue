@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 
 import { useRouter } from "vue-router";
 import { usePostStore } from "../../stores/post";
+import { useAuthStore } from "../../stores/auth.js";
 import { onMounted, ref } from "vue";
 
 import { useModalStore } from "@/stores/modal";
@@ -30,8 +31,10 @@ export default {
   },
   setup(props) {
     const postStore = usePostStore();
+    const authStore = useAuthStore();
     const router = useRouter();
     const post = ref(null);
+    const { user: currentUser } = storeToRefs(authStore);
 
     const fetchPost = async () => {
       await postStore.fetchPostById(props.postId);
@@ -105,6 +108,7 @@ export default {
 
     return {
       post,
+      currentUser,
       editPost,
       handleDelete,
       formatDate,
@@ -156,7 +160,7 @@ export default {
           </div>
 
           <!-- 수정/삭제 버튼 -->
-          <div class="flex flex-row gap-3 text-sm font-semibold text-white/50">
+          <div v-if="post?.user?.id === currentUser?.id" class="flex flex-row gap-3 text-sm font-semibold text-white/50">
             <button @click="editPost" class="hover:text-white/100">수정</button>
             <button @click="handleDelete" class="hover:text-white/100">
               삭제

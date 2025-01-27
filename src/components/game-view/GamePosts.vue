@@ -61,18 +61,26 @@ const handleChangeSort = async (currentSort) => {
   }
 };
 
-// 디바운스된 검색 함수
 const debouncedSearch = debounce((value) => {
   query.value = value;
-  handleGetPosts(page.value);
+  page.value = 1; // 페이지 리셋
+  handleGetPosts(1); // 첫 페이지부터 검색
 }, 300);
 
-// Enter키나 검색 버튼 클릭시 즉시 검색
+// Enter키나 검색 버튼 클릭시 즉시 검색 수정
 const handleSearch = async () => {
   query.value = searchQuery.value;
-  page.value = 1;
-  await handleGetPosts(page.value);
+  page.value = 1; // 페이지 리셋
+  await handleGetPosts(1); // 첫 페이지부터 검색
 };
+
+// 검색어 변경 감시
+watch(query, async (newQuery) => {
+  if (newQuery !== undefined) {
+    page.value = 1;
+    await handleGetPosts(1);
+  }
+});
 
 onBeforeMount(async () => {
   await handleGetPosts(1);

@@ -6,8 +6,7 @@ const imgLoaded = ref(false);
 const props = defineProps({
   src: {
     type: String,
-    default:
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+    default: "/assets/images/defaultProfile.png",
   },
   size: {
     type: String,

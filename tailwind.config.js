@@ -37,6 +37,7 @@ export default {
       fontFamily: {
         pretendard: ["Pretendard", "san-serif"],
         dnf: ["DNFBitBitv2", "san-serif"],
+        pixelNes: ["Pixel_NES", "san-serif"],
       },
     },
   },

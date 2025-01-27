@@ -20,7 +20,7 @@ const handleClickButton = () => {
   <div
     v-if="isOpen"
     ref="modalBgRef"
-    class="fixed top-0 left-0 bottom-0 right-0 bg-main-500/50 flex items-center justify-center z-[999999]"
+    class="fixed top-0 left-0 bottom-0 right-0 bg-main-500/50 backdrop-blur-sm flex items-center justify-center z-[999999]"
     @click.prevent="handleClickBg($event)"
   >
     <div

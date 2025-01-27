@@ -21,7 +21,6 @@ export function makePlayer(k) {
         };
 
         this.keyControllers.push(k.onKeyPress("space", jumpLogic));
-        this.keyControllers.push(k.onClick(jumpLogic));
       },
       disableControls() {
         this.keyControllers.forEach((keyController) => keyController.cancel());

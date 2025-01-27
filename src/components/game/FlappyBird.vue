@@ -20,12 +20,6 @@ export default {
   async mounted() {
     const { currentTime, start, stop, reset } = useTimer();
 
-    // if (window.__kaplayInitialized) {
-    //   console.warn("KAPLAY already initialized!");
-    //   return;
-    // }
-    // window.__kaplayInitialized = true;
-
     const canvas = this.$refs.gameCanvas;
     const k = kaplay({
       width: 1300,
@@ -79,7 +73,7 @@ export default {
       }
 
       const player = makePlayer(k);
-      player.pos = k.vec2(k.center().x - 350, k.center().y + 40); // 0,350
+      player.pos = k.vec2(k.center().x - 350, k.center().y + 40);
 
       const playBtn = k.add([
         k.sprite("playBtn"),
@@ -98,7 +92,6 @@ export default {
 
       playBtn.onClick(goToGame);
       k.onKeyPress("space", goToGame);
-
     });
 
     function startGame() {

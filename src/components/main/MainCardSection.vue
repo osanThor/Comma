@@ -74,8 +74,27 @@ const handleClickTarget = async (idx) => {
 };
 
 function handleKeyPress(event) {
-  console.log(event.keyCode);
-  if (event.keyCode === 37 || event.keyCode) {
+  if (!swiperInstance.value) return;
+  if (
+    event.keyCode !== 37 &&
+    event.keyCode !== 39 &&
+    event.keyCode !== 32 &&
+    event.keyCode !== 38 &&
+    event.keyCode !== 40
+  )
+    return;
+
+  event.preventDefault();
+  if (event.keyCode === 37) {
+    swiperInstance.value.slidePrev();
+  } else if (event.keyCode === 39) {
+    swiperInstance.value.slideNext();
+  } else if (event.keyCode === 32 || event.keyCode === 38) {
+    if (targetIdx.value === activeIndex.value) {
+      targetIdx.value = null;
+    } else {
+      targetIdx.value = activeIndex.value;
+    }
   }
 }
 onMounted(() => {

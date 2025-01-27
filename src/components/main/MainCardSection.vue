@@ -72,6 +72,19 @@ const handleClickTarget = async (idx) => {
     targetIdx.value = idx;
   }
 };
+
+function handleKeyPress(event) {
+  console.log(event.keyCode);
+  if (event.keyCode === 37 || event.keyCode) {
+  }
+}
+onMounted(() => {
+  document.removeEventListener("keydown", handleKeyPress);
+  document.addEventListener("keydown", handleKeyPress);
+});
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyPress);
+});
 </script>
 
 <template>

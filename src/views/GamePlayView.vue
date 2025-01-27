@@ -1,20 +1,49 @@
 <script setup>
 import GameOverModal from "@/components/game-over/GameOverModal.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
+import { getGameByName, updateGameScore } from "@/services/game.service";
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+
+const category = ref("");
+const route = useRoute();
+const loading = ref(false);
 
 const playTime = ref(0);
 const score = ref(0);
 
 const isGameOver = ref(false);
 
-const openGameOver = (currentScore, currentPlayTime) => {
-  isGameOver.value = true;
-  score.value = currentScore;
-  playTime.value = currentPlayTime;
-};
-const closeGameOver = () => {
-  isGameOver.value = false;
-};
+async function openGameOver(currentScore, currentPlayTime) {
+  try {
+    loading.value = true;
+    score.value = currentScore;
+    playTime.value = currentPlayTime;
+
+    const gameId = await getGameByName(route.name);
+
+    await updateGameScore(
+      gameId.id,
+      user.value.id,
+      score.value,
+      playTime.value
+    );
+
+    isGameOver.value = true;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(() => {
+  category.value = route.name;
+});
 </script>
 <template>
   <div

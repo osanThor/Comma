@@ -12,10 +12,10 @@ const { imageBlobs, score, playTime } = defineProps({
     type: Array,
   },
   score: {
-    type: Number,
+    type: String,
   },
   playTime: {
-    type: Number,
+    type: String,
   },
 });
 
@@ -30,7 +30,6 @@ const { user } = storeToRefs(authStore);
 const title = ref("");
 const content = ref("");
 const category = ref("");
-const loading = ref(false);
 
 const fileInputRef = ref(null);
 
@@ -38,6 +37,7 @@ const isGameShareModalOpen = ref(true);
 
 function closeGameShareModal() {
   isGameShareModalOpen.value = false;
+  window.location.reload();
 }
 
 const handleUploadImage = (e) => {
@@ -53,10 +53,6 @@ const handleUploadImage = (e) => {
   e.target.value = "";
 };
 
-const removeImage = () => {
-  emit("removeImage");
-};
-
 const handleGetImageURL = async (file) => {
   try {
     return await uploadImage(file);
@@ -69,15 +65,13 @@ const handleSubmit = async () => {
   if (!user.value || !user.value.id) return alert("로그인해주세요");
 
   try {
-    loading.value = true;
-
     const images = await Promise.all(
       imageBlobs.map((file) => handleGetImageURL(file.file))
     );
     const data = await createPost({
       userId: user.value.id,
-      category: category.value,
       title: title.value,
+      category: category.value,
       content: content.value,
       images,
       score,
@@ -90,13 +84,11 @@ const handleSubmit = async () => {
     }
   } catch (err) {
     console.error(err);
-  } finally {
-    loading.value = false;
   }
 };
 
 watch(
-  () => route.params.gameName,
+  () => route.name,
   (newGameName) => {
     category.value = newGameName;
   },
@@ -149,7 +141,7 @@ watch(
             v-if="imageBlobs.length > 0"
             type="button"
             class="group absolute bottom-[-16px] right-[-16px] w-[42px] h-[42px] bg-point-500 hover:bg-white rounded-full flex items-center justify-center text-white text-xl shadow-lg"
-            @click="removeImage()"
+            @click="emit(removeImage)"
           >
             <img
               src="/assets/images/icons/trash-white.svg"

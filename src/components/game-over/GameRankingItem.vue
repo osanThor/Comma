@@ -16,7 +16,7 @@ function formatPlayTime(milliseconds) {
   const millis = milliseconds % 1000;
   return `${minutes.toString().padStart(2, "0")}:${seconds
     .toString()
-    .padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
+    .padStart(2, "0")}:${millis.toString().padStart(3, "0")}`;
 }
 
 const formatedName = computed(() => {
@@ -55,7 +55,7 @@ const formatedName = computed(() => {
         isHighlighted ? 'ml-12' : 'ml-10',
       ]"
     >
-      <span class="font-dnf text-white text-sm">{{ formatedName() }}</span>
+      <span class="font-dnf text-white text-sm">{{ formatedName }}</span>
       <span class="font-pretendard text-white text-xs">{{ score }}점</span>
       <span class="font-pretendard text-white text-xs">{{
         formatPlayTime(time)

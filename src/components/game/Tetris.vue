@@ -12,7 +12,7 @@ import Board from "@/classes/tetris/board.js";
 import Sound from "@/classes/tetris/sound.js";
 import { useTimer } from "@/hooks/useTimer.js";
 
-const emits = defineEmits(["open-game-over"]);
+const emit = defineEmits(["open-game-over"]);
 
 const { currentTime, start, stop, reset } = useTimer();
 
@@ -151,7 +151,7 @@ function gameOver() {
 
   isPlaying.value = false;
   isGameOver.value = true;
-  emits("open-game-over");
+  emit("open-game-over", account.score, currentTime.value);
 }
 
 function pause() {

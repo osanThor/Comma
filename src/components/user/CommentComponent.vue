@@ -57,10 +57,10 @@ const handleClickDelete = () => {
   <div class="w-full relative group">
     <router-link
       :to="`/post/${item.post_id}`"
-      class="h-[70px] w-full rounded-2xl bg-main-600 flex items-center px-[33px] mt-3"
+      class="h-[70px] w-full rounded-2xl bg-main-600 flex flex-wrap items-center px-[33px] mt-3"
     >
       <div
-        class="min-w-[128px] flex-1 text-white text-base font-dnf max-w-32 truncate mr-10"
+        class="w-[128px] flex-1 text-white text-base font-dnf max-w-32 truncate mr-10"
       >
         {{ item.post.title }}
       </div>
@@ -74,7 +74,7 @@ const handleClickDelete = () => {
       >
         {{ dateFormed }}
       </div>
-      <div class="flex items-center text-point-500 text-base min-w-12">
+      <div class="flex items-center text-point-500 text-base w-12">
         <small-like width="15" height="15"></small-like>
         <span class="ml-1">{{ totalLikes }}</span>
       </div>

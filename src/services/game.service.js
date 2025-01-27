@@ -4,7 +4,7 @@ export const getGames = async () => {
   const { data, error } = await supabase
     .from("games")
     .select("*")
-    .order("display_name", { ascending: false });
+    .order("order", { ascending: false });
 
   if (error) throw error;
   return data;

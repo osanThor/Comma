@@ -10,7 +10,7 @@ const gameNameMap = {
   mineSweeper: "지뢰 찾기",
   tetris: "테트리스",
   bounceBall: "바운스 볼",
-  flappyBird: "플래피 버드",
+  flappyBoo: "플래피 버드",
   shooting: "슈팅게임",
 };
 
@@ -20,7 +20,7 @@ const gameStore = useGameStore();
 const postCounts = ref({
   bounceBall: 0,
   mineSweeper: 0,
-  flappyBird: 0,
+  flappyBoo: 0,
   tetris: 0,
   shooting: 0,
 });
@@ -43,7 +43,7 @@ onMounted(async () => {
   await Promise.all([
     getPostCount("bounceBall"),
     getPostCount("mineSweeper"),
-    getPostCount("flappyBird"),
+    getPostCount("flappyBoo"),
     getPostCount("tetris"),
     getPostCount("shooting"),
   ]);

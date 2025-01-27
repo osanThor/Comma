@@ -12,7 +12,7 @@ const { games, gameTopRankers } = storeToRefs(gameStore);
 const postCounts = ref({
   bounceBall: 0,
   mineSweeper: 0,
-  flappyBird: 0,
+  flappyBoo: 0,
   tetris: 0,
   shooting: 0,
 });

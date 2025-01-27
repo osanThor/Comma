@@ -70,35 +70,33 @@ watch(trigger, async () => {
 });
 </script>
 <template>
-  <div class="flex flex-col flex-grow">
-    <div class="flex justify-end mb-5">
-      <base-filter
-        :sort="sort"
-        :sortOption="sortOption"
-        @change-sort="handleChangeSort"
-      ></base-filter>
-    </div>
-    <div
-      v-if="!commentsData.comments.length"
-      class="w-full flex items-center flex-grow justify-center py-[200px] text-white/50 text-2xl font-bold"
-    >
-      작성한 댓글이 존재하지 않습니다.
-    </div>
-    <div v-else class="flex flex-col gap-3 pr-[70px] mb-[70px]">
-      <comment-component
-        v-for="item in commentsData.comments"
-        :item="item"
-        @comment-trigger="handleCommentTrigger"
-      ></comment-component>
-    </div>
-    <div class="w-full flex justify-center">
-      <pagination
-        :page="page"
-        :total="commentsData.total"
-        :page-size="10"
-        @page-change="handleChangePage"
-      ></pagination>
-    </div>
+  <div class="flex justify-end mb-5">
+    <base-filter
+      :sort="sort"
+      :sortOption="sortOption"
+      @change-sort="handleChangeSort"
+    ></base-filter>
+  </div>
+  <div
+    v-if="!commentsData.comments.length"
+    class="w-full flex items-center flex-grow justify-center py-[200px] text-white/50 text-2xl font-bold"
+  >
+    작성한 댓글이 존재하지 않습니다.
+  </div>
+  <div v-else class="flex flex-col gap-3 pr-[70px] mb-[70px]">
+    <comment-component
+      v-for="item in commentsData.comments"
+      :item="item"
+      @comment-trigger="handleCommentTrigger"
+    ></comment-component>
+  </div>
+  <div class="w-full flex justify-center">
+    <pagination
+      :page="page"
+      :total="commentsData.total"
+      :page-size="10"
+      @page-change="handleChangePage"
+    ></pagination>
   </div>
 </template>
 <style scoped></style>

@@ -15,9 +15,6 @@ const { user } = storeToRefs(authStore);
 
 const isGameOverModalOpen = ref(true);
 const isGameShareModalOpen = ref(false);
-
-const playTime = ref("00:00:00");
-const score = ref(0);
 const imageBlobs = ref([]);
 
 const gameScoreData = ref(null);
@@ -25,13 +22,18 @@ const filteredRankings = ref([]);
 
 const route = useRoute();
 
+const { playTime, score } = defineProps({
+  playTime: Number,
+  score: Number,
+});
+
 function formatPlayTime(milliseconds) {
   const minutes = Math.floor(milliseconds / 60000);
   const seconds = Math.floor((milliseconds % 60000) / 1000);
   const millis = milliseconds % 1000;
   return `${minutes.toString().padStart(2, "0")}:${seconds
     .toString()
-    .padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
+    .padStart(2, "0")}:${millis.toString().padStart(3, "0")}`;
 }
 
 function getCurrentUserRanking(gameRankingData, userId) {
@@ -100,13 +102,13 @@ function openGameShareModal() {
     });
 }
 
-const handleUploadImage = (newFile) => {
+function handleUploadImage(newFile) {
   imageBlobs.value = [newFile];
-};
+}
 
-const handleRemoveImage = () => {
+function handleRemoveImage() {
   imageBlobs.value = [];
-};
+}
 
 function closeGameOverModal() {
   isGameOverModalOpen.value = false;
@@ -119,7 +121,7 @@ function replayGame() {
 
 onMounted(async () => {
   try {
-    const gameId = await getGameByName(route.params.gameName);
+    const gameId = await getGameByName(route.name);
 
     if (gameId.id) {
       const rankings = await getGameRanking(gameId.id);
@@ -166,7 +168,7 @@ onMounted(async () => {
         >
           <h2 class="font-dnf text-2xl mt-[22px]">TIME</h2>
           <p class="mt-3 font-pretendard font-medium text-xl opacity-80">
-            {{ playTime }}
+            {{ formatPlayTime(playTime) }}
           </p>
         </article>
         <article

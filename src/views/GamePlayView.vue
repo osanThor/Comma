@@ -2,10 +2,15 @@
 import GameOverModal from "@/components/game-over/GameOverModal.vue";
 import { ref } from "vue";
 
+const playTime = ref(0);
+const score = ref(0);
+
 const isGameOver = ref(false);
 
-const openGameOver = (score, playTime) => {
+const openGameOver = (currentScore, currentPlayTime) => {
   isGameOver.value = true;
+  score.value = currentScore;
+  playTime.value = currentPlayTime;
 };
 const closeGameOver = () => {
   isGameOver.value = false;
@@ -23,7 +28,7 @@ const closeGameOver = () => {
         v-if="isGameOver"
         class="fixed inset-0 flex justify-center items-center z-50"
       >
-        <game-over-modal />
+        <game-over-modal :play-time="playTime" :score="score"></game-over-modal>
       </div>
     </section>
   </div>

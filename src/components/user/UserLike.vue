@@ -89,9 +89,10 @@ watch(page, async () => {
         <button
           :class="
             twMerge(
-              'text-lg font-bold text-white px-7 pb-4 hover:text-point-500 hover:border-point-500',
-              channelSelected === 'game' &&
-                'border-b-4 text-point-500 border-point-500'
+              'text-lg font-bold text-white px-7 pb-4 border-b-4  hover:text-point-500 hover:border-point-500',
+              channelSelected === 'game'
+                ? 'text-point-500 border-point-500 border-opacity-100'
+                : 'border-black border-opacity-0'
             )
           "
           @click="changeChannelSelected('game')"
@@ -101,9 +102,10 @@ watch(page, async () => {
         <button
           :class="
             twMerge(
-              'text-lg font-bold text-white px-7 pb-4 hover:text-point-500 hover:border-point-500',
-              channelSelected === 'comma' &&
-                'border-b-4 text-point-500 border-point-500'
+              'text-lg font-bold text-white px-7 pb-4 border-b-4 hover:text-point-500 hover:border-point-500',
+              channelSelected === 'comma'
+                ? 'text-point-500 border-point-500 border-opacity-100'
+                : 'border-black border-opacity-0'
             )
           "
           @click="changeChannelSelected('comma')"

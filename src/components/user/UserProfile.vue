@@ -96,7 +96,7 @@ const totalPlayTime = computed(() => formatTime(playTime.value));
       </div>
     </div>
     <div class="flex flex-col items-start">
-      <div class="inline-flex">
+      <div class="flex flex-wrap">
         <h2 class="text-white font-bold font-dnf text-[30px] mr-[8px]">
           {{ user.name }}
         </h2>
@@ -108,7 +108,7 @@ const totalPlayTime = computed(() => formatTime(playTime.value));
         {{ formatedBio }}
       </h2>
       <div
-        class="mt-2 bg-main-600 text-point-500 h-[38px] px-3.5 rounded-xl text-base font-semibold flex items-center justify-center text-center"
+        class="mt-2 bg-main-600 text-point-500 min-h-[38px] px-3.5 py-1 rounded-xl text-base font-semibold flex items-center justify-center text-center"
       >
         총 플레이 시간 | {{ totalPlayTime }}
       </div>

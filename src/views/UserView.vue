@@ -45,7 +45,7 @@ watch(
 </script>
 <template>
   <section
-    class="w-full max-w-[1640px] min-h-[898px] mt-[120px] flex flex-col contents-box py-[90px] mb-10 px-20"
+    class="w-[calc(100%-40px)] max-w-[1640px] min-h-[898px] mt-[120px] flex flex-col contents-box py-[90px] mb-10 px-10 lg:px-20"
   >
     <div
       v-if="loading"

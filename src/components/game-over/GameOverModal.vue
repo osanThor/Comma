@@ -22,10 +22,25 @@ const filteredRankings = ref([]);
 
 const route = useRoute();
 
-const { playTime, score } = defineProps({
-  playTime: Number,
-  score: Number,
+
+const props = defineProps({
+  playTime: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  score: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
 });
+
+const localPlayTime = ref(props.playTime);
+const localScore = ref(props.score);
+
+const formattedPlayTime = computed(() => formatPlayTime(localPlayTime.value));
+const formattedScore = computed(() => `${localScore.value}점`);
 
 function formatPlayTime(milliseconds) {
   const minutes = Math.floor(milliseconds / 60000);
@@ -49,13 +64,12 @@ function getCurrentUserRanking(gameRankingData, userId) {
 }
 
 function filterRankingsForDisplay(rankings, latestRanking) {
-  console.log(rankings, latestRanking);
   if (!latestRanking) return [];
 
   const rankMinusOne = rankings.find(
     (rank) => rank.rank === latestRanking.rank - 1
   );
-  let rankPlusOne = rankings.find(
+  const rankPlusOne = rankings.find(
     (rank) => rank.rank === latestRanking.rank + 1
   );
 
@@ -130,8 +144,6 @@ onMounted(async () => {
       const latestRanking = getCurrentUserRanking(rankings, user.value.id);
 
       if (latestRanking) {
-        score.value = latestRanking.score;
-        playTime.value = formatPlayTime(latestRanking.play_time);
         filteredRankings.value = filterRankingsForDisplay(
           rankings,
           latestRanking
@@ -168,7 +180,7 @@ onMounted(async () => {
         >
           <h2 class="font-dnf text-2xl mt-[22px]">TIME</h2>
           <p class="mt-3 font-pretendard font-medium text-xl opacity-80">
-            {{ formatPlayTime(playTime) }}
+            {{ formattedPlayTime }}
           </p>
         </article>
         <article
@@ -176,7 +188,7 @@ onMounted(async () => {
         >
           <h2 class="font-dnf text-2xl mt-[22px]">SCORE</h2>
           <p class="mt-3 font-pretendard font-medium text-xl opacity-80">
-            {{ score }}점
+            {{ localScore }}점
           </p>
         </article>
       </section>
@@ -216,8 +228,8 @@ onMounted(async () => {
   <div v-if="isGameShareModalOpen">
     <game-share-modal
       :imageBlobs="imageBlobs"
-      :playTime="playTime"
-      :score="score"
+      :playTime="formattedPlayTime"
+      :score="formattedScore"
       @uploadImage="handleUploadImage"
       @removeImage="handleRemoveImage"
     ></game-share-modal>

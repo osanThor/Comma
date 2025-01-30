@@ -115,9 +115,9 @@ const router = createRouter({
               component: () => import("../components/game/Tetris.vue"),
             },
             {
-              path: "flappyBird",
-              name: "flappyBird",
-              component: () => import("../components/game/FlappyBird.vue"),
+              path: "flappyBoo",
+              name: "flappyBoo",
+              component: () => import("../components/game/FlappyBoo.vue"),
             },
           ],
         },

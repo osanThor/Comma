@@ -64,18 +64,21 @@ export default {
     v-if="comment && comment.user"
     class="flex flex-row items-center justify-between mb-8 lg:mb-12 w-full"
   >
-    <section class="flex flex-row items-center gap-4">
-      <!-- 작성자 프로필 이미지 -->
-      <div
+    <section class="flex flex-row items-start gap-4 ">
+      <div class="pt-2">
+
+        <!-- 작성자 프로필 이미지 -->
+        <div
         @click="navigateToProfile(comment.user?.id)"
-        class="md:w-8 md:h-8 lg:w-16 lg:h-16 rounded-full cursor-pointer"
-      >
+        class="md:w-8 md:h-8 lg:w-14 lg:h-14 rounded-full cursor-pointer "
+        >
         <img
           class="w-full h-full object-cover object-center rounded-full"
           :src="comment.user?.profile_image || '/assets/images/defaultProfile.png'"
         />
       </div>
-
+    </div>
+      
       <!-- 댓글 콘텐츠 -->
       <div>
         <!-- 닉네임 및 작성일시 -->
@@ -88,7 +91,7 @@ export default {
           </p>
         </div>
         <!-- 댓글 본문 -->
-        <p class="w-full max-w-[700px] h-auto text-white/70 font-medium text-sm mr-16">
+        <p class="w-full max-w-[750px] h-auto text-white/70 font-medium text-sm mr-16">
           {{ comment.content }}
         </p>
       </div>

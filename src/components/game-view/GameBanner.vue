@@ -6,7 +6,7 @@ const gameNameMap = {
   mineSweeper: "지뢰 찾기",
   tetris: "테트리스",
   bounceBall: "바운스 볼",
-  flappyBird: "플래피 버드",
+  flappyBoo: "플래피 버드",
   shooting: "슈팅게임",
 };
 

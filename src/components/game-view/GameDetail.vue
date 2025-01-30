@@ -33,7 +33,7 @@ const gameDetails = {
       "패들로 공을 맞추면 점수를 획득하고\n공이 땅에 닿으면 게임이 종료됩니다.",
     ],
   },
-  flappyBird: {
+  flappyBoo: {
     intro:
       "플래피 버드는 단순하지만 중독성 있는 게임으로, 스페이스바를 통해 새를 조작하여 장애물을 피하는 방식으로 진행됩니다.",
     description: [

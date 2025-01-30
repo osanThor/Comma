@@ -2,38 +2,28 @@
 import { ref, onMounted } from "vue";
 import { useTimer } from "@/hooks/useTimer.js";
 import { useBackgroundMusic } from "@/classes/shooting/sound";
-import { useAuthStore } from "@/stores/auth";
-import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
+import { Bullet } from "@/classes/shooting/bullet";
+import { Enemy } from "@/classes/shooting/enemy";
+import { formatPlayTime, generateRandomValue } from "@/classes/shooting/utils";
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
   SPACESHIP_HEIGHT,
   SPACESHIP_INITIAL_X_OFFSET,
-  BULLET_X_OFFSET,
-  BULLET_SPEED,
-  ENEMY_WIDTH,
-  ENEMY_HEIGHT,
-  ENEMY_BOX_PADDING,
   ENEMY_GENERATION_INTERVALS,
-  ENEMY_SPEED,
-  HIT_BOX_PADDING,
   IMAGE_PATHS,
   SPACESHIP_WIDTH,
 } from "@/constants/shooting";
 
-const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
 const category = ref("");
 const route = useRoute();
 
 const emits = defineEmits(["open-game-over"]);
-
 const canvas = ref(null);
 let ctx;
 
 let backgroundImage, spaceshipImage, bulletImage, enemyImage;
-const gameOver = ref(false);
 const score = ref(0);
 const playButtonVisible = ref(true);
 
@@ -42,77 +32,13 @@ const spaceshipY = ref(0);
 
 const keysDown = {};
 
-const bulletList = [];
-const enemyList = [];
-
 const enemyIntervalId = ref(null);
 const previousIntervalTime = ref(null);
 
-const { currentTime, start, stop, reset } = useTimer();
+const { currentTime, start, stop } = useTimer();
 const { playGameMusic, stopAllMusic, setMute } = useBackgroundMusic();
 
 const isMuted = ref(false);
-
-function Bullet() {
-  this.x = 0;
-  this.y = 0;
-  this.init = function () {
-    this.x = spaceshipX.value + BULLET_X_OFFSET;
-    this.y = spaceshipY.value;
-    this.alive = true;
-
-    bulletList.push(this);
-  };
-  this.update = function () {
-    this.y -= BULLET_SPEED;
-
-    if (this.y < 0) {
-      this.alive = false;
-    }
-  };
-
-  this.checkHit = function () {
-    for (let i = 0; i < enemyList.length; i++) {
-      if (
-        this.y <= enemyList[i].y &&
-        this.x >= enemyList[i].x - HIT_BOX_PADDING &&
-        this.x <= enemyList[i].x + HIT_BOX_PADDING
-      ) {
-        score.value++;
-        this.alive = false;
-        enemyList.splice(i, 1);
-      }
-    }
-  };
-}
-
-function generateRandomValue(min, max) {
-  let randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-  return randomNum;
-}
-
-function Enemy() {
-  this.x = 0;
-  this.y = 0;
-  this.init = function () {
-    this.x = generateRandomValue(
-      ENEMY_BOX_PADDING,
-      CANVAS_WIDTH - ENEMY_WIDTH - ENEMY_BOX_PADDING
-    );
-    this.y = 0;
-    enemyList.push(this);
-  };
-  this.update = async function () {
-    this.y += ENEMY_SPEED;
-
-    if (this.y >= CANVAS_HEIGHT - ENEMY_HEIGHT) {
-      gameOver.value = true;
-      stop();
-      stopAllMusic();
-      emits("open-game-over", score.value, currentTime.value);
-    }
-  };
-}
 
 function loadImage() {
   backgroundImage = new Image();
@@ -159,8 +85,7 @@ function setupKeyboardListener() {
 }
 
 function createBullet() {
-  let b = new Bullet();
-  b.init();
+  return new Bullet(spaceshipX.value, spaceshipY.value, Bullet.bulletList);
 }
 
 function createEnemy() {
@@ -172,12 +97,17 @@ function createEnemy() {
     }
 
     enemyIntervalId.value = setInterval(() => {
-      let e = new Enemy();
-      e.init();
+      new Enemy(
+        generateRandomValue,
+        stop,
+        stopAllMusic,
+        emits,
+        score.value,
+        currentTime.value
+      );
     }, intervalTime);
   };
 
-  // 점수 변화 감지
   watch(score, (newScore) => {
     if (newScore >= 80) {
       intervalTime = ENEMY_GENERATION_INTERVALS.score80;
@@ -207,18 +137,6 @@ function toggleMute() {
   setMute(isMuted.value);
 }
 
-function formatPlayTime(milliseconds) {
-  if (!milliseconds || isNaN(milliseconds)) {
-    return "00:00:000";
-  }
-  const minutes = Math.floor(milliseconds / 60000);
-  const seconds = Math.floor((milliseconds % 60000) / 1000);
-  const millis = milliseconds % 1000;
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}:${millis.toString().padStart(3, "0")}`;
-}
-
 function update() {
   if ("ArrowRight" in keysDown) {
     spaceshipX.value += 4;
@@ -233,15 +151,15 @@ function update() {
     spaceshipX.value = CANVAS_WIDTH - SPACESHIP_WIDTH;
   }
 
-  for (let i = 0; i < bulletList.length; i++) {
-    if (bulletList[i].alive) {
-      bulletList[i].update();
-      bulletList[i].checkHit();
+  for (let i = 0; i < Bullet.bulletList.length; i++) {
+    if (Bullet.bulletList[i].alive) {
+      Bullet.bulletList[i].update();
+      Bullet.bulletList[i].checkHit(Enemy.enemyList, score);
     }
   }
 
-  for (let i = 0; i < enemyList.length; i++) {
-    enemyList[i].update();
+  for (let i = 0; i < Enemy.enemyList.length; i++) {
+    Enemy.enemyList[i].update();
   }
 }
 
@@ -267,19 +185,23 @@ function render() {
   ctx.fillStyle = "white";
   ctx.font = "20px arial";
 
-  for (let i = 0; i < bulletList.length; i++) {
-    if (bulletList[i].alive) {
-      ctx.drawImage(bulletImage, bulletList[i].x, bulletList[i].y);
+  for (let i = 0; i < Bullet.bulletList.length; i++) {
+    if (Bullet.bulletList[i].alive) {
+      ctx.drawImage(
+        bulletImage,
+        Bullet.bulletList[i].x,
+        Bullet.bulletList[i].y
+      );
     }
   }
 
-  for (let i = 0; i < enemyList.length; i++) {
-    ctx.drawImage(enemyImage, enemyList[i].x, enemyList[i].y);
+  for (let i = 0; i < Enemy.enemyList.length; i++) {
+    ctx.drawImage(enemyImage, Enemy.enemyList[i].x, Enemy.enemyList[i].y);
   }
 }
 
 function main() {
-  if (!gameOver.value) {
+  if (!Enemy.isGameOver) {
     update();
     render();
     requestAnimationFrame(main);
@@ -330,27 +252,11 @@ onMounted(() => {
     >
       PLAY
     </button>
-    <button @click="toggleMute" class="absolute top-0 right-0">
-      <img
-        :src="
-          isMuted
-            ? '/assets/images/icons/mute.png'
-            : '/assets/images/icons/sound.png'
-        "
-        alt="Sound Mute Button"
-      />
-    </button>
-  </div>
-  <div class="relative w-[500px] h-[700px] mx-auto">
-    <canvas ref="canvas" class="w-full h-full"></canvas>
     <button
-      v-if="playButtonVisible"
-      @click="startGame"
-      class="font-dnf text-2xl text-white w-[160px] h-[64px] bg-main-400 hover:bg-point-500 rounded-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      @click="toggleMute"
+      @keydown.space.prevent="(e) => e.target.blur"
+      class="absolute top-0 right-0 focus:outline-none"
     >
-      PLAY
-    </button>
-    <button @click="toggleMute" class="absolute top-0 right-0">
       <img
         :src="
           isMuted

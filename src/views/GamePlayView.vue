@@ -11,7 +11,6 @@ const { user } = storeToRefs(authStore);
 
 const category = ref("");
 const route = useRoute();
-const loading = ref(false);
 
 const playTime = ref(0);
 const score = ref(0);
@@ -20,7 +19,6 @@ const isGameOver = ref(false);
 
 async function openGameOver(currentScore, currentPlayTime) {
   try {
-    loading.value = true;
     score.value = currentScore;
     playTime.value = currentPlayTime;
 
@@ -36,8 +34,6 @@ async function openGameOver(currentScore, currentPlayTime) {
     isGameOver.value = true;
   } catch (err) {
     console.error(err);
-  } finally {
-    loading.value = false;
   }
 }
 

@@ -341,4 +341,24 @@ onMounted(() => {
       />
     </button>
   </div>
+  <div class="relative w-[500px] h-[700px] mx-auto">
+    <canvas ref="canvas" class="w-full h-full"></canvas>
+    <button
+      v-if="playButtonVisible"
+      @click="startGame"
+      class="font-dnf text-2xl text-white w-[160px] h-[64px] bg-main-400 hover:bg-point-500 rounded-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+    >
+      PLAY
+    </button>
+    <button @click="toggleMute" class="absolute top-0 right-0">
+      <img
+        :src="
+          isMuted
+            ? '/assets/images/icons/mute.png'
+            : '/assets/images/icons/sound.png'
+        "
+        alt="Sound Mute Button"
+      />
+    </button>
+  </div>
 </template>

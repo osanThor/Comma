@@ -179,7 +179,7 @@ onMounted(async () => {
         >
           <h2 class="font-dnf text-2xl mt-[22px]">TIME</h2>
           <p class="mt-3 font-pretendard font-medium text-xl opacity-80">
-            {{ formatPlayTime(playTime) }}
+            {{ formattedPlayTime }}
           </p>
         </article>
         <article

@@ -23,7 +23,7 @@ export default {
       const user = authStore.user;
 
       const optimisticComment = {
-        id: Date.now().toString(),
+        id: `temp-${Date.now().toString()}`,
         post_id: props.postId,
         user_id: user.id,
         content: commentContent.value,
@@ -36,7 +36,7 @@ export default {
         like_count: 0,
         liked: false,
       };
-      commentStore.addOptimisticComment(optimisticComment);
+      commentStore.addOptimisticComment(optimisticComment, true);
       commentContent.value = "";
 
       try {

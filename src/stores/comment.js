@@ -45,24 +45,22 @@ export const useCommentStore = defineStore("comment", {
       try {
         const authStore = useAuthStore();
         const userId = authStore.user.id;
-        const data = await createComment({ postId, content, userId });
+        await createComment({ postId, content, userId });
 
-        const index = this.comments.findIndex(
-          (comment) => comment.id === data[0].id
-        );
-        if (index !== -1) {
-          this.comments[index] = data[0];
-        } else {
-          this.comments.push(data[0]);
-        }
-        this.totalCount += 1;
       } catch (error) {
         console.error("댓글 작성 실패:", error);
+        throw error;
       }
     },
-    addOptimisticComment(comment) {
-      this.comments.push(comment);
+    addOptimisticComment(comment, prepend = false) {
+      if(prepend){
+        this.comments.unshift(comment);
+      } else {
+        this.comments.push(comment);
+      }
+      this.totalCount += 1;
     },
+    
     removeOptimisticComment(commentId) {
       this.comments = this.comments.filter(
         (comment) => comment.id !== commentId

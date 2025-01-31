@@ -13,6 +13,8 @@ const { games } = storeToRefs(gameStore);
 
 const initialIndex = 2;
 
+const target = ref(null);
+
 // Swiper 설정
 const swiperOptions = ref({
   slidesPerView: "5",
@@ -81,7 +83,7 @@ const handleClickTarget = async (idx) => {
   }
 };
 
-function handleKeyPress(event) {
+const handleKeyPress = (event) => {
   if (!swiperInstance.value) return;
   if (
     event.keyCode !== 37 &&
@@ -104,13 +106,27 @@ function handleKeyPress(event) {
       targetIdx.value = activeIndex.value;
     }
   }
-}
+};
+
+const mouseDownHeader = (event) => {
+  event.preventDefault();
+  if (target.value && !target.value.contains(event.target))
+    targetIdx.value = null;
+};
+
+watch(targetIdx, () => {
+  if (targetIdx.value !== null)
+    window.addEventListener("mousedown", mouseDownHeader);
+  else window.removeEventListener("mousedown", mouseDownHeader);
+});
+
 onMounted(() => {
   document.removeEventListener("keydown", handleKeyPress);
   document.addEventListener("keydown", handleKeyPress);
 });
 onUnmounted(() => {
   document.removeEventListener("keydown", handleKeyPress);
+  window.removeEventListener("mousedown", mouseDownHeader);
 });
 </script>
 
@@ -138,7 +154,10 @@ onUnmounted(() => {
           alt="title"
         />
       </h2>
-      <div class="w-[calc(100%-32px)] max-w-[1200px] h-[41vh] max-h-[400px]">
+      <div
+        ref="target"
+        class="w-[calc(100%-32px)] max-w-[1200px] h-[41vh] max-h-[400px]"
+      >
         <swiper
           v-bind="swiperOptions"
           class="mySwiper w-full"
@@ -209,7 +228,7 @@ onUnmounted(() => {
               >
                 <router-link
                   :to="`/game/${value.name}`"
-                  class="text-2xl text-white w-[180px] flex items-center justify-center py-3 bg-main-500 transition-all hover:bg-point-500 rounded-full"
+                  class="text-3xl text-white w-[180px] flex items-center justify-center py-3 bg-main-500 transition-all hover:bg-point-500 rounded-full"
                   >Play</router-link
                 >
               </div>

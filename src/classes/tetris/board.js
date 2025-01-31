@@ -116,7 +116,8 @@ export default class Board {
     this.piece.shape.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value > 0) {
-          this.grid[y + this.piece.y][x + this.piece.x] = value;
+          // ✨ 도형의 typeId를 저장하여 색상을 유지
+          this.grid[y + this.piece.y][x + this.piece.x] = this.piece.typeId;
         }
       });
     });
@@ -126,12 +127,96 @@ export default class Board {
     this.grid.forEach((row, y) => {
       row.forEach((value, x) => {
         if (value > 0) {
-          this.ctx.fillStyle = COLORS[value];
-          this.ctx.fillRect(x, y, 1, 1);
+          // 0보다 크면 블록이 존재하는 것
+          const px = x;
+          const py = y;
+          const blockSize = 1;
+          const color = COLORS[value];
+          if (!color) return;
+
+          this.ctx.fillStyle = color;
+          this.ctx.fillRect(px, py, blockSize, blockSize);
+
+          this.ctx.strokeStyle = this.darkenColor(color, 50);
+          this.ctx.lineWidth = 0.05;
+          this.ctx.strokeRect(px, py, blockSize, blockSize);
+
+          this.ctx.fillStyle = this.lightenColor(color, 70);
+          this.ctx.fillRect(px, py, blockSize * 0.1, blockSize);
+          this.ctx.fillStyle = this.lightenColor(color, 100);
+          this.ctx.fillRect(px, py, blockSize, blockSize * 0.1);
+
+          this.ctx.fillStyle = this.darkenColor(color, 50);
+          this.ctx.fillRect(
+            px + blockSize * 0.9,
+            py,
+            blockSize * 0.1,
+            blockSize
+          );
+          this.ctx.fillRect(
+            px,
+            py + blockSize * 0.9,
+            blockSize,
+            blockSize * 0.1
+          );
+
+          this.ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+          this.ctx.fillRect(px, py, blockSize * 0.15, blockSize * 0.15);
+
+          this.ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+          this.ctx.fillRect(
+            px + blockSize * 0.85,
+            py + blockSize * 0.85,
+            blockSize * 0.15,
+            blockSize * 0.15
+          );
         }
       });
     });
   }
+
+  lightenColor(color, percent) {
+    const num = parseInt(color.slice(1), 16);
+    const amt = Math.round(2.55 * percent);
+    const r = (num >> 16) + amt;
+    const g = ((num >> 8) & 0x00ff) + amt;
+    const b = (num & 0x0000ff) + amt;
+    return `#${(
+      0x1000000 +
+      (r < 255 ? r : 255) * 0x10000 +
+      (g < 255 ? g : 255) * 0x100 +
+      (b < 255 ? b : 255)
+    )
+      .toString(16)
+      .slice(1)}`;
+  }
+
+  darkenColor(color, percent) {
+    const num = parseInt(color.slice(1), 16);
+    const amt = Math.round(2.55 * percent);
+    const r = (num >> 16) - amt;
+    const g = ((num >> 8) & 0x00ff) - amt;
+    const b = (num & 0x0000ff) - amt;
+    return `#${(
+      0x1000000 +
+      (r > 80 ? r : 80) * 0x10000 +
+      (g > 80 ? g : 80) * 0x100 +
+      (b > 80 ? b : 80)
+    )
+      .toString(16)
+      .slice(1)}`;
+  }
+
+  // drawBoard() {
+  //   this.grid.forEach((row, y) => {
+  //     row.forEach((value, x) => {
+  //       if (value > 0) {
+  //         this.ctx.fillStyle = COLORS[value];
+  //         this.ctx.fillRect(x, y, 1, 1);
+  //       }
+  //     });
+  //   });
+  // }
 
   // 0으로 채워진 행렬을 얻는다.
   getEmptyGrid() {

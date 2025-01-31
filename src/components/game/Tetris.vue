@@ -11,6 +11,7 @@ import {
 import Board from "@/classes/tetris/board.js";
 import Sound from "@/classes/tetris/sound.js";
 import { useTimer } from "@/hooks/useTimer.js";
+import { twMerge } from "tailwind-merge";
 
 const emit = defineEmits(["open-game-over"]);
 
@@ -138,8 +139,8 @@ function gameOver() {
   cancelAnimationFrame(requestId.value);
 
   ctx.value.fillStyle = "black";
-  ctx.value.fillRect(1, 3, 8, 1.2);
-  ctx.value.font = "1px Arial";
+  ctx.value.fillRect(1.2, 3, 8, 1.2);
+  ctx.value.font = "1px Pixel_NES";
   ctx.value.fillStyle = "red";
   ctx.value.fillText("GAME OVER", 1.8, 4);
 
@@ -165,10 +166,10 @@ function pause() {
   cancelAnimationFrame(requestId.value);
   requestId.value = null;
 
-  ctx.value.fillStyle = "black";
-  ctx.value.fillRect(0, 2.8, 10, 2);
-  ctx.value.font = "1px DNFBitBitv2";
-  ctx.value.fillStyle = "yellow";
+  ctx.value.fillStyle = "rgb(29 23 63 / 0.8)";
+  ctx.value.fillRect(0, 2.55, 10, 2.7);
+  ctx.value.font = "1px Pixel_NES";
+  ctx.value.fillStyle = "white";
   ctx.value.fillText("PAUSED", 2.7, 4.1);
   isPlaying.value = false;
   isPaused.value = true;
@@ -238,46 +239,75 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <div class="grid bg-white p-10 font-dnf">
-    <canvas id="board" class="game-board"></canvas>
-    <div class="right-column">
-      <div class="flex flex-col gap-1">
-        <h2 class="text-2xl mb-4">TETRIS</h2>
-        <p>
-          Score: <span id="score">{{ account.score }}</span>
-        </p>
-        <p>
-          Lines: <span id="lines">{{ account.lines }}</span>
-        </p>
-        <p>
-          Level: <span id="level">{{ account.level }}</span>
-        </p>
-        <p v-if="currentTime">
-          Play Time: <span id="time">{{ formatTime(currentTime) }}</span>
-        </p>
+  <div
+    class="w-full h-full bg-[url(/assets/images/bg/tetris-bg.jpg)] bg-cover bg-center bg-no-repeat py-4 px-10 font-pixelNes flex flex-col items-center gap-4"
+  >
+    <h2 class="font-pixelNes text-white text-3xl">TETRIS</h2>
+    <div class="grid">
+      <div class="left-column"></div>
+      <div class="w-full flex flex-col items-center">
+        <canvas
+          id="board"
+          class="game-board bg-main-500/50 backdrop-blur-sm"
+        ></canvas>
+      </div>
+      <div class="right-column text-white">
+        <div class="flex flex-col gap-3 text-xl pl-3">
+          <p>
+            Score:
+            <span id="score" class="bg-main-500/80 p-1 rounded-lg">{{
+              account.score
+            }}</span>
+          </p>
+          <p>
+            Lines:
+            <span id="lines" class="bg-main-500/80 p-1 rounded-lg">{{
+              account.lines
+            }}</span>
+          </p>
+          <p>
+            Level:
+            <span id="level" class="bg-main-500/80 p-1 rounded-lg">{{
+              account.level
+            }}</span>
+          </p>
+          <p v-if="currentTime">
+            PlayTime: <br />
+            <span id="time" class="bg-main-500/80 p-1 rounded-lg">{{
+              formatTime(currentTime)
+            }}</span>
+          </p>
+          <div id="sound-div">
+            <span class="sound-item" id="sound-speaker"></span>
+            <span class="sound-item" id="sound-description"></span>
+          </div>
+          <canvas id="next" class="next"></canvas>
+        </div>
         <div id="sound-div">
           <span class="sound-item" id="sound-speaker"></span>
           <span class="sound-item" id="sound-description"></span>
         </div>
-        <canvas id="next" class="next"></canvas>
+        <button
+          @click="handleClickPlay"
+          :class="
+            twMerge(
+              'play-button text-white rounded-full bg-center bg-cover bg-no-repeat focus:outline-none',
+              isPlaying
+                ? 'bg-[url(/assets/tetris/pause.png)]'
+                : 'bg-[url(/assets/tetris/play.png)]'
+            )
+          "
+        >
+          <span class="sr-only">play button</span>
+        </button>
       </div>
-      <div id="sound-div">
-        <span class="sound-item" id="sound-speaker"></span>
-        <span class="sound-item" id="sound-description"></span>
-      </div>
-      <button
-        @click="handleClickPlay"
-        class="play-button text-white bg-point-500 rounded-full"
-      >
-        {{ isPlaying ? "Pause" : "Play" }}
-      </button>
     </div>
   </div>
 </template>
 <style scoped>
 .grid {
   display: grid;
-  grid-template-columns: 350px 120px;
+  grid-template-columns: 120px 400px 120px;
 }
 
 .left-column {
@@ -292,12 +322,15 @@ onUnmounted(() => {
 }
 
 .game-board {
-  border: solid 2px;
+  border: solid 2px white;
+  border-radius: 8px;
+  box-shadow: 0 0 7px #fff, 0 0 10px #a5087d, 0 0 21px #a5087d;
 }
 
 .play-button {
   font-size: 16px;
-  padding: 15px 30px;
+  padding: 15px 1rem;
+  height: 40px;
   cursor: pointer;
 }
 

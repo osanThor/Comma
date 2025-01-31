@@ -5,6 +5,7 @@ import GameList from "../components/game-view/GameList.vue";
 import GamePosts from "../components/game-view/GamePosts.vue";
 import GameDetail from "../components/game-view/GameDetail.vue";
 import GameRank from "../components/game-view/GameRank.vue";
+import BaseFooter from "@/components/common/Footer.vue";
 
 const route = useRoute();
 const gameName = route.params.gameName;
@@ -24,4 +25,5 @@ const gameName = route.params.gameName;
       </div>
     </div>
   </div>
+  <base-footer></base-footer>
 </template>

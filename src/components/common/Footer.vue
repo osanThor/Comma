@@ -24,7 +24,7 @@ const teamMembers = [
 </script>
 
 <template>
-  <footer class="bg-main-700/10 mt-32">
+  <footer class="w-full bg-main-700/10 mt-20">
     <div class="max-w-7xl mx-auto px-8">
       <div class="py-8">
         <div class="flex items-center justify-center">

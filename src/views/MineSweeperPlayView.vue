@@ -1,6 +1,7 @@
 <script setup>
 import GameOverModal from "@/components/game-over/GameOverModal.vue";
 import { ref } from "vue";
+import { backGround } from "@/assets/MineSweeper/MineSweeperBackGround.jpg";
 
 const isGameOver = ref(false);
 </script>
@@ -9,7 +10,7 @@ const isGameOver = ref(false);
     class="w-full flex justify-center items-center h-screen pt-[16.666vh] pb-[11.111vh]"
   >
     <section
-      class="w-[1500px] h-[780px] bg-black flex items-center justify-center rounded-3xl capture"
+      class="w-[1500px] h-[780px] bg-rose-500 flex items-center justify-center rounded-3xl capture"
     >
       <RouterView />
       <div

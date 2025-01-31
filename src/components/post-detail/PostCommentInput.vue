@@ -31,7 +31,7 @@ export default {
         user: {
           id: user.id,
           name: user.name,
-          profile_image: user.profile_image || '/assets/images/exProfile.png',
+          profile_image: user.profile_image || "/assets/images/exProfile.png",
         },
         like_count: 0,
         liked: false,
@@ -98,5 +98,4 @@ export default {
 textarea {
   scrollbar-width: none;
 }
-
 </style>

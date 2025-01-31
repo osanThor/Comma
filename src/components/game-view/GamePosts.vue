@@ -113,7 +113,7 @@ const handleInput = (e) => {
 
 <template>
   <div
-    class="mt-[82.4px] w-[1075px] h-[1470px] border-[3px] pl-[63px] pr-[62px] pt-[61px] border-white bg-[rgba(23,18,50,0.2)] backdrop-blur-[10px] rounded-[30px]"
+    class="mt-[82.4px] w-full max-w-[1075px] pb-20 border-[3px] pl-[63px] pr-[62px] pt-[61px] border-white bg-[rgba(23,18,50,0.2)] backdrop-blur-[10px] rounded-[30px]"
   >
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-[26px]">
@@ -146,7 +146,7 @@ const handleInput = (e) => {
     <!-- 게시글 목록 또는 빈 상태 메시지 -->
     <div
       v-if="postData.posts.length > 0"
-      class="mt-[35px] grid grid-cols-4 grid-rows-4 gap-x-[25px] gap-y-[33.17px] mb-[59px]"
+      class="mt-[35px] grid grid-cols-4 gap-x-[25px] gap-y-[33.17px] mb-[59px]"
     >
       <game-post-item
         v-for="value in postData.posts"

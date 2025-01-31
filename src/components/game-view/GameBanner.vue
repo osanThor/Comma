@@ -37,40 +37,41 @@ const titleTopPosition = computed(() => {
 
 <template>
   <div
-    class="w-[1075px] h-[404px] rounded-2xl mt-[160px] bg-main-500 flex flex-col relative"
+    class="w-full max-w-[1075px] h-[404px] rounded-2xl mt-[160px] bg-main-500 flex flex-col relative"
     :style="{
       backgroundImage: `url(${currentBackground})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }"
   >
-    <div class="absolute right-[0px]" :class="titleTopPosition">
+    <div
+      class="absolute right-[0px] flex flex-col items-start gap-5 top-1/2 translate-y-5"
+      :class="titleTopPosition"
+    >
       <h1
-        class="text-6xl font-bold font-pixelNes text-white mb-[27px] w-[389px] whitespace-pre-line"
+        class="text-6xl font-bold font-pixelNes text-white w-[367px] whitespace-pre-line"
       >
         {{ localizedGameName }}
       </h1>
       <router-link
         :to="playPath"
-        class="group rounded-[60px] w-[229px] h-[65px] bg-point-500 hover:bg-white flex items-center justify-center gap-[12px] mt-[27px] transition-transform hover:scale-105"
+        class="group rounded-[60px] text-main-500 hover:text-point-500 bg-point-500 px-5 py-3 relative -translate-x-1 hover:bg-white flex items-center justify-center gap-[6px] transition-transform hover:scale-105"
       >
         <svg
-          width="18"
-          height="25"
-          viewBox="0 0 18 25"
+          width="15"
+          height="18"
+          viewBox="0 0 15 18"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          class="w-[18px] h-[25px]"
         >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
-            d="M5.44253 1.66346L16.8125 10.2615C17.5576 10.7916 18 11.6495 18 12.564C18 13.4784 17.5576 14.3363 16.8125 14.8665L5.44253 24.2655C4.48065 25.0351 3.17405 25.2149 2.04002 24.7338C0.905987 24.2526 0.127405 23.188 0.0125275 21.9615L0.0125275 3.96146C0.129372 2.73601 0.908712 1.67329 2.04238 1.19351C3.17605 0.713741 4.4815 0.894174 5.44253 1.66346Z"
-            class="fill-main-500 group-hover:fill-point-500"
+            d="M4.9294 0.549587L13.7789 6.97893C14.3588 7.37539 14.7031 8.0169 14.7031 8.70067C14.7031 9.38445 14.3588 10.026 13.7789 10.4224L4.9294 17.4507C4.18075 18.0262 3.1638 18.1607 2.28116 17.8009C1.39852 17.4411 0.792538 16.645 0.703125 15.7279L0.703125 2.26797C0.794068 1.35161 1.40064 0.556933 2.283 0.198172C3.16535 -0.160589 4.18141 -0.0256664 4.9294 0.549587Z"
+            fill="currentColor"
           />
         </svg>
-        <p class="font-dnf text-main-500 text-2xl group-hover:text-point-500">
-          Play Game
-        </p>
+        <p class="font-dnf text-lg">PLAY GAME</p>
       </router-link>
     </div>
   </div>

@@ -79,7 +79,7 @@ const getRankImage = (rank) => {
 
 <template>
   <div
-    class="mt-[82px] pt-[29px] h-[874px] w-[325px] bg-main-600 rounded-2xl flex flex-col items-center"
+    class="mt-[82px] pt-[29px] max-h-[874px] flex-1 max-w-[325px] bg-main-600 rounded-2xl flex flex-col items-center"
   >
     <h2 class="font-dnf text-white text-2xl mb-[8px] flex items-center gap-2">
       <img src="/assets/images/ranking.png?url" alt="ranking" class="w-6 h-6" />

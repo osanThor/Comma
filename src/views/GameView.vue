@@ -12,7 +12,7 @@ const gameName = route.params.gameName;
 </script>
 
 <template>
-  <div class="max-w-[1920px] h-[2458px] mx-auto px-[240px]">
+  <div class="w-[calc(100%-40px)] max-w-[1440px]">
     <div class="grid grid-cols-4 gap-10">
       <div class="col-span-3">
         <game-banner :game-name="gameName"></game-banner>

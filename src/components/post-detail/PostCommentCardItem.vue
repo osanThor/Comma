@@ -70,7 +70,7 @@ export default {
         <!-- 작성자 프로필 이미지 -->
         <div
         @click="navigateToProfile(comment.user?.id)"
-        class="md:w-8 md:h-8 lg:w-14 lg:h-14 rounded-full cursor-pointer "
+        class="md:w-8 md:h-8 lg:w-12 lg:h-12 rounded-full cursor-pointer "
         >
         <img
           class="w-full h-full object-cover object-center rounded-full"
@@ -80,7 +80,7 @@ export default {
     </div>
       
       <!-- 댓글 콘텐츠 -->
-      <div>
+      <div class="pt-2">
         <!-- 닉네임 및 작성일시 -->
         <div class="flex flex-row items-center text-white gap-2">
           <p class="font-semibold text-lg leading-0">

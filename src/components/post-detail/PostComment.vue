@@ -77,7 +77,7 @@ export default {
     <!-- 댓글 상단 -->
     <header class="flex flex-row items-end justify-between w-full text-white mb-12">
       <p class="font-semibold text-2xl">댓글 {{ totalCount }}개</p>
-      <div class="flex flex-row items gap-5 font-semibold text-lg">
+      <div class="flex flex-row items gap-4 font-medium text-lg">
         <button
           :class="{ 'text-point-500': sortType === 'desc' }"
           @click="handleChangeSort('desc')"

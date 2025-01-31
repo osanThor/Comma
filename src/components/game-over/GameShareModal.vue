@@ -35,10 +35,10 @@ const fileInputRef = ref(null);
 
 const isGameShareModalOpen = ref(true);
 
-function closeGameShareModal() {
+const closeGameShareModal = () => {
   isGameShareModalOpen.value = false;
   window.location.reload();
-}
+};
 
 const handleUploadImage = (e) => {
   const files = e.target.files;
@@ -141,7 +141,7 @@ watch(
             v-if="imageBlobs.length > 0"
             type="button"
             class="group absolute bottom-[-16px] right-[-16px] w-[42px] h-[42px] bg-point-500 hover:bg-white rounded-full flex items-center justify-center text-white text-xl shadow-lg"
-            @click="emit(removeImage)"
+            @click="emit('removeImage')"
           >
             <img
               src="/assets/images/icons/trash-white.svg"

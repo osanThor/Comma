@@ -25,6 +25,19 @@ let isGameStarted = ref(false);
 let audioContext = null;
 let k = null;
 
+const SCORE_LABEL_CONFIG = {
+  font: "Pixel NES",
+  size: 32,
+  styles: {
+    bold: true,
+    shadow: {
+      color: k?.rgb(0, 0, 0),
+      blur: 4,
+      offset: k?.vec2(2, 2),
+    },
+  },
+};
+
 const { currentTime, start, stop, reset } = useTimer();
 
 const setCanvasSize = () => {
@@ -62,6 +75,8 @@ onMounted(async () => {
     global: true,
     canvas: canvas,
   });
+
+  await k.loadFont("gameFont", "/assets/fonts/Pixel_NES.otf");
 
   k.loadSprite("sky", "/assets/flappy/2.png");
   k.loadSprite("field", "/assets/flappy/3.png");
@@ -118,12 +133,21 @@ onMounted(async () => {
     const map = k.add([k.pos(0, 0), k.scale(SCALE_FACTOR)]);
 
     const scoreLabel = k.add([
-      k.text(`Score: ${score}`, { size: 32 }),
-      k.pos(600, 620), 
+      k.text(`Score: ${score}`, {
+        ...SCORE_LABEL_CONFIG,
+        size: SCORE_LABEL_CONFIG.size,
+        font: SCORE_LABEL_CONFIG.font,
+      }),
+      k.pos(50, 50),
+      k.fixed(),
+      k.z(100),
       k.color(255, 255, 255),
-      { updateScore: (newScore) => (scoreLabel.text = `Score: ${newScore}`) },
+      {
+        updateScore: (newScore) => {
+          scoreLabel.text = `Score: ${newScore}`;
+        },
+      },
     ]);
-
     const clouds = map.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
     clouds.onUpdate(() => {
       if (isGameStarted.value) {
@@ -178,8 +202,10 @@ onMounted(async () => {
     });
 
     k.loop(1, () => {
-      score += 1;
-      scoreLabel.updateScore(score);
+      if (isGameStarted.value && !player.isDead) {
+        score += 1;
+        scoreLabel.updateScore(score);
+      }
     });
 
     for (const collider of collidersData) {
@@ -214,15 +240,16 @@ onMounted(async () => {
     // 충돌한 후 게임 점수/타임 기록
     player.onCollide("obstacle", async () => {
       if (player.isDead) return;
+
       if (audioEnabled.value) k.play("hurt");
-      isGameStarted.value = false;
+      player.isDead = true;
       player.disableControls();
+      isGameStarted.value = false;
       obstaclesLayer.speed = 0;
       map.speed = 0;
 
       stop();
       console.log(score, currentTime.value);
-      player.isDead = true;
 
       emit("open-game-over", score, currentTime.value);
       reset();
@@ -245,21 +272,4 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
-.game-scene {
-  position: relative;
-}
-
-.score-label {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 32px;
-  color: white;
-  font-weight: bold;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  border-radius: 10px;
-}
-</style>
+<style scoped></style>

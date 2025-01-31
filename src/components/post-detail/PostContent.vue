@@ -167,7 +167,7 @@ export default {
     >
       <section class="w-full">
         <!-- 상단 -->
-        <header class="flex flex-row items-end justify-between w-full">
+        <div class="flex flex-row items-end justify-between w-full">
           <!-- 제목 및 날짜 -->
           <div class="flex-grow">
             <p class="font-medium text-sm text-white/70 mb-2">
@@ -186,7 +186,7 @@ export default {
               삭제
             </button>
           </div>
-        </header>
+        </div>
         <hr class="border-2 opacity-30 w-full my-5 rounded-sm" />
 
         <!-- 게시글 내용 -->

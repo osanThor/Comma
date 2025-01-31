@@ -75,7 +75,9 @@ export default {
 <template>
   <section class="flex flex-col items-center w-full mx-auto">
     <!-- 댓글 상단 -->
-    <header class="flex flex-row items-end justify-between w-full text-white mb-12">
+    <div
+      class="flex flex-row items-end justify-between w-full text-white mb-12"
+    >
       <p class="font-semibold text-2xl">댓글 {{ totalCount }}개</p>
       <div class="flex flex-row items gap-4 font-medium text-lg">
         <button
@@ -93,7 +95,7 @@ export default {
           인기순
         </button>
       </div>
-    </header>
+    </div>
     <main class="flex flex-col items-center w-full">
       <!-- 댓글 목록 -->
       <post-comment-card-item

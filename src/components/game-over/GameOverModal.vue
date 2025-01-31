@@ -163,9 +163,9 @@ onMounted(async () => {
     >
       <img src="/assets/images/icons/close-icon.svg" alt="닫기" />
     </button>
-    <header class="mt-[64px] flex justify-center">
+    <div class="mt-[64px] flex justify-center">
       <h1 class="text-[44px] text-point-500 font-dnf">!! GAME OVER !!</h1>
-    </header>
+    </div>
 
     <main>
       <!-- TIME / SCORE -->

@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, onMounted, ref } from "vue";
+import { reactive, computed, onMounted, ref, watch } from "vue";
 import { useTimer } from "@/hooks/useTimer.js";
 
 const { currentTime, start, stop, reset } = useTimer();
@@ -12,12 +12,18 @@ const account = reactive({
 const isPlaying = ref(false);
 const isGameOver = ref(false);
 const time = ref(null);
+const remainTime = ref(600000); // 10 minutes in milliseconds
+const isBlinking = ref(false); // 🚀 깜빡이는 상태 저장
+let countdownInterval = null;
+let animationFrameId = null;
+const showVictory = ref(false);
 
 const emits = defineEmits(["open-game-over"]);
 
 const rows = 16;
 const cols = 24;
 const mineCount = 30;
+const flagCount = ref(mineCount);
 const cells = reactive(
   Array.from({ length: rows * cols }, () => ({
     mine: false,
@@ -33,14 +39,62 @@ const gridStyle = computed(() => ({
   gridTemplateColumns: `repeat(${cols}, 1fr)`,
 }));
 
+// 깜빡이는 효과를 위한 watch
+watch(remainTime, (newTime) => {
+  if (newTime <= 10000) {
+    isBlinking.value = true;
+  } else {
+    isBlinking.value = false;
+  }
+});
+
+let lastTime = performance.now();
+function startCountdown() {
+  if (countdownInterval || animationFrameId) return; // Prevent multiple intervals
+
+  function update() {
+    if (!isPlaying.value || isGameOver.value) {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId); // 🚀 requestAnimationFrame 정지
+        animationFrameId = null;
+      }
+      return;
+    }
+
+    const now = performance.now();
+    const deltaTime = now - lastTime;
+    lastTime = now;
+
+    if (remainTime.value > 0) {
+      remainTime.value -= deltaTime;
+    } else {
+      remainTime.value = 0;
+      account.score = 0;
+      stop();
+      isGameOver.value = true;
+      emits("open-game-over", account.score, currentTime.value);
+      return;
+    }
+
+    animationFrameId = requestAnimationFrame(update); // 🚀 ID 저장
+  }
+
+  animationFrameId = requestAnimationFrame(update);
+}
+// Function to reset the game and timer
 function resetGame() {
   reset();
   isPlaying.value = false;
   isGameOver.value = false;
+  remainTime.value = 600000; // Reset remainTime to 10 minutes
   time.value = {
     start: performance.now(),
     elapsed: 0,
   };
+
+  clearInterval(countdownInterval);
+  countdownInterval = null;
+
   cells.splice(
     0,
     cells.length,
@@ -54,6 +108,10 @@ function resetGame() {
   );
   placeMines();
   calculateAdjacentMines();
+}
+
+function toggleHover(index, hoverState) {
+  cells[index].isHovered = hoverState;
 }
 
 function placeMines() {
@@ -75,22 +133,14 @@ function placeMines() {
   }
 }
 
-function validateMines() {
-  cells.forEach((cell, index) => {
-    const row = Math.floor(index / cols);
-    const col = index % cols;
-    if (row < 0 || row >= rows || col < 0 || col >= cols) {
-      cell.mine = false;
-    }
-  });
-}
-
 function revealAllMines() {
   isGameOver.value = true;
-
+  clearInterval(countdownInterval);
+  countdownInterval = null;
   const mineCells = cells
     .map((cell, index) => ({ cell, index }))
     .filter(({ cell }) => cell.mine);
+
   mineCells.forEach(({ cell, index }, i) => {
     setTimeout(() => {
       cell.revealed = true;
@@ -137,6 +187,7 @@ function revealCell(index) {
   if (!isPlaying.value) {
     start();
     isPlaying.value = true;
+    startCountdown(); // Start the countdown on first move
   }
 
   const cell = cells[index];
@@ -146,12 +197,13 @@ function revealCell(index) {
     isPlaying.value = false;
     stop();
     revealAllMines();
-    console.log(
-      account.score,
-      currentTime.value,
-      formatTime(currentTime.value)
+
+    remainTime.value -= currentTime.value; // Deduct elapsed time
+    account.score = 0;
+    setTimeout(
+      () => emits("open-game-over", account.score, currentTime.value),
+      3000
     );
-    setTimeout(() => emits("open-game-over"), 3000);
     return;
   }
 
@@ -184,7 +236,18 @@ function revealAdjacentCells(index) {
 
 function toggleFlag(index) {
   if (isGameOver.value || cells[index].revealed) return;
-  cells[index].flagged = !cells[index].flagged;
+
+  if (!cells[index].flagged) {
+    // 깃발 추가
+    if (flagCount.value > 0) {
+      cells[index].flagged = true;
+      flagCount.value--;
+    }
+  } else {
+    // 깃발 제거
+    cells[index].flagged = false;
+    flagCount.value++;
+  }
   checkVictory();
 }
 
@@ -192,113 +255,188 @@ function checkVictory() {
   const allMinesFlagged = cells.every((cell) =>
     cell.mine ? cell.flagged : true
   );
+
   if (allMinesFlagged) {
+    isPlaying.value = false;
     stop();
-    alert("Victory!");
-    account.score = 100000 - currentTime.value;
-    console.log(
-      account.score,
-      currentTime.value,
-      formatTime(currentTime.value)
-    );
-    setTimeout(() => emits("open-game-over"), 2000);
+
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+
+    remainTime.value = Math.round(remainTime.value);
+    account.score = Math.round(remainTime.value);
+
+    // 🚀 Victory 애니메이션
+    showVictory.value = true;
+
+    console.log(account);
+    setTimeout(() => {
+      showVictory.value = false;
+      emits("open-game-over", account.score, currentTime.value);
+    }, 3000);
   }
 }
 
-function onHoverCell(index) {
-  cells[index].isHovered = true;
-}
-
-function onLeaveCell(index) {
-  cells[index].isHovered = false;
-}
-
 function formatTime(milliseconds) {
-  const totalSeconds = Math.floor(milliseconds / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const totalSeconds = Math.floor(milliseconds / 1000); // 🔥 밀리초 제외
+  const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
     "0"
-  )}:${String(seconds).padStart(2, "0")}`;
+  )}`;
+}
+
+function play() {
+  if (!isPlaying.value) {
+    start();
+    isPlaying.value = true;
+    startCountdown(); // Start countdown when game starts
+  }
 }
 
 onMounted(() => {
   resetGame();
-  validateMines();
 });
 </script>
 
 <template>
-  <div id="app" class="text-center mt-5">
-    <h1 class="text-4xl font-bold mb-4 font-dnf text-point-500">
-      COMMA Minesweeper
-    </h1>
-    <h2 class="text-white bg-point-500 border-2 text-right px-4 py-2">
-      Play Time: <span id="time">{{ formatTime(currentTime) }}</span>
-    </h2>
-
-    <div class="grid mx-auto" :style="gridStyle">
-      <div
-        v-for="(cell, index) in cells"
-        :key="index"
-        :class="[
-          'cell',
-          {
-            'bg-gray-200': cell.revealed && !cell.mine,
-            'bg-red-400': cell.mine && cell.revealed,
-            'bg-gray-400': !cell.revealed,
-            'text-gray-800': cell.revealed && cell.adjacentMines > 0,
-            'cursor-pointer': !cell.revealed,
-            'cursor-default': cell.revealed,
-            'bg-gray-700': cell.isHovered && !cell.revealed,
-          },
-        ]"
-        @click="revealCell(index)"
-        @contextmenu.prevent="toggleFlag(index)"
-        @mouseover="onHoverCell(index)"
-        @mouseleave="onLeaveCell(index)"
-        class="flex items-center justify-center border border-gray-300"
-      >
-        <span v-if="cell.revealed && !cell.mine && cell.adjacentMines > 0">
-          {{ cell.adjacentMines }}
+  <div
+    class="w-full h-full bg-[url(/assets/images/bg/mineSweeper-bg.jpg)] bg-cover bg-center bg-no-repeat font-pixelNes flex flex-col items-center"
+  >
+    <div id="app" class="text-center mt-20 w-[calc(full-60px)]">
+      <div class="flex justify-between">
+        <span class="text-white items-start">
+          TIME :
+          <span :class="{ blinking: isBlinking }" id="time">{{
+            formatTime(remainTime)
+          }}</span>
         </span>
-        <span v-if="cell.flagged && !cell.revealed">🚩</span>
-        <span v-if="cell.mine && cell.revealed">💣</span>
+        <span class="text-white text-right items-end"
+          >🚩 : &nbsp{{ flagCount }}</span
+        >
       </div>
+
+      <div class="flex justify-center items-start mt-4 w-full">
+        <!-- 게임 보드 -->
+        <div class="grid-container">
+          <!-- <div class="border-s">123123</div> -->
+          <div class="grid" :style="gridStyle">
+            <div
+              v-for="(cell, index) in cells"
+              :key="index"
+              :class="[
+                'cell',
+                {
+                  'bg-gray-200': cell.revealed && !cell.mine,
+                  'bg-red-400': cell.mine && cell.revealed,
+                  'bg-gray-400': !cell.revealed,
+                  'text-gray-800': cell.revealed && cell.adjacentMines > 0,
+                  'cursor-pointer': !cell.revealed,
+                  'cursor-default': cell.revealed,
+                  'bg-gray-600': cell.isHovered && !cell.revealed,
+                },
+              ]"
+              @click="revealCell(index)"
+              @contextmenu.prevent="toggleFlag(index)"
+              @mouseover="toggleHover(index, true)"
+              @mouseleave="toggleHover(index, false)"
+              class="flex items-center justify-center border border-gray-300"
+            >
+              <span
+                v-if="cell.revealed && !cell.mine && cell.adjacentMines > 0"
+              >
+                {{ cell.adjacentMines }}
+              </span>
+              <span v-if="cell.flagged && !cell.revealed">🚩</span>
+              <span v-if="cell.mine && cell.revealed">💣</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽 정보 박스 -->
+      </div>
+
+      <!-- Restart 버튼 -->
+      <button
+        @click="resetGame"
+        class="mt-8 px-4 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-700 font-pixelNes text-xl w-40"
+      >
+        RESTART
+      </button>
     </div>
-    <button
-      @click="play"
-      class="mt-5 px-4 py-2 bg-point-500 text-white font-bold rounded-full hover:bg-point-600 mx-8"
-    >
-      PLAY
-    </button>
-    <button
-      @click="resetGame"
-      class="mt-5 px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600"
-    >
-      Restart
-    </button>
+
+    <transition name="fade">
+      <div v-if="showVictory" class="victory-message">🎉 Victory! 🎉</div>
+    </transition>
   </div>
 </template>
 
 <style>
+/* Grid 컨테이너 */
+.grid-container {
+  display: flex;
+  align-items: center;
+}
+
 .grid {
   display: grid;
-  gap: 0rem;
-  width: 30rem;
+  width: 40rem;
+  height: 26rem;
 }
+
 .cell {
-  width: 100%;
-  padding-top: 100%; /* This makes the cells square */
+  width: 26px;
+  height: 26px;
   position: relative;
-  transition: background-color 0.2s ease;
+  border-color: white;
 }
+
 .cell span {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.blinking {
+  animation: blink 1s infinite;
+}
+
+.victory-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: bold;
+  color: gold;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px 40px;
+  border-radius: 10px;
+
+  text-align: center;
+  z-index: 1000;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 2s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

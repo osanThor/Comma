@@ -248,9 +248,13 @@ onMounted(() => {
     <button
       v-if="playButtonVisible"
       @click="startGame"
-      class="font-dnf text-2xl text-white w-[160px] h-[64px] bg-main-400 hover:bg-point-500 rounded-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      class="w-[172px] h-[80px] overflow-hidden rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
     >
-      PLAY
+      <img
+        src="/assets/tetris/play.png"
+        alt="play button image"
+        class="mt-[-44px]"
+      />
     </button>
     <button
       @click="toggleMute"

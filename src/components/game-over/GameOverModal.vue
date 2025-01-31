@@ -34,6 +34,9 @@ const props = defineProps({
     required: true,
     default: 0,
   },
+  gameResult: {
+    type: String,
+  },
 });
 
 const localPlayTime = ref(props.playTime);
@@ -88,11 +91,11 @@ const openGameShareModal = () => {
 
   html2canvas(screenElement, { useCORS: true, scale: 2, backgroundColor: null })
     .then((canvas) => {
-      const imageData = canvas.toDataURL("image/png");
+      const imageData = canvas.toDataURL("image/jpeg");
 
       canvas.toBlob((blob) => {
         if (blob) {
-          const fileName = `capture-${Date.now()}.png`;
+          const fileName = `capture-${Date.now()}.jpeg`;
           const file = new File([blob], fileName, { type: blob.type });
           imageBlobs.value = [{ file, preview: imageData }];
           isGameOverModalOpen.value = false;
@@ -100,11 +103,16 @@ const openGameShareModal = () => {
         } else {
           console.error("Blob 생성 실패");
         }
-      }, "image/png");
+      }, "image/jpeg");
     })
     .catch((error) => {
       console.error("캡처 실패:", error);
     });
+};
+
+const closeShareModalAndShowGameOver = () => {
+  isGameShareModalOpen.value = false;
+  isGameOverModalOpen.value = true;
 };
 
 const handleUploadImage = (newFile) => {
@@ -147,9 +155,12 @@ onMounted(async () => {
 <template>
   <div
     v-if="isGameOverModalOpen"
-    class="relative w-[538px] h-[754px] border-4 border-white rounded-[28px] bg-main-500"
+    class="relative w-[530px] h-[748px] border-4 border-white rounded-[28px] bg-main-500"
   >
-    <button class="absolute top-[22px] right-[22px]" @click="replayGame">
+    <button
+      class="absolute top-3 right-3 opacity-50 hover:opacity-100"
+      @click="replayGame"
+    >
       <img src="/assets/images/icons/close-icon.svg" alt="닫기" />
     </button>
     <header class="mt-[64px] flex justify-center">
@@ -160,25 +171,25 @@ onMounted(async () => {
       <!-- TIME / SCORE -->
       <section class="mx-[82px] mt-7 flex flex-row justify-between">
         <article
-          class="w-[174px] h-[122px] bg-main-700 text-white flex flex-col first-line:justify-center items-center rounded-xl"
+          class="w-[174px] h-[116px] bg-main-700 text-white flex flex-col first-line:justify-center items-center rounded-xl"
         >
-          <h2 class="font-dnf text-2xl mt-[22px]">TIME</h2>
-          <p class="mt-3 font-pretendard font-medium text-xl opacity-80">
+          <h2 class="font-dnf text-xl mt-[22px]">TIME</h2>
+          <p class="mt-3 font-pretendard font-medium text-lg opacity-80">
             {{ formattedPlayTime }}
           </p>
         </article>
         <article
-          class="w-[174px] h-[122px] bg-main-700 text-white flex flex-col first-line:justify-center items-center rounded-xl"
+          class="w-[174px] h-[116px] bg-main-700 text-white flex flex-col first-line:justify-center items-center rounded-xl"
         >
-          <h2 class="font-dnf text-2xl mt-[22px]">SCORE</h2>
-          <p class="mt-3 font-pretendard font-medium text-xl opacity-80">
+          <h2 class="font-dnf text-xl mt-[22px]">SCORE</h2>
+          <p class="mt-3 font-pretendard font-medium text-lg opacity-80">
             {{ localScore }}점
           </p>
         </article>
       </section>
       <!-- RANKING -->
       <section class="h-[246px]">
-        <h2 class="font-dnf text-2xl text-white flex justify-center mt-12">
+        <h2 class="font-dnf text-2xl text-white flex justify-center mt-9">
           RANKING
         </h2>
         <div class="mt-[18px] space-y-[10px] flex flex-col items-center">
@@ -191,31 +202,35 @@ onMounted(async () => {
               :rank="rankData.rank"
               :key="rankData.rank"
               :isHighlighted="rankData.isHighlighted"
+              :game-result="gameResult"
             ></game-ranking-item>
             <game-ranking-item-last-place v-else></game-ranking-item-last-place>
           </template>
         </div>
       </section>
     </main>
-    <footer class="flex justify-between mx-[82px] mt-[56px]">
-      <after-game-over-button
-        text="REPLAY"
-        bg-color="bg-[#0A58CE]"
-        @click="replayGame"
-      ></after-game-over-button>
-      <after-game-over-button
-        text="SHARE"
-        @click="openGameShareModal"
-      ></after-game-over-button>
-    </footer>
+    <section class="flex flex-col items-center mt-12">
+      <div class="flex flex-row items-center gap-8">
+        <after-game-over-button
+          text="REPLAY"
+          bg-color="bg-[#0A58CE]"
+          @click="replayGame"
+        ></after-game-over-button>
+        <after-game-over-button
+          text="SHARE"
+          @click="openGameShareModal"
+        ></after-game-over-button>
+      </div>
+    </section>
   </div>
-  <div v-if="isGameShareModalOpen">
+  <div v-if="isGameShareModalOpen" class="z-50">
     <game-share-modal
       :imageBlobs="imageBlobs"
       :playTime="formattedPlayTime"
       :score="formattedScore"
       @uploadImage="handleUploadImage"
       @removeImage="handleRemoveImage"
+      @close-share-modal="closeShareModalAndShowGameOver"
     ></game-share-modal>
   </div>
 </template>

@@ -8,6 +8,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  gameResult: String,
 });
 
 function formatPlayTime(milliseconds) {
@@ -33,20 +34,29 @@ const formatedName = computed(() => {
     ]"
   >
     <div
-      v-if="!isHighlighted"
-      class="absolute top-0 left-0 bg-main-400 bg-opacity-50 rounded-[10px] w-[326px] h-[56px]"
-    ></div>
-    <div
       :class="[
-        'flex-shrink-0 flex justify-center items-center',
+        'flex-shrink-0 flex flex-col justify-center items-center',
         isHighlighted ? 'w-[38px] h-[38px]' : 'w-8 h-8',
       ]"
     >
+      <div v-if="gameResult === 'new success' && isHighlighted">
+        <p
+          class="new-text absolute top-[-10px] left-[-10px] font-dnf text-point-500"
+        >
+          NEW
+        </p>
+      </div>
       <template v-if="rank <= 3">
         <img :src="`/assets/images/medal${rank}.png`" alt="Medal Image" />
       </template>
       <template v-else>
-        <span class="font-dnf text-white text-xl">{{ rank }}</span>
+        <span
+          :class="[
+            'font-dnf text-xl',
+            isHighlighted ? 'text-white' : 'text-white/50',
+          ]"
+          >{{ rank }}</span
+        >
       </template>
     </div>
     <div
@@ -55,11 +65,34 @@ const formatedName = computed(() => {
         isHighlighted ? 'ml-12' : 'ml-10',
       ]"
     >
-      <span class="font-dnf text-white text-sm">{{ formatedName }}</span>
-      <span class="font-pretendard text-white text-xs">{{ score }}점</span>
-      <span class="font-pretendard text-white text-xs">{{
-        formatPlayTime(time)
-      }}</span>
+      <span
+        :class="[
+          'font-dnf text-sm',
+          isHighlighted ? 'text-white' : 'text-white/50',
+        ]"
+        >{{ formatedName }}</span
+      >
+      <span
+        :class="[
+          'font-pretendard text-xs',
+          isHighlighted ? 'text-white' : 'text-white/50',
+        ]"
+        >{{ score }}점</span
+      >
+      <span
+        :class="[
+          'font-pretendard text-xs',
+          isHighlighted ? 'text-white' : 'text-white/50',
+        ]"
+        >{{ formatPlayTime(time) }}</span
+      >
     </div>
   </div>
 </template>
+<style scoped>
+.new-text {
+  font-weight: Extra Bold;
+  text-shadow: -2px -2px white, 2px -2px white, -2px 2px white, 2px 2px white,
+    -2px 0px white, 2px 0px white, 0px -2px white, 0px 2px white;
+}
+</style>

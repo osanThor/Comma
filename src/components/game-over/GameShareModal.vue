@@ -19,7 +19,7 @@ const { imageBlobs, score, playTime } = defineProps({
   },
 });
 
-const emit = defineEmits(["removeImage", "uploadImage"]);
+const emit = defineEmits(["removeImage", "uploadImage", "close-share-modal"]);
 
 const route = useRoute();
 const router = useRouter();
@@ -36,8 +36,7 @@ const fileInputRef = ref(null);
 const isGameShareModalOpen = ref(true);
 
 const closeGameShareModal = () => {
-  isGameShareModalOpen.value = false;
-  window.location.reload();
+  emit("close-share-modal");
 };
 
 const handleUploadImage = (e) => {
@@ -99,7 +98,7 @@ watch(
 <template>
   <div
     v-if="isGameShareModalOpen"
-    class="w-[538px] h-[754px] border-4 border-white rounded-[28px] bg-main-500"
+    class="w-[530px] h-[748px] border-4 border-white rounded-[28px] bg-main-500"
   >
     <form @submit.prevent="handleSubmit">
       <header class="flex flex-col items-center">
@@ -177,17 +176,19 @@ watch(
           ></textarea>
         </section>
       </main>
-      <footer class="flex justify-between mx-[82px] mt-[32px]">
-        <after-game-over-button
-          text="CANCEL"
-          bg-color="bg-main-400"
-          @click="closeGameShareModal"
-        ></after-game-over-button>
-        <after-game-over-button
-          text="SHARE"
-          type="submit"
-        ></after-game-over-button>
-      </footer>
+      <section class="flex flex-col items-center mt-9">
+        <div class="flex flex-row items-center gap-8">
+          <after-game-over-button
+            text="CANCEL"
+            bg-color="bg-main-400"
+            @click="closeGameShareModal"
+          ></after-game-over-button>
+          <after-game-over-button
+            text="SHARE"
+            type="submit"
+          ></after-game-over-button>
+        </div>
+      </section>
     </form>
   </div>
 </template>

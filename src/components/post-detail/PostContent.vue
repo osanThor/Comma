@@ -49,6 +49,8 @@ export default {
         likeCount: postStore.likeCount,
         commentCount: postStore.commentCount,
         hasLiked: postStore.hasLiked,
+        playTime: postStore.play_time,
+        score: postStore.score,
       };
     };
 
@@ -173,10 +175,11 @@ export default {
         <section>
           <!-- 점수 및 플레이 타임 -->
           <div
+            v-if="post?.category !== 'free'"
             class="flex flex-row items-center gap-4 font-semibold text-lg mb-4 text-point-500"
           >
-            <p>TIME | 01:00:00</p>
-            <p>SCORE | 999점</p>
+          <p>TIME | {{ post?.playTime }}</p>
+          <p>SCORE | {{ post?.score }}</p>
           </div>
           <!-- 본문 -->
           <p class="font-medium opacity-85">{{ post?.content }}</p>

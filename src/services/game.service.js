@@ -24,7 +24,7 @@ export const getGameByName = async (gameName) => {
 export const updateGameScore = async (gameId, userId, score, playTime) => {
   const { data: existingGameData, error: existingGameError } = await supabase
     .from("game_scores")
-    .select("total_play_time")
+    .select("score,total_play_time")
     .eq("game_id", gameId)
     .eq("user_id", userId)
     .single();
@@ -41,17 +41,19 @@ export const updateGameScore = async (gameId, userId, score, playTime) => {
         },
       ]);
     if (insertGameError) throw insertGameError;
-    return "suceess";
+    return "new success";
   }
   if (existingGameError) {
     throw existingGameError;
   }
 
+  const renewal = existingGameData.score < score;
+
   const { error: updateGameError } = await supabase
     .from("game_scores")
     .update([
       {
-        score,
+        score: renewal ? score : existingGameData.score,
         play_time: playTime,
         total_play_time: existingGameData.total_play_time + playTime,
       },
@@ -59,7 +61,7 @@ export const updateGameScore = async (gameId, userId, score, playTime) => {
     .eq("game_id", gameId)
     .eq("user_id", userId);
   if (updateGameError) throw updateGameError;
-  return "suceess";
+  return renewal ? "new success" : "success";
 };
 
 export const getGameRanking = async (gameId, sortType = "desc") => {

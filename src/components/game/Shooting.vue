@@ -264,8 +264,8 @@ onMounted(() => {
       <img
         :src="
           isMuted
-            ? '/assets/images/icons/mute.png'
-            : '/assets/images/icons/sound.png'
+            ? '/assets/images/game/shooting/mute.png'
+            : '/assets/images/game/shooting/sound.png'
         "
         alt="Sound Mute Button"
       />

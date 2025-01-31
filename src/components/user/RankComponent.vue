@@ -1,4 +1,5 @@
 <script setup>
+import Avatar from "@/components/common/Avatar.vue";
 const props = defineProps({
   item: {
     type: Object,
@@ -22,11 +23,15 @@ const formattedTime = computed(() => {
 <template>
   <!-- 메인내용 들어갈 곳 -->
   <div class="max-w-[1000px]">
-    <div class="h-20 rounded-full bg-[#19162B]/50 flex items-center pl-4 mt-4">
-      <img
-        src="/assets/images/icons/mineSweeper-icon.svg"
-        class="w-[60px] h-[60px]"
-      />
+    <router-link
+      :to="`/game/${item.game.name}`"
+      class="h-20 rounded-full bg-[#19162B]/50 flex items-center pl-4 mt-4"
+    >
+      <avatar
+        :src="`/assets/images/game/profile/${item.game.name}.jpg`"
+        size="lg"
+        :alt="item.game.name"
+      ></avatar>
       <div class="flex-1 flex justify-center text-white text-2xl font-semibold">
         {{ item.game.display_name }}
       </div>
@@ -36,7 +41,7 @@ const formattedTime = computed(() => {
       <div class="flex-1 flex justify-center text-white text-lg font-semibold">
         {{ item.rank }}등
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 <style scoped></style>

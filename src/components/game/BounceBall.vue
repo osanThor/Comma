@@ -2,6 +2,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useTimer } from "@/hooks/useTimer.js";
 
+const emits = defineEmits(["open-game-over"]);
+
 const GAME_WIDTH = 500;
 const GAME_HEIGHT = 700;
 
@@ -62,8 +64,8 @@ const updateBall = () => {
   if (ballY.value >= GAME_HEIGHT) {
     isGameOver.value = true;
     isPlaying.value = false;
-    stop(); // 타이머 중지 추가
-    emits("open-game-over", score.value, currentTime.value);
+    stop(); // 타이머 중지
+    emits("open-game-over", score.value, currentTime.value); // GameOverModal 호출
     return;
   }
 
@@ -230,21 +232,6 @@ onUnmounted(() => {
         >
           게임 시작
         </button>
-      </div>
-      <!-- 게임 오버 화면 -->
-      <div
-        v-if="isGameOver"
-        class="absolute inset-0 flex items-center justify-center bg-black/50"
-      >
-        <div class="text-center">
-          <p class="text-4xl font-bold font-dnf text-white mb-4">GAME OVER</p>
-          <button
-            @click="resetGame"
-            class="px-8 py-4 bg-point-500 text-white font-dnf text-2xl rounded-xl hover:bg-point-600"
-          >
-            다시 시작
-          </button>
-        </div>
       </div>
     </div>
   </div>

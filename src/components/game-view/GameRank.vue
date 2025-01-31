@@ -18,7 +18,7 @@ const error = ref(null);
 const gameIdMap = {
   shooting: "84def04e-5b48-4ea4-ac2d-73ff8d4de2bc",
   bounceball: "93c1daf7-5b81-4763-b4d2-24fbaf5d8927",
-  flappyBoo: "ad2e1675-f09c-4f4d-95fe-97e9a009bd9f",
+  flappyboo: "ad2e1675-f09c-4f4d-95fe-97e9a009bd9f",
   tetris: "9ce4366d-7bd4-489e-a115-15988141af19",
   minesweeper: "3fee33bb-0a86-4c0a-b05b-f27038555b16",
 };

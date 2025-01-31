@@ -152,12 +152,11 @@ const formatTime = (milliseconds) => {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  const millis = Math.floor(milliseconds % 1000);
 
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
     2,
     "0"
-  )}:${String(seconds).padStart(2, "0")}:${String(millis).padStart(3, "0")}`;
+  )}:${String(seconds).padStart(2, "0")}`;
 };
 
 onMounted(() => {
@@ -175,23 +174,28 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full flex items-center justify-center">
+  <div
+    class="w-full h-full bg-[url(/assets/images/bounceBallBg.jpg)] bg-cover bg-center bg-no-repeat py-4 px-10 flex items-center justify-center"
+  >
     <div
       ref="gameContainerRef"
-      class="game-container w-[500px] h-[700px] relative"
+      class="game-container w-[500px] h-[700px] relative bg-[url(/assets/bounceBall/bounceBallBg.png)] backdrop-blur-sm rounded-lg"
       :style="{
-        backgroundImage: 'url(/assets/bounceBall/bounceBallBg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        boxShadow:
+          '0 0 7px #fff, 0 0 10px rgb(0, 100, 200), 0 0 21px rgb(0, 100, 200)',
       }"
     >
-      <!-- 스코어와 플레이타임을 함께 표시 -->
-      <div class="absolute top-6 left-4 flex flex-col gap-2">
-        <div class="text-3xl font-dnf text-white opacity-30">
-          {{ score }}
-        </div>
-        <div v-if="currentTime" class="text-xl font-dnf text-white opacity-30">
+      <!-- 타임 -->
+      <div class="absolute top-6 left-4">
+        <div v-if="currentTime" class="text-[20px] font-pixelNes text-white">
           {{ formatTime(currentTime) }}
+        </div>
+      </div>
+
+      <!-- 스코어  -->
+      <div class="absolute top-6 right-4">
+        <div class="text-[20px] font-pixelNes text-white">
+          {{ score }}
         </div>
       </div>
       <div
@@ -213,10 +217,10 @@ onUnmounted(() => {
         :style="{
           left: `${paddlePosition}px`,
           backgroundImage: 'url(/assets/bounceBall/sprites.png)',
-          backgroundPosition: '-125px -70px',
+          backgroundPosition: '-125px -120px',
           backgroundSize: '250px 150px',
           boxShadow:
-            '0 0 15px 5px rgba(0, 255, 0, 0.3), 0 0 30px 10px rgba(0, 200, 0, 0.2)',
+            '0 0 15px 5px rgba(147, 51, 234, 0.3), 0 0 30px 10px rgba(168, 85, 247, 0.2)',
           imageRendering: 'pixelated',
           borderRadius: '5px',
         }"
@@ -224,14 +228,32 @@ onUnmounted(() => {
       <!-- 게임 시작 버튼 -->
       <div
         v-if="!isPlaying && !isGameOver"
-        class="absolute inset-0 flex items-center justify-center bg-black/50"
+        class="absolute inset-0 flex flex-col items-center justify-center bg-black/50"
       >
-        <button
-          @click="togglePlay"
-          class="px-8 py-4 bg-point-500 text-white font-dnf text-2xl rounded-xl hover:bg-point-600"
-        >
-          게임 시작
-        </button>
+        <div class="flex flex-col items-center mt-24">
+          <h1
+            class="flex flex-col items-center text-6xl font-bold text-white font-pixelNes gap-0"
+            style="
+              text-shadow: 0 0 10px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(168, 85, 247, 0.8),
+                0 0 30px rgba(147, 51, 234, 0.6),
+                0 0 40px rgba(168, 85, 247, 0.4), 2px 2px 2px rgba(0, 0, 0, 0.5);
+            "
+          >
+            <span>BOUNCE</span>
+            <span class="-mt-2">BALL</span>
+          </h1>
+          <button
+            @click="togglePlay"
+            class="w-[150px] h-[150px] transition-transform duration-200 hover:scale-105"
+          >
+            <img
+              src="/assets/tetris/play.png"
+              alt="게임 시작"
+              class="w-full h-full object-contain"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>

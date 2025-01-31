@@ -3,27 +3,51 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 const gameNameMap = {
-  mineSweeper: "지뢰 찾기",
-  tetris: "테트리스",
-  bounceBall: "바운스 볼",
-  flappyBoo: "플래피 버드",
-  shooting: "슈팅게임",
+  mineSweeper: ["MINE", "SWEEPER"],
+  tetris: ["TETRIS"],
+  bounceBall: ["BOUNCE", "BALL"],
+  flappyBoo: ["FLAPPY", "BOO"],
+  shooting: ["SHOOT", "ALIENS"],
 };
 
 const route = useRoute();
 const localizedGameName = computed(() => {
-  return gameNameMap[route.params.gameName] || route.params.gameName;
+  const name = gameNameMap[route.params.gameName];
+  return name ? name.join("\n") : route.params.gameName;
 });
 
 const playPath = computed(() => `/game/play/${route.params.gameName}`);
+
+const gameBackgrounds = {
+  mineSweeper: "/assets/images/banner/mineSweeperBanner.png",
+  tetris: "/assets/images/banner/tetrisBanner.png",
+  bounceBall: "/assets/images/banner/bounceBallBanner.png",
+  flappyBoo: "/assets/images/banner/flappyBooBanner.png",
+  shooting: "/assets/images/banner/shootingBanner.png",
+};
+
+const currentBackground = computed(() => {
+  return gameBackgrounds[route.params.gameName] || "";
+});
+
+const titleTopPosition = computed(() => {
+  return route.params.gameName === "tetris" ? "top-[126px]" : "top-[96px]";
+});
 </script>
 
 <template>
   <div
     class="w-[1075px] h-[404px] rounded-2xl mt-[160px] bg-main-500 flex flex-col relative"
+    :style="{
+      backgroundImage: `url(${currentBackground})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }"
   >
-    <div class="absolute right-[56px] top-[126px]">
-      <h1 class="text-6xl font-bold font-dnf text-white mb-10 w-[389px]">
+    <div class="absolute right-[0px]" :class="titleTopPosition">
+      <h1
+        class="text-6xl font-bold font-pixelNes text-white mb-[27px] w-[389px] whitespace-pre-line"
+      >
         {{ localizedGameName }}
       </h1>
       <router-link

@@ -142,15 +142,23 @@ const handleInput = (e) => {
         />
       </div>
     </div>
+
+    <!-- 게시글 목록 또는 빈 상태 메시지 -->
     <div
+      v-if="postData.posts.length > 0"
       class="mt-[35px] grid grid-cols-4 grid-rows-4 gap-x-[25px] gap-y-[33.17px] mb-[59px]"
     >
       <game-post-item
         v-for="value in postData.posts"
         :key="value.id"
         :item="value"
-      ></game-post-item>
+      >
+      </game-post-item>
     </div>
+    <div v-else class="h-[1000px] flex items-center justify-center">
+      <p class="text-2xl text-white opacity-50">게시글이 존재하지 않습니다.</p>
+    </div>
+
     <div class="flex justify-center">
       <pagination
         :page="page"

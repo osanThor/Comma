@@ -28,6 +28,8 @@ export const usePostStore = defineStore("post", {
     likeCount: 0,
     commentCount: 0,
     hasLiked: false,
+    score: null,
+		play_time: null,
   }),
   getters: {
     isValidPost(state) {
@@ -72,6 +74,14 @@ export const usePostStore = defineStore("post", {
 
     setHasLiked(newHasLiked) {
       this.hasLiked = newHasLiked;
+    },
+
+    setScore(newScore) {
+      this.score = newScore;
+    },
+
+    setPlayTime(newPlayTime) {
+      this.play_time = newPlayTime;
     },
 
     addImage({ index, images }) {
@@ -151,6 +161,8 @@ export const usePostStore = defineStore("post", {
         this.setCategory(post.category);
         this.setLikeCount(post.like_count);
         this.setCommentCount(post.comment_count);
+        this.setScore(post.score);
+        this.setPlayTime(post.play_time);
 
         this.user = {
           ...post.user,
@@ -197,7 +209,9 @@ export const usePostStore = defineStore("post", {
           title: this.title,
           content: this.content,
           images: successfulUploads,
-          category: "free",
+          category: this.category,
+          score: this.score,
+          play_time: this.play_time,
         };
 
         const response = await createPost(postPayload);
@@ -259,6 +273,8 @@ export const usePostStore = defineStore("post", {
       this.images = [];
       this.author = "";
       this.createdAt = "";
+      this.score = null;
+      this.play_time = null;
     },
   },
 });

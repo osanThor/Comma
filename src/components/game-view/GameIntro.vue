@@ -9,7 +9,7 @@ defineProps({
 
 <template>
   <div
-    class="h-[108px] w-[287px] bg-main-600 text-sm text-white text-center pt-[27px] pr-[18px] pb-[19px] pl-[19px] items-center justify-center mb-[38px] whitespace-pre-line"
+    class="h-[108px] w-[287px] bg-main-600 text-sm text-white text-center rounded-2xl pt-[27px] pr-[18px] pb-[19px] pl-[19px] items-center justify-center mb-[38px] whitespace-pre-line"
   >
     {{ intro }}
   </div>

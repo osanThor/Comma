@@ -17,7 +17,7 @@ defineProps({
   <button
     :type="type"
     :class="[
-      'font-dnf text-2xl text-white w-[174px] h-[64px] rounded-xl',
+      'font-dnf text-xl text-white w-[160px] h-[64px] rounded-xl',
       bgColor,
     ]"
   >

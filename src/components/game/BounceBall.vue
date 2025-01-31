@@ -38,14 +38,16 @@ onMounted(() => {
   paddleSound.load();
 });
 
+const gameContainerRef = ref(null); // template ref 추가
+
 const resetGame = () => {
+  cleanupGame();
   score.value = 0;
   ballX.value = 250;
   ballY.value = 50;
   ballDx.value = (Math.random() * 2 - 1) * ballSpeed;
   ballDy.value = ballSpeed;
   paddlePosition.value = 200;
-  isPlaying.value = false;
   isGameOver.value = false;
   reset();
 };
@@ -118,19 +120,28 @@ const updateBall = () => {
 };
 
 const handleMouseMove = (e) => {
-  const container = e.currentTarget;
-  const rect = container.getBoundingClientRect();
+  if (!isPlaying.value) return; // 게임이 진행 중일 때만 동작하도록
+  const rect = gameContainerRef.value.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   paddlePosition.value = Math.max(0, Math.min(mouseX - 50, GAME_WIDTH - 100));
 };
 
+const cleanupGame = () => {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+  stop();
+  isPlaying.value = false;
+};
+
 const togglePlay = () => {
-  isPlaying.value = !isPlaying.value;
   if (isPlaying.value) {
+    cleanupGame();
+  } else {
+    isPlaying.value = true;
     animationFrameId = requestAnimationFrame(updateBall);
     start();
-  } else {
-    stop();
   }
 };
 
@@ -148,20 +159,23 @@ const formatTime = (milliseconds) => {
 };
 
 onMounted(() => {
-  const gameContainer = document.querySelector(".game-container");
-  gameContainer.addEventListener("mousemove", handleMouseMove);
+  if (gameContainerRef.value) {
+    gameContainerRef.value.addEventListener("mousemove", handleMouseMove);
+  }
 });
 
 onUnmounted(() => {
-  const gameContainer = document.querySelector(".game-container");
-  gameContainer.removeEventListener("mousemove", handleMouseMove);
-  cancelAnimationFrame(animationFrameId);
+  cleanupGame();
+  if (gameContainerRef.value) {
+    gameContainerRef.value.removeEventListener("mousemove", handleMouseMove);
+  }
 });
 </script>
 
 <template>
   <div class="w-full h-full flex items-center justify-center">
     <div
+      ref="gameContainerRef"
       class="game-container w-[500px] h-[700px] relative"
       :style="{
         backgroundImage: 'url(/assets/bounceBall/bounceBallBg.png)',

@@ -9,15 +9,13 @@ import GameRankingItem from "./GameRankingItem.vue";
 import GameShareModal from "./GameShareModal.vue";
 import GameRankingItemLastPlace from "./GameRankingItemLastPlace.vue";
 import html2canvas from "html2canvas";
+import { formatPlayTime } from "@/classes/shooting/utils";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 
 const isGameOverModalOpen = ref(true);
 const isGameShareModalOpen = ref(false);
-
-const playTime = ref("00:00:00");
-const score = ref(0);
 const imageBlobs = ref([]);
 
 const gameScoreData = ref(null);
@@ -44,16 +42,7 @@ const localScore = ref(props.score);
 const formattedPlayTime = computed(() => formatPlayTime(localPlayTime.value));
 const formattedScore = computed(() => `${localScore.value}점`);
 
-function formatPlayTime(milliseconds) {
-  const minutes = Math.floor(milliseconds / 60000);
-  const seconds = Math.floor((milliseconds % 60000) / 1000);
-  const millis = milliseconds % 1000;
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}:${millis.toString().padStart(2, "0")}`;
-}
-
-function getCurrentUserRanking(gameRankingData, userId) {
+const getCurrentUserRanking = (gameRankingData, userId) => {
   const userRankings = gameRankingData.filter(
     (rank) => rank.user_id === userId
   );
@@ -63,9 +52,9 @@ function getCurrentUserRanking(gameRankingData, userId) {
   );
 
   return userRankings.length > 0 ? userRankings[0] : null;
-}
+};
 
-function filterRankingsForDisplay(rankings, latestRanking) {
+const filterRankingsForDisplay = (rankings, latestRanking) => {
   if (!latestRanking) return [];
 
   const rankMinusOne = rankings.find(
@@ -88,9 +77,9 @@ function filterRankingsForDisplay(rankings, latestRanking) {
     { ...latestRanking, isHighlighted: true },
     rankPlusOne,
   ].filter(Boolean);
-}
+};
 // 함수가 실행되면 게임 오버 화면이 캡쳐되고 GameShareModal이 열립니다.
-function openGameShareModal() {
+const openGameShareModal = () => {
   const screenElement = document.querySelector(".capture");
   if (!screenElement) {
     console.error("캡처할 요소를 찾을 수 없습니다.");
@@ -116,7 +105,7 @@ function openGameShareModal() {
     .catch((error) => {
       console.error("캡처 실패:", error);
     });
-}
+};
 
 const handleUploadImage = (newFile) => {
   imageBlobs.value = [newFile];
@@ -126,18 +115,14 @@ const handleRemoveImage = () => {
   imageBlobs.value = [];
 };
 
-function closeGameOverModal() {
-  isGameOverModalOpen.value = false;
-}
-
-function replayGame() {
+const replayGame = () => {
   isGameOverModalOpen.value = false;
   window.location.reload();
-}
+};
 
 onMounted(async () => {
   try {
-    const gameId = await getGameByName(route.params.gameName);
+    const gameId = await getGameByName(route.name);
 
     if (gameId.id) {
       const rankings = await getGameRanking(gameId.id);
@@ -164,10 +149,7 @@ onMounted(async () => {
     v-if="isGameOverModalOpen"
     class="relative w-[538px] h-[754px] border-4 border-white rounded-[28px] bg-main-500"
   >
-    <button
-      class="absolute top-[22px] right-[22px]"
-      @click="closeGameOverModal"
-    >
+    <button class="absolute top-[22px] right-[22px]" @click="replayGame">
       <img src="/assets/images/icons/close-icon.svg" alt="닫기" />
     </button>
     <header class="mt-[64px] flex justify-center">

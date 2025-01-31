@@ -175,11 +175,11 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="w-full h-full bg-[url(/assets/images/bounceBallBg.jpg)] bg-cover bg-center bg-no-repeat py-4 px-10 flex items-center justify-center"
+    class="w-full h-full bg-[url(/assets/images/bg/bounceBallBg.jpg)] bg-cover bg-center bg-no-repeat py-4 px-10 flex items-center justify-center"
   >
     <div
       ref="gameContainerRef"
-      class="game-container w-[500px] h-[700px] relative bg-[url(/assets/bounceBall/bounceBallBg.png)] backdrop-blur-sm rounded-lg"
+      class="game-container w-[500px] h-[700px] relative bg-[url(/assets/images/game/bounceBall/bg/bounceBallBg.png)] backdrop-blur-sm rounded-lg"
       :style="{
         boxShadow:
           '0 0 7px #fff, 0 0 10px rgb(0, 100, 200), 0 0 21px rgb(0, 100, 200)',
@@ -203,7 +203,7 @@ onUnmounted(() => {
         :style="{
           left: `${ballX}px`,
           top: `${ballY}px`,
-          backgroundImage: 'url(/assets/bounceBall/sprites.png)',
+          backgroundImage: 'url(/assets/images/game/bounceBall/sprites.png)',
           backgroundPosition: '-115px -15px',
           backgroundSize: '250px 150px',
           imageRendering: 'pixelated',
@@ -216,7 +216,7 @@ onUnmounted(() => {
         class="absolute bottom-[50px] w-[100px] h-[10px]"
         :style="{
           left: `${paddlePosition}px`,
-          backgroundImage: 'url(/assets/bounceBall/sprites.png)',
+          backgroundImage: 'url(/assets/images/game/bounceBall/sprites.png)',
           backgroundPosition: '-125px -120px',
           backgroundSize: '250px 150px',
           boxShadow:
@@ -248,7 +248,7 @@ onUnmounted(() => {
             class="w-[150px] h-[150px] transition-transform duration-200 hover:scale-105"
           >
             <img
-              src="/assets/tetris/play.png"
+              src="/assets/images/game/tetris/play.png"
               alt="게임 시작"
               class="w-full h-full object-contain"
             />

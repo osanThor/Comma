@@ -15,10 +15,10 @@ export const ENEMY_SPEED = 2;
 export const FONT_STYLE = "20px Arial";
 
 export const IMAGE_PATHS = {
-  background: "/assets/images/shooting-background.jpg",
-  spaceship: "/assets/images/shooting-spaceship.png",
-  bullet: "/assets/images/shooting-bullet.png",
-  enemy: "/assets/images/shooting-alien.png",
+  background: "/assets/images/bg/shooting-background.jpg",
+  spaceship: "/assets/images/game/shooting/shooting-spaceship.png",
+  bullet: "/assets/images/game/shooting/shooting-bullet.png",
+  enemy: "/assets/images/game/shooting/shooting-alien.png",
 };
 
 export const ENEMY_GENERATION_INTERVALS = {

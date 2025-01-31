@@ -14,9 +14,9 @@
 import { useTimer } from "@/hooks/useTimer.js";
 import kaplay from "kaplay";
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { makeBackground } from "../../classes/flappy/makeBackground.js";
-import { makePlayer } from "../../classes/flappy/makePlayer.js";
-import { SCALE_FACTOR } from "../../constants/flappy.js";
+import { makeBackground } from "@/classes/flappy/makeBackground.js";
+import { makePlayer } from "@/classes/flappy/makePlayer.js";
+import { SCALE_FACTOR } from "@/constants/flappy.js";
 
 const emit = defineEmits(["open-game-over"]);
 const gameCanvas = ref(null);
@@ -78,15 +78,15 @@ onMounted(async () => {
 
   await k.loadFont("gameFont", "/assets/fonts/Pixel_NES.otf");
 
-  k.loadSprite("sky", "/assets/flappy/2.png");
-  k.loadSprite("field", "/assets/flappy/3.png");
-  k.loadSprite("boo", "/assets/flappy/Boo.png");
-  k.loadSprite("obstacles", "/assets/flappy/obstacles.png");
-  k.loadSprite("playBtn", "/assets/flappy/playBtn.png");
-  k.loadSprite("clouds", "/assets/flappy/clouds.png");
-  k.loadSound("jump", "/assets/flappy/jump.wav");
-  k.loadSound("hurt", "/assets/flappy/hurt.wav");
-  k.loadSound("confirm", "/assets/flappy/poka02.mp3");
+  k.loadSprite("sky", "/assets/images/game/flappy/2.png");
+  k.loadSprite("field", "/assets/images/game/flappy/3.png");
+  k.loadSprite("boo", "/assets/images/game/flappy/Boo.png");
+  k.loadSprite("obstacles", "/assets/images/game/flappy/obstacles.png");
+  k.loadSprite("playBtn", "/assets/images/game/flappy/playBtn.png");
+  k.loadSprite("clouds", "/assets/images/game/flappy/clouds.png");
+  k.loadSound("jump", "/assets/images/game/flappy/jump.wav");
+  k.loadSound("hurt", "/assets/images/game/flappy/hurt.wav");
+  k.loadSound("confirm", "/assets/images/game/flappy/poka02.mp3");
 
   // 시작 화면 씬
   k.scene("start", async () => {
@@ -159,7 +159,7 @@ onMounted(async () => {
     });
 
     const colliders = await (
-      await fetch("/assets/flappy/collidersData.json")
+      await fetch("/assets/images/game/flappy/collidersData.json")
     ).json();
     const collidersData = colliders.data;
 

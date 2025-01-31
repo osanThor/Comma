@@ -95,7 +95,7 @@ watch([isOpenMenu, user], async () => {
       <span
         v-if="newAlarm"
         @mousedown.prevent="mouseDownHeader"
-        class="absolute top-0 right-0 flex h-3 w-3 items-center justify-center"
+        class="absolute top-0 right-0 flex h-3 w-3 items-center justify-center -z-10"
       >
         <span
           class="animate-ping absolute inline-flex h-[20px] w-[20px] translate-x-1 rounded-full bg-point-400 opacity-75"
@@ -105,7 +105,7 @@ watch([isOpenMenu, user], async () => {
         ></span>
       </span>
       <img
-        class="w-[24px]"
+        class="w-[24px] relative -z-[11]"
         src="/assets/images/icons/alarm-icon.svg"
         alt="알림"
       />

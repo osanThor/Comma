@@ -57,7 +57,6 @@ const handleUpdateUser = async () => {
       body.profile_image = url;
     }
     const data = await updateUserProfile(user.value.id, body);
-    console.log(data, body);
     if (data) {
       addToast("성공적으로 저장 됐어요.");
       updateUser({ ...user.value, ...body });

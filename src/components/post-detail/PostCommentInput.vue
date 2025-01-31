@@ -1,7 +1,9 @@
 <script>
 import { ref } from "vue";
-import { useCommentStore } from "../../stores/comment";
-import { useAuthStore } from "../../stores/auth";
+import { useCommentStore } from "@/stores/comment";
+import { useAuthStore } from "@/stores/auth";
+import { usePostStore } from "@/stores/post";
+import { createNotification } from "@/services/notification.service";
 
 export default {
   name: "PostCommentInput",
@@ -12,6 +14,7 @@ export default {
     },
   },
   setup(props) {
+    const postStore = usePostStore();
     const commentStore = useCommentStore();
     const authStore = useAuthStore();
     const commentContent = ref("");
@@ -39,6 +42,16 @@ export default {
       commentStore.addOptimisticComment(optimisticComment, true);
       commentContent.value = "";
 
+      if (postStore.user && postStore.user.id !== user.id) {
+        await createNotification({
+          userId: postStore.user.id,
+          senderId: user.id,
+          targetId: props.postId,
+          targetType: "post",
+          type: "comment",
+          message: ` 회원님의 게시글에 댓글을 남겼습니다.`,
+        });
+      }
       try {
         await commentStore.addComment(props.postId, optimisticComment.content);
       } catch (error) {

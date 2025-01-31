@@ -94,7 +94,7 @@ export default {
             targetId: props.postId,
             targetType: "post",
             type: "like",
-            message: ` 회원님의 게시글을 좋아합니다`,
+            message: ` 회원님의 게시글을 좋아합니다.`,
           });
         }
       } catch (error) {

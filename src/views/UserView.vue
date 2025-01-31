@@ -19,11 +19,11 @@ const handleGetUser = async (id) => {
       user.value = data;
       userId.value = id;
     } else {
-      addToast("사용자를 찾을 수 없어요");
+      addToast("사용자를 찾을 수 없어요", "error");
       router.push("/");
     }
   } catch (err) {
-    addToast("사용자를 찾을 수 없어요");
+    addToast("사용자를 찾을 수 없어요", "error");
     router.push("/");
   } finally {
     loading.value = false;

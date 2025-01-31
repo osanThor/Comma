@@ -58,7 +58,7 @@ export const upsertUser = async (user) => {
     if (insertError) {
       throw insertError;
     }
-    addToast("성공적으로 회원가입 되었어요");
+    addToast("회원가입 완료!");
     return newUser;
   }
 

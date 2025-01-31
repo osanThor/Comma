@@ -40,7 +40,7 @@ function mouseDownItem(handler) {
 }
 const handleLogout = async () => {
   await logout();
-  addToast("성공적으로 로그아웃 되었습니다");
+  addToast("다시 돌아오실거죠...?", "error");
 };
 const handleClickLogout = () => {
   openModal(

@@ -58,6 +58,7 @@ function resetGame() {
   reset();
   isPlaying.value = false;
   isGameOver.value = false;
+  flagCount.value = mineCount;
   if (timeOut) {
     clearTimeout(timeOut);
     timeOut = null;
@@ -251,6 +252,13 @@ function formatTime(milliseconds) {
 onMounted(() => {
   resetGame();
 });
+onUnmounted(() => {
+  stop();
+  if (timeOut) {
+    clearTimeout(timeOut);
+    timeOut = null;
+  }
+});
 </script>
 
 <template>
@@ -325,7 +333,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 /* Grid 컨테이너 */
 .grid-container {
   display: flex;

@@ -1,7 +1,8 @@
 <script>
+import { createNotification } from "@/services/notification.service";
 import { useCommentStore } from "../../stores/comment";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
 
 export default {
   name: "PostCommentCardItem",
@@ -17,8 +18,8 @@ export default {
   },
   setup(props) {
     const commentStore = useCommentStore();
+    const authStore = useAuthStore();
     const isAnimating = ref(false);
-    const router = useRouter();
 
     const toggleLike = async (commentId) => {
       if (isAnimating.value) return;
@@ -34,6 +35,17 @@ export default {
         updatedComment.like_count += 1;
         updatedComment.liked = true;
         await commentStore.likeComment(commentId);
+        const user = authStore.user;
+        if (updatedComment.user && updatedComment.user.id !== user.id) {
+          await createNotification({
+            userId: updatedComment.user.id,
+            senderId: user.id,
+            targetId: updatedComment.id,
+            targetType: "comment",
+            type: "like",
+            message: ` 회원님의 게시글에 댓글을 좋아합니다.`,
+          });
+        }
       }
 
       props.comment.like_count = updatedComment.like_count;
@@ -64,21 +76,22 @@ export default {
     v-if="comment && comment.user"
     class="flex flex-row items-center justify-between mb-8 lg:mb-12 w-full"
   >
-    <section class="flex flex-row items-start gap-4 ">
+    <section class="flex flex-row items-start gap-4">
       <div class="pt-2">
-
         <!-- 작성자 프로필 이미지 -->
         <div
-        @click="navigateToProfile(comment.user?.id)"
-        class="md:w-8 md:h-8 lg:w-12 lg:h-12 rounded-full cursor-pointer "
+          @click="navigateToProfile(comment.user?.id)"
+          class="md:w-8 md:h-8 lg:w-12 lg:h-12 rounded-full cursor-pointer"
         >
-        <img
-          class="w-full h-full object-cover object-center rounded-full"
-          :src="comment.user?.profile_image || '/assets/images/defaultProfile.png'"
-        />
+          <img
+            class="w-full h-full object-cover object-center rounded-full"
+            :src="
+              comment.user?.profile_image || '/assets/images/defaultProfile.png'
+            "
+          />
+        </div>
       </div>
-    </div>
-      
+
       <!-- 댓글 콘텐츠 -->
       <div class="pt-2">
         <!-- 닉네임 및 작성일시 -->
@@ -91,12 +104,14 @@ export default {
           </p>
         </div>
         <!-- 댓글 본문 -->
-        <p class="w-full max-w-[750px] h-auto text-white/70 font-medium text-sm mr-16">
+        <p
+          class="w-full max-w-[750px] h-auto text-white/70 font-medium text-sm mr-16"
+        >
           {{ comment.content }}
         </p>
       </div>
     </section>
-    
+
     <!-- 좋아요 -->
     <div
       class="w-6 flex flex-col items-center justify-center font-medium text-white object-contain"

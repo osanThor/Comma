@@ -44,10 +44,11 @@ const handleFileChange = (event) => {
 
 const handleUpdateUser = async () => {
   try {
-    if (!name.value) return addToast("닉네임을 입력해주세요.");
-    if (name.value.length > 10) return addToast("닉네임은 최대 10자까지에요.");
+    if (!name.value) return addToast("닉네임을 입력해주세요.", "error");
+    if (name.value.length > 10)
+      return addToast("닉네임은 최대 10자까지에요.", "error");
     if (bio.value.length > 150)
-      return addToast("자기소개는 최대 150자까지에요.");
+      return addToast("자기소개는 최대 150자까지에요.", "error");
     const body = {
       name: name.value.trim(),
       bio: bio.value.trim() || null,

@@ -58,7 +58,7 @@ watch(page, async () => {
       <title-left
         class="w-[184px] h-10 absolute right-[calc(100%+28px)] bottom-0"
       ></title-left>
-      <span class="text-3xl">GAME</span>
+      <span class="text-3xl">COMMA</span>
       COMMUNITY
       <title-right
         class="w-[184px] h-10 absolute left-[calc(100%+28px)] bottom-0"

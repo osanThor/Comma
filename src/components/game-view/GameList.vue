@@ -64,12 +64,12 @@ const filteredGames = computed(() => {
 </script>
 
 <template>
-  <div class="mt-[31px] w-[1075px] flex justify-between">
+  <div class="mt-[31px] w-full max-w-[1075px] flex justify-between gap-8">
     <router-link
       v-for="game in filteredGames"
       :key="game.id"
       :to="`/game/${game.route}`"
-      class="w-[244.8px] h-[129px] flex flex-col px-[30px] pt-[23.4px] pb-[17.1px] pl-[27px] pr-[19.8px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"
+      class="flex-1 h-[129px] flex flex-col px-[30px] pt-[23.4px] pb-[17.1px] pl-[27px] pr-[19.8px] rounded-2xl transition-all bg-main-500 text-point-500 hover:bg-point-500 hover:text-main-500"
     >
       <div class="font-dnf text-[21.6px] mb-[4.1px] truncate">
         {{ game.name }}

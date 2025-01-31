@@ -114,7 +114,7 @@ watch([isOpenMenu, user], async () => {
       ref="modal"
       id="alarm-dropdown"
       v-if="isOpenMenu"
-      class="absolute bg-white w-[calc(100vw-40px)] max-w-[440px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center px-12 py-8 shadow-md"
+      class="absolute bg-white w-[calc(100vw-40px)] max-w-[440px] top-full translate-y-6 right-0 min-w-[180px] rounded-2xl flex flex-col items-center px-10 py-8 shadow-md"
     >
       <div class="w-full flex justify-between items-center mb-5">
         <div class="flex items-center gap-4 text-main-500 font-bold">
@@ -133,7 +133,7 @@ watch([isOpenMenu, user], async () => {
         </div>
         <button
           @click="handleClickAllRead"
-          class="w-20 h-9 rounded-[10px] bg-main-200 text-white text-sm"
+          class="w-20 h-9 rounded-[10px] bg-main-200 opacity-40 hover:opacity-100 text-white text-sm"
         >
           모두 읽음
         </button>
@@ -155,10 +155,12 @@ watch([isOpenMenu, user], async () => {
             @click="mouseDownItem(`/user/${item.sender.id}`, item.id)"
           >
             <avatar :src="item.sender.profile_image"></avatar>
-            <div class="font-medium text-sm text-main-500/70 break-keep">
-              <span class="font-bold">{{ item.sender.name }}</span> 님이
-              {{ item.message }}<span class="ml-1"></span>
-              <span class="text-xs">2025년 1월 13일</span>
+            <div class="flex flex-col text-main-500/70">
+              <div class="font-medium text-sm">
+                <span class="font-bold">{{ item.sender.name }}</span> 님이
+                {{ item.message }}{{ " " }}<span class="ml-1"></span>
+              </div>
+              <span class="text-xs opacity-70">2025년 1월 13일</span>
             </div>
           </li>
         </ul>

@@ -213,7 +213,7 @@ onUnmounted(() => {
               >
                 <img
                   class="w-full h-full object-cover"
-                  :src="`/assets/images/bg/main/main-card-${value.name}.png`"
+                  :src="`/assets/images/bg/main/main-card-${value.name}.jpg`"
                   :alt="`main-card-${value.name}`"
                 />
                 <h2

@@ -13,7 +13,7 @@ const gameName = route.params.gameName;
 
 <template>
   <div class="w-[calc(100%-40px)] max-w-[1440px]">
-    <div class="grid grid-cols-4 gap-10">
+    <div class="w-full grid grid-cols-4 gap-10">
       <div class="col-span-3">
         <game-banner :game-name="gameName"></game-banner>
         <game-list :game-name="gameName"></game-list>

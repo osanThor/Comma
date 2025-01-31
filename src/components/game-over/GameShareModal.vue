@@ -101,7 +101,7 @@ watch(
     class="w-[530px] h-[748px] border-4 border-white rounded-[28px] bg-main-500"
   >
     <form @submit.prevent="handleSubmit">
-      <header class="flex flex-col items-center">
+      <div class="flex flex-col items-center">
         <input
           type="text"
           class="w-[372px] mt-[52px] mx-auto text-white font-dnf text-3xl placeholder:text-white placeholder:font-dnf placeholder:opacity-70 bg-transparent text-center focus:outline-none border-none shadow-none focus:placeholder-transparent"
@@ -110,7 +110,7 @@ watch(
           required
         />
         <div class="w-[372px] h-[2px] bg-white mt-3 opacity-50"></div>
-      </header>
+      </div>
       <main class="flex flex-col items-center">
         <!-- 이미지 업로드 섹션 -->
         <section

@@ -16,7 +16,6 @@
     "@tiptap/pm": "^2.11.2",
     "@tiptap/starter-kit": "^2.11.2",
     "@tiptap/vue-3": "^2.11.2",
-    "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "html2canvas": "^1.4.1",
     "install": "^0.13.0",

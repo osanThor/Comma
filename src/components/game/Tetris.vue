@@ -293,8 +293,8 @@ onUnmounted(() => {
             twMerge(
               'play-button text-white rounded-full bg-center bg-cover bg-no-repeat focus:outline-none',
               isPlaying
-                ? 'bg-[url(/assets/tetris/pause.png)]'
-                : 'bg-[url(/assets/tetris/play.png)]'
+                ? 'bg-[url(/assets/images/game/tetris/pause.png)]'
+                : 'bg-[url(/assets/images/game/tetris/play.png)]'
             )
           "
         >

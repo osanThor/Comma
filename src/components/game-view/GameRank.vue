@@ -2,9 +2,9 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getGameRanking } from "@/services/game.service";
-import rank1st from "/assets/images/rank_1st.png";
-import rank2nd from "/assets/images/rank_2nd.png";
-import rank3rd from "/assets/images/rank_3rd.png";
+import rank1st from "/assets/images/medal1.png";
+import rank2nd from "/assets/images/medal2.png";
+import rank3rd from "/assets/images/medal3.png";
 
 // 라우트 정보 가져오기
 const route = useRoute();

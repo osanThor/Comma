@@ -1,5 +1,5 @@
 <script setup>
-import Header from "@/components/common/Header.vue";
+import BaseHeader from "@/components/common/Header.vue";
 import { watch } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { storeToRefs } from "pinia";
@@ -16,7 +16,7 @@ watch(user, () => {
 </script>
 <template>
   <div class="bg-size font-pretendard font-medium bg-main">
-    <Header />
+    <base-header></base-header>
     <main class="flex flex-col items-center">
       <router-view />
     </main>

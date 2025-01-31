@@ -114,7 +114,7 @@ export default {
 
     <!-- 좋아요 -->
     <div
-      class="w-6 flex flex-col items-center justify-center font-medium text-white object-contain"
+      class="w-6 flex flex-col items-center justify-center font-medium text-white object-contain cursor-pointer"
     >
       <img
         :class="['like-icon', { 'animate-like': isAnimating }]"

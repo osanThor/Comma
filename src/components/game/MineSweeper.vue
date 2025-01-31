@@ -11,18 +11,17 @@ const account = reactive({
 
 const isPlaying = ref(false);
 const isGameOver = ref(false);
-const time = ref(null);
 const remainTime = ref(600000); // 10 minutes in milliseconds
 const isBlinking = ref(false); // 🚀 깜빡이는 상태 저장
-let countdownInterval = null;
-let animationFrameId = null;
 const showVictory = ref(false);
+
+let timeOut = null;
 
 const emits = defineEmits(["open-game-over"]);
 
 const rows = 16;
 const cols = 24;
-const mineCount = 30;
+const mineCount = 10;
 const flagCount = ref(mineCount);
 const cells = reactive(
   Array.from({ length: rows * cols }, () => ({
@@ -40,60 +39,30 @@ const gridStyle = computed(() => ({
 }));
 
 // 깜빡이는 효과를 위한 watch
-watch(remainTime, (newTime) => {
-  if (newTime <= 10000) {
+watch(currentTime, (newTime) => {
+  const targetTime = remainTime.value - newTime;
+  if (targetTime <= 10000) {
     isBlinking.value = true;
+    if (targetTime <= 0) {
+      stop();
+      account.score = 0;
+      isGameOver.value = true;
+      emits("open-game-over", account.score, currentTime.value);
+    }
   } else {
     isBlinking.value = false;
   }
 });
 
-let lastTime = performance.now();
-function startCountdown() {
-  if (countdownInterval || animationFrameId) return; // Prevent multiple intervals
-
-  function update() {
-    if (!isPlaying.value || isGameOver.value) {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId); // 🚀 requestAnimationFrame 정지
-        animationFrameId = null;
-      }
-      return;
-    }
-
-    const now = performance.now();
-    const deltaTime = now - lastTime;
-    lastTime = now;
-
-    if (remainTime.value > 0) {
-      remainTime.value -= deltaTime;
-    } else {
-      remainTime.value = 0;
-      account.score = 0;
-      stop();
-      isGameOver.value = true;
-      emits("open-game-over", account.score, currentTime.value);
-      return;
-    }
-
-    animationFrameId = requestAnimationFrame(update); // 🚀 ID 저장
-  }
-
-  animationFrameId = requestAnimationFrame(update);
-}
-// Function to reset the game and timer
 function resetGame() {
   reset();
   isPlaying.value = false;
   isGameOver.value = false;
-  remainTime.value = 600000; // Reset remainTime to 10 minutes
-  time.value = {
-    start: performance.now(),
-    elapsed: 0,
-  };
-
-  clearInterval(countdownInterval);
-  countdownInterval = null;
+  flagCount.value = mineCount;
+  if (timeOut) {
+    clearTimeout(timeOut);
+    timeOut = null;
+  }
 
   cells.splice(
     0,
@@ -135,8 +104,6 @@ function placeMines() {
 
 function revealAllMines() {
   isGameOver.value = true;
-  clearInterval(countdownInterval);
-  countdownInterval = null;
   const mineCells = cells
     .map((cell, index) => ({ cell, index }))
     .filter(({ cell }) => cell.mine);
@@ -184,10 +151,10 @@ function calculateAdjacentMines() {
 
 function revealCell(index) {
   if (isGameOver.value || cells[index].flagged) return;
+  if (showVictory.value && !isPlaying.value) return;
   if (!isPlaying.value) {
     start();
     isPlaying.value = true;
-    startCountdown(); // Start the countdown on first move
   }
 
   const cell = cells[index];
@@ -198,9 +165,8 @@ function revealCell(index) {
     stop();
     revealAllMines();
 
-    remainTime.value -= currentTime.value; // Deduct elapsed time
     account.score = 0;
-    setTimeout(
+    timeOut = setTimeout(
       () => emits("open-game-over", account.score, currentTime.value),
       3000
     );
@@ -260,17 +226,11 @@ function checkVictory() {
     isPlaying.value = false;
     stop();
 
-    clearInterval(countdownInterval);
-    countdownInterval = null;
-
-    remainTime.value = Math.round(remainTime.value);
-    account.score = Math.round(remainTime.value);
-
+    account.score = Math.round(remainTime.value - currentTime.value);
     // 🚀 Victory 애니메이션
     showVictory.value = true;
 
-    console.log(account);
-    setTimeout(() => {
+    timeOut = setTimeout(() => {
       showVictory.value = false;
       emits("open-game-over", account.score, currentTime.value);
     }, 3000);
@@ -278,25 +238,26 @@ function checkVictory() {
 }
 
 function formatTime(milliseconds) {
-  const totalSeconds = Math.floor(milliseconds / 1000); // 🔥 밀리초 제외
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
+  const totalSeconds = Math.floor(milliseconds / 1000); // 총 초
+  const minutes = Math.floor((totalSeconds % 3600) / 60); // 분
+  const seconds = totalSeconds % 60; // 초
+  const millis = Math.floor(milliseconds % 1000); // 밀리초
+
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
     2,
     "0"
-  )}`;
-}
-
-function play() {
-  if (!isPlaying.value) {
-    start();
-    isPlaying.value = true;
-    startCountdown(); // Start countdown when game starts
-  }
+  )}:${String(millis).padStart(3, "0")}`;
 }
 
 onMounted(() => {
   resetGame();
+});
+onUnmounted(() => {
+  stop();
+  if (timeOut) {
+    clearTimeout(timeOut);
+    timeOut = null;
+  }
 });
 </script>
 
@@ -309,7 +270,7 @@ onMounted(() => {
         <span class="text-white items-start">
           TIME :
           <span :class="{ blinking: isBlinking }" id="time">{{
-            formatTime(remainTime)
+            formatTime(remainTime - currentTime)
           }}</span>
         </span>
         <span class="text-white text-right items-end"
@@ -372,7 +333,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 /* Grid 컨테이너 */
 .grid-container {
   display: flex;

@@ -19,6 +19,7 @@ const formatedSize = computed(() => {
   if (props.size === "sm") return "w-[27px] h-[27px] min-w-[27px] min-h-[27px]";
   if (props.size === "base")
     return "w-[50px] h-[50px] min-w-[50px] min-h-[50px]";
+  if (props.size === "lg") return "w-[60px] h-[60px] min-w-[60px] min-h-[60px]";
   if (props.size === "xl")
     return "w-[156px] h-[156px] min-w-[156px] min-h-[156px]";
 });

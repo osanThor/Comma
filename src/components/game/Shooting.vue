@@ -251,7 +251,7 @@ onMounted(() => {
       class="w-[172px] h-[80px] overflow-hidden rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
     >
       <img
-        src="/assets/tetris/play.png"
+        src="/assets/images/game/tetris/play.png"
         alt="play button image"
         class="mt-[-44px]"
       />
@@ -264,8 +264,8 @@ onMounted(() => {
       <img
         :src="
           isMuted
-            ? '/assets/images/icons/mute.png'
-            : '/assets/images/icons/sound.png'
+            ? '/assets/images/game/shooting/mute.png'
+            : '/assets/images/game/shooting/sound.png'
         "
         alt="Sound Mute Button"
       />

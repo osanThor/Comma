@@ -179,7 +179,7 @@ onUnmounted(() => {
   >
     <div
       ref="gameContainerRef"
-      class="game-container w-[500px] h-[700px] relative bg-[url(/assets/images/game/bounceBall/bg/bounceBallBg.png)] backdrop-blur-sm rounded-lg"
+      class="game-container w-[500px] h-[700px] relative bg-[url(/assets/images/game/bounceBall/bounceBallBg.png)] backdrop-blur-sm rounded-lg"
       :style="{
         boxShadow:
           '0 0 7px #fff, 0 0 10px rgb(0, 100, 200), 0 0 21px rgb(0, 100, 200)',

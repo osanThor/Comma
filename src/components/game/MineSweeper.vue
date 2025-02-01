@@ -21,7 +21,7 @@ const emits = defineEmits(["open-game-over"]);
 
 const rows = 16;
 const cols = 24;
-const mineCount = 10;
+const mineCount = 30;
 const flagCount = ref(mineCount);
 const cells = reactive(
   Array.from({ length: rows * cols }, () => ({

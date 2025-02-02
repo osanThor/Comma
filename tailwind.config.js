@@ -52,7 +52,7 @@ export default {
             "",
         },
         ".bg-size": {
-          "@apply w-screen min-h-screen bg-cover bg-no-repeat": "",
+          "@apply w-full min-h-screen bg-cover bg-no-repeat": "",
         },
       });
     },

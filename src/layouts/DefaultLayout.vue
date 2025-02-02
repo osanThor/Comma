@@ -15,9 +15,11 @@ watch(user, () => {
 });
 </script>
 <template>
-  <div class="bg-size font-pretendard font-medium bg-main">
+  <div
+    class="bg-size font-pretendard font-medium bg-main w-screen max-w-[100vw]"
+  >
     <base-header></base-header>
-    <main class="flex flex-col items-center">
+    <main class="w-full max-w-[100vw] flex flex-col items-center">
       <router-view />
     </main>
   </div>

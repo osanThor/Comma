@@ -276,6 +276,7 @@ export const usePostStore = defineStore("post", {
       this.images = [];
       this.author = "";
       this.createdAt = "";
+      this.category = "free";
       this.score = null;
       this.play_time = null;
     },

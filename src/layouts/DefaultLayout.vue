@@ -17,7 +17,7 @@ watch(user, () => {
 <template>
   <div class="bg-size font-pretendard font-medium bg-main">
     <base-header></base-header>
-    <main class="flex flex-col items-center">
+    <main class="w-full flex flex-col items-center">
       <router-view />
     </main>
   </div>

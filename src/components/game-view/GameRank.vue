@@ -138,7 +138,7 @@ const getRankImage = (rank) => {
             {{ item.user.name }}
           </span>
           <!-- 점수 표시 -->
-          <div class="w-[60px] text-right">
+          <div class="min-w-[60px] text-right">
             <span class="text-sm text-white">{{ item.score }}점</span>
           </div>
         </div>

@@ -219,7 +219,7 @@ export default {
               "
             />
           </div>
-          <p class="text-lg font-medium opacity-9 pb-[2px]">
+          <p class="text-lg font-medium opacity-9 pt-[1px]">
             {{ post?.user?.name || "알 수 없음" }}
           </p>
         </div>

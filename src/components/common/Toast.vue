@@ -17,7 +17,7 @@ const { toasts } = storeToRefs(toastStore);
       :key="toast.id"
       :class="
         twMerge(
-          'w-[calc(100vw-32px)] max-w-[470px] rounded-xl border-2 px-10 py-[24px] text-white font-dnf border-white shadow-lg transition transform duration-300 backdrop-blur-sm flex items-center gap-2',
+          'w-[calc(100vw-32px)] max-w-[470px] rounded-xl border-2 px-10 py-[24px] text-white font-dnf border-white shadow-lg transition transform duration-300 backdrop-blur-sm flex justify-center items-center gap-2',
           toast.type === 'success' && 'bg-point-500/30',
           toast.type === 'error' && 'bg-[#0A90CE]/30'
         )

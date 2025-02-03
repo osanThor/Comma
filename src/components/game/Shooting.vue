@@ -243,32 +243,51 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="relative w-[500px] h-[700px] mx-auto">
-    <canvas ref="canvas" class="w-full h-full"></canvas>
-    <button
-      v-if="playButtonVisible"
-      @click="startGame"
-      class="w-[172px] h-[80px] overflow-hidden rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-    >
-      <img
-        src="/assets/images/game/tetris/play.png"
-        alt="play button image"
-        class="mt-[-44px]"
-      />
-    </button>
-    <button
-      @click="toggleMute"
-      @keydown.space.prevent="(e) => e.target.blur"
-      class="absolute top-0 right-0 focus:outline-none"
-    >
-      <img
-        :src="
-          isMuted
-            ? '/assets/images/game/shooting/mute.png'
-            : '/assets/images/game/shooting/sound.png'
-        "
-        alt="Sound Mute Button"
-      />
-    </button>
+  <div
+    class="relative w-full h-full bg-cover bg-center bg-[url(/assets/images/bg/shoot-bg.png)]"
+  >
+    <div class="relative w-[500px] h-[700px] mx-auto">
+      <canvas ref="canvas" class="w-full h-full"></canvas>
+      <div
+        v-if="playButtonVisible"
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+      >
+        <h1
+          class="text-center text-6xl font-bold text-white font-pixelNes mb-8"
+          style="
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9),
+              0 0 20px rgba(168, 85, 247, 0.8), 0 0 30px rgba(147, 51, 234, 0.6),
+              0 0 40px rgba(168, 85, 247, 0.4), 2px 2px 2px rgba(0, 0, 0, 0.5);
+          "
+        >
+          <span>SHOOT</span><br />
+          <span>ALIENS</span>
+        </h1>
+        <button
+          @click="startGame"
+          class="w-[160px] h-[68px] overflow-hidden rounded-full transition-transform duration-200 hover:scale-105"
+        >
+          <img
+            src="/assets/images/game/tetris/play.png"
+            alt="play button image"
+            class="mt-[-44px]"
+          />
+        </button>
+      </div>
+      <button
+        @click="toggleMute"
+        @keydown.space.prevent="(e) => e.target.blur"
+        class="absolute top-0 right-0 focus:outline-none"
+      >
+        <img
+          :src="
+            isMuted
+              ? '/assets/images/game/shooting/mute.png'
+              : '/assets/images/game/shooting/sound.png'
+          "
+          alt="Sound Mute Button"
+        />
+      </button>
+    </div>
   </div>
 </template>

@@ -134,13 +134,17 @@ function toggleMute() {
   setMute(isMuted.value);
 }
 
-function update() {
+function update(deltaTime) {
+  const spaceshipSpeed = 200; // 초당 200px 이동
+
   if ("ArrowRight" in keysDown) {
-    spaceshipX.value += 4;
+    spaceshipX.value += spaceshipSpeed * deltaTime; // deltaTime 적용
   }
   if ("ArrowLeft" in keysDown) {
-    spaceshipX.value -= 4;
+    spaceshipX.value -= spaceshipSpeed * deltaTime;
   }
+
+  // 화면 경계 체크
   if (spaceshipX.value <= 0) {
     spaceshipX.value = 0;
   }
@@ -148,15 +152,17 @@ function update() {
     spaceshipX.value = CANVAS_WIDTH - SPACESHIP_WIDTH;
   }
 
-  for (let i = 0; i < Bullet.bulletList.length; i++) {
-    if (Bullet.bulletList[i].alive) {
-      Bullet.bulletList[i].update();
-      Bullet.bulletList[i].checkHit(Enemy.enemyList, score);
+  // 총알 이동에 deltaTime 적용
+  for (let bullet of Bullet.bulletList) {
+    if (bullet.alive) {
+      bullet.update(deltaTime);
+      bullet.checkHit(Enemy.enemyList, score);
     }
   }
 
-  for (let i = 0; i < Enemy.enemyList.length; i++) {
-    Enemy.enemyList[i].update();
+  // 적 이동에 deltaTime 적용
+  for (let enemy of Enemy.enemyList) {
+    enemy.update(deltaTime);
   }
 }
 
@@ -197,13 +203,18 @@ function render() {
   }
 }
 
-function main() {
+let lastFrameTime = 0; // 이전 프레임의 시간 저장
+
+function main(timestamp) {
+  if (!lastFrameTime) lastFrameTime = timestamp;
+  const deltaTime = (timestamp - lastFrameTime) / 1000; // 밀리초 → 초로 변환
+  lastFrameTime = timestamp;
+
   if (!Enemy.isGameOver) {
-    update();
+    update(deltaTime);
     render();
     requestId.value = requestAnimationFrame(main);
   } else {
-    console.log("game over");
     stop();
     stopAllMusic();
     emits("open-game-over", score.value, currentTime.value);

@@ -11,12 +11,12 @@
 </template>
 
 <script setup>
-import { useTimer } from "@/hooks/useTimer.js";
-import kaplay from "kaplay";
-import { onBeforeUnmount, onMounted, ref } from "vue";
 import { makeBackground } from "@/classes/flappy/makeBackground.js";
 import { makePlayer } from "@/classes/flappy/makePlayer.js";
 import { SCALE_FACTOR } from "@/constants/flappy.js";
+import { useTimer } from "@/hooks/useTimer.js";
+import kaplay from "kaplay";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const emit = defineEmits(["open-game-over"]);
 const gameCanvas = ref(null);
@@ -149,13 +149,27 @@ onMounted(async () => {
       },
     ]);
 
-    const clouds = map.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
-    clouds.onUpdate(() => {
+    const clouds = [];
+    const cloudSpeed = 5;
+
+    for (let i = 0; i < 2; i++) {
+      const cloud = map.add([
+        k.sprite("clouds"),
+        k.pos(i * 900, 10),
+        { speed: cloudSpeed },
+      ]);
+      clouds.push(cloud);
+    }
+
+    k.onUpdate(() => {
       if (isGameStarted.value) {
-        clouds.move(clouds.speed, 0);
-        if (clouds.pos.x > 500) {
-          clouds.pos.x = -100;
-        }
+        clouds.forEach((cloud) => {
+          cloud.move(cloud.speed, 0);
+
+          if (cloud.pos.x > canvas.width) {
+            cloud.pos.x = -cloud.width;
+          }
+        });
       }
     });
 
@@ -183,22 +197,26 @@ onMounted(async () => {
       ],
     };
 
+    let lastUpdateTime = performance.now();
     k.onUpdate(() => {
-      if (!isGameStarted.value) return;
+      const currentTime = performance.now();
+      const deltaTime = (currentTime - lastUpdateTime) / 1000;
+      lastUpdateTime = currentTime;
 
-      for (let i = 0; i < obstaclesLayer.parts.length; i++) {
-        const currentPart = obstaclesLayer.parts[i];
-        const nextPart =
-          obstaclesLayer.parts[(i + 1) % obstaclesLayer.parts.length];
+      if (isGameStarted.value) {
+        for (let i = 0; i < obstaclesLayer.parts.length; i++) {
+          const currentPart = obstaclesLayer.parts[i];
+          const nextPart =
+            obstaclesLayer.parts[(i + 1) % obstaclesLayer.parts.length];
 
-        if (currentPart.pos.x < -IMAGE_WIDTH) {
-          currentPart.pos.x = nextPart.pos.x + IMAGE_WIDTH;
+          if (currentPart.pos.x < -IMAGE_WIDTH) {
+            currentPart.pos.x = nextPart.pos.x + IMAGE_WIDTH;
+          }
+          currentPart.move(obstaclesLayer.speed * deltaTime * 60, 0);
         }
-
-        currentPart.move(obstaclesLayer.speed, 0);
       }
       if (isGameStarted.value) {
-        obstaclesLayer.speed -= 0.1;
+        obstaclesLayer.speed -= 5 * deltaTime;
       }
     });
 

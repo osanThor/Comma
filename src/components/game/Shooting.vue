@@ -135,7 +135,7 @@ function toggleMute() {
 }
 
 function update(deltaTime) {
-  const spaceshipSpeed = 200; // 초당 200px 이동
+  const spaceshipSpeed = 500; // 초당 200px 이동
 
   if ("ArrowRight" in keysDown) {
     spaceshipX.value += spaceshipSpeed * deltaTime; // deltaTime 적용

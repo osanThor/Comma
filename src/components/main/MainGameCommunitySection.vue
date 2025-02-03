@@ -69,7 +69,7 @@ const formatedScore = (score) => {
           </div>
           <div class="font-semibold text-sm">
             BEST SCORE :
-            {{ formatedScore(gameTopRankers[game.name]?.score) || 0 }}점
+            {{ formatedScore(gameTopRankers[game.name]?.score || 0) }}점
           </div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">

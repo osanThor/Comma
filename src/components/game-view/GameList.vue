@@ -6,14 +6,6 @@ import { getPostsByCategory } from "@/services/post.service";
 import CommentIcon from "@/components/common/icons/CommentIcon.vue";
 import PlayIcon from "@/components/common/icons/PlayIcon.vue";
 
-const gameNameMap = {
-  mineSweeper: "지뢰 찾기",
-  tetris: "테트리스",
-  bounceBall: "바운스 볼",
-  flappyBoo: "플래피 부",
-  shooting: "슈팅게임",
-};
-
 const route = useRoute();
 const gameStore = useGameStore();
 
@@ -52,7 +44,7 @@ onMounted(async () => {
 const games = computed(() => {
   return gameStore.games.map((game) => ({
     id: game.id,
-    name: gameNameMap[game.name] || game.name,
+    name: game.display_name || game.name,
     route: game.name,
     bestScore: gameStore.gameTopRankers[game.name]?.score || 0,
   }));

@@ -15,8 +15,8 @@ export class Bullet {
     Bullet.bulletList.push(this);
   }
 
-  update() {
-    this.y -= BULLET_SPEED;
+  update(deltaTime) {
+    this.y -= BULLET_SPEED * deltaTime;
 
     if (this.y < 0) {
       this.alive = false;

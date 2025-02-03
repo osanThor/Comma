@@ -21,8 +21,9 @@ export class Enemy {
     Enemy.enemyList.push(this);
   }
 
-  async update() {
-    this.y += ENEMY_SPEED;
+  update(deltaTime) {
+    // deltaTime 적용: ENEMY_SPEED * deltaTime
+    this.y += ENEMY_SPEED * deltaTime;
 
     if (this.y >= CANVAS_HEIGHT - ENEMY_HEIGHT) {
       Enemy.isGameOver = true;

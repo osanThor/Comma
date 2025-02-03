@@ -6,11 +6,11 @@ export const SPACESHIP_HEIGHT = 64;
 export const SPACESHIP_INITIAL_X_OFFSET = SPACESHIP_WIDTH / 2;
 
 export const BULLET_X_OFFSET = 20;
-export const BULLET_SPEED = 7;
+export const BULLET_SPEED = 700;
 
 export const ENEMY_WIDTH = 40;
 export const ENEMY_HEIGHT = 40;
-export const ENEMY_SPEED = 2;
+export const ENEMY_SPEED = 200;
 
 export const FONT_STYLE = "20px Arial";
 

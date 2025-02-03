@@ -85,7 +85,7 @@ const totalPlayTime = computed(() => formatTime(playTime.value));
       <avatar :src="user.profile_image" size="xl"></avatar>
       <div
         v-if="userInfo.id === user.id"
-        class="absolute bottom-[7px] right-[6px] bg-point-500 rounded-full w-[39px] h-[39px] flex items-center justify-center overflow-hidden cursor-pointer transform transition-transform duration-100 ease-in-out hover:scale-125"
+        class="absolute bottom-[4px] right-[5px] bg-point-500 rounded-full w-[39px] h-[39px] flex items-center justify-center overflow-hidden cursor-pointer transform transition-transform duration-100 ease-in-out hover:scale-125"
         @click="navigateToEdit"
       >
         <img

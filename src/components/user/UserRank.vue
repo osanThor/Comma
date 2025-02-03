@@ -58,7 +58,7 @@ watch(userGames, async () => {
   >
     플레이된 게임이 없습니다.
   </div>
-  <div v-else class="flex-grow space-y-3 mt-[74px]">
+  <div v-else class="flex-grow space-y-3 mt-[64px]">
     <rank-component v-for="item in rankings" :item="item"></rank-component>
   </div>
 </template>

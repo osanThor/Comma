@@ -163,9 +163,9 @@ export default {
     </section>
     <!-- 컨텐츠 -->
     <article
-      class="flex flex-col justify-between text-white flex-grow md:h-[410px] lg:h-[448px] w-full min-w-[500px]"
+      class="flex flex-col gap-4 justify-between text-white flex-grow md:h-[410px] lg:h-[448px] w-full"
     >
-      <section class="w-full">
+      <section class="w-full flex flex-col flex-grow">
         <!-- 상단 -->
         <div class="flex flex-row items-end justify-between w-full">
           <!-- 제목 및 날짜 -->
@@ -190,7 +190,7 @@ export default {
         <hr class="border-2 opacity-30 w-full my-5 rounded-sm" />
 
         <!-- 게시글 내용 -->
-        <section>
+        <section class="flex-grow">
           <!-- 점수 및 플레이 타임 -->
           <div
             v-if="post?.category !== 'free'"
@@ -200,9 +200,11 @@ export default {
             <p>SCORE | {{ post?.score }}</p>
           </div>
           <!-- 본문 -->
-          <p class="font-medium opacity-85 whitespace-pre-wrap">
-            {{ post?.content }}
-          </p>
+          <div class="flex-grow max-h-[275px] overflow-y-auto">
+            <p class="font-medium opacity-85 whitespace-pre-wrap">
+              {{ post?.content }}
+            </p>
+          </div>
         </section>
       </section>
 

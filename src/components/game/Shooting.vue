@@ -101,14 +101,7 @@ function createEnemy() {
     }
 
     enemyIntervalId.value = setInterval(() => {
-      new Enemy(
-        generateRandomValue
-        // stop,
-        // stopAllMusic,
-        // emits,
-        // score.value,
-        // currentTime.value
-      );
+      new Enemy(generateRandomValue);
     }, intervalTime);
   };
 

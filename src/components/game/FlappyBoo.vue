@@ -249,7 +249,6 @@ onMounted(async () => {
       map.speed = 0;
 
       stop();
-      console.log(score, currentTime.value);
 
       emit("open-game-over", score, currentTime.value);
       reset();
@@ -269,6 +268,11 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", setCanvasSize);
+
+  if (audioContext && audioContext.state !== "closed") {
+    audioContext.close();
+    window.location.reload();
+  }
 });
 </script>
 

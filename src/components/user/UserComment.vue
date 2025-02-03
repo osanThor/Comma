@@ -31,7 +31,6 @@ const commentsData = reactive({
 const trigger = ref(false);
 
 const handleCommentTrigger = () => {
-  console.log("?");
   trigger.value = !trigger.value;
 };
 

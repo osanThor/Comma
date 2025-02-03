@@ -200,7 +200,9 @@ export default {
             <p>SCORE | {{ post?.score }}</p>
           </div>
           <!-- 본문 -->
-          <p class="font-medium opacity-85">{{ post?.content }}</p>
+          <p class="font-medium opacity-85 whitespace-pre-wrap">
+            {{ post?.content }}
+          </p>
         </section>
       </section>
 

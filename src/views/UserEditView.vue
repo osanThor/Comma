@@ -94,7 +94,7 @@ const handleUpdateUser = async () => {
 
           <!-- 에딧 버튼 -->
           <div
-            class="absolute cursor-pointer bottom-2 right-4 bg-point-500 rounded-full w-[45px] h-[45px] flex items-center justify-center text-white text-xs overflow-hidden transform transition-transform duration-100 ease-in-out hover:scale-125"
+            class="absolute cursor-pointer bottom-[5px] right-[15px] bg-point-500 rounded-full w-[45px] h-[45px] flex items-center justify-center text-white text-xs overflow-hidden transform transition-transform duration-100 ease-in-out hover:scale-125"
             @click="updateProfilePictureHandler"
           >
             <img
@@ -116,7 +116,10 @@ const handleUpdateUser = async () => {
       </div>
 
       <!-- Main Content Area -->
-      <form class="flex-1 pt-5" @submit.prevent="handleUpdateUser">
+      <form
+        class="flex-1 pt-5 flex flex-col w-full max-w-[624px]"
+        @submit.prevent="handleUpdateUser"
+      >
         <h2 class="text-white font-dnf text-5xl">PROFILE</h2>
         <label for="name" class="text-white text-xl block font-bold mt-12">
           닉네임
@@ -124,7 +127,7 @@ const handleUpdateUser = async () => {
         <input
           id="name"
           type="text"
-          class="w-full max-w-[624px] h-[56px] rounded-[12px] px-7 mt-2.5 text-lg font-medium"
+          class="w-full max-w-[624px] h-[56px] rounded-[12px] px-7 mt-2.5 text-lg font-medium text-[#2E2E2E]"
           placeholder="닉네임을 입력해주세요."
           name="name"
           v-model="name"
@@ -136,7 +139,7 @@ const handleUpdateUser = async () => {
         <input
           id="email"
           type="text"
-          class="w-full max-w-[624px] h-[56px] rounded-[12px] px-7 mt-2.5 text-lg font-medium text-[#2E2E2E] text-black/30"
+          class="w-full max-w-[624px] h-[56px] rounded-[12px] px-7 mt-2.5 text-lg font-medium text-white/20"
           name="email"
           disabled
           v-model="email"
@@ -147,7 +150,7 @@ const handleUpdateUser = async () => {
         <div class="flex flex-col">
           <textarea
             id="bio"
-            class="w-full max-w-[624px] h-32 rounded-[12px] py-5 px-6 resize-none mt-2.5 text-lg font-medium"
+            class="w-full max-w-[624px] h-32 rounded-[12px] py-5 px-6 resize-none mt-2.5 text-lg font-medium text-[#2E2E2E]"
             placeholder="아직 자기소개를 작성하지 않으셨습니다. 자기소개를 작성해주세요."
             name="bio"
             maxlength="150"
@@ -164,17 +167,17 @@ const handleUpdateUser = async () => {
             현재 글자 수: {{ charCount }} / 150
           </h2>
         </div>
-        <div class="mt-8 flex float-right pr-[150px]">
+        <div class="mt-8 flex justify-end">
           <button
             type="button"
-            class="w-[66px] h-[32px] bg-main-500 rounded-lg text-white mr-2"
+            class="w-[66px] h-[32px] bg-main-500 rounded-lg text-white mr-2 hover:bg-white hover:text-main-500"
             @click="navigateToUserPage"
           >
             취소
           </button>
           <button
             type="submit"
-            class="min-w-[66px] h-[32px] bg-point-500 rounded-lg text-white"
+            class="min-w-[66px] h-[32px] bg-point-500 rounded-lg text-white hover:bg-white hover:text-point-500"
           >
             저장
           </button>

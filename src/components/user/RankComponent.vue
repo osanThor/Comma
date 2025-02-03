@@ -18,27 +18,39 @@ const formattedTime = computed(() => {
 
   return `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
 });
+
+const formatedScore = computed(() => {
+  return props.item.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+});
 </script>
 
 <template>
   <!-- 메인내용 들어갈 곳 -->
-  <div class="max-w-[1000px]">
+  <div class="w-full max-w-[1000px]">
     <router-link
       :to="`/game/${item.game.name}`"
-      class="h-20 rounded-full bg-[#19162B]/50 flex items-center pl-4 mt-4"
+      class="py-2 rounded-full bg-[#19162B]/50 flex items-center pl-4"
     >
       <avatar
         :src="`/assets/images/game/profile/${item.game.name}.jpg`"
-        size="lg"
         :alt="item.game.name"
       ></avatar>
-      <div class="flex-1 flex justify-center text-white text-2xl font-semibold">
+      <div class="flex-1 flex justify-center text-white text-lg font-semibold">
         {{ item.game.display_name }}
       </div>
-      <div class="flex-1 flex justify-center text-white text-lg font-semibold">
+      <div
+        class="flex-1 flex justify-center text-white text-base font-semibold opacity-70"
+      >
+        {{ formatedScore }}점
+      </div>
+      <div
+        class="flex-1 flex justify-center text-white text-base font-semibold opacity-70"
+      >
         {{ formattedTime }}
       </div>
-      <div class="flex-1 flex justify-center text-white text-lg font-semibold">
+      <div
+        class="flex-1 flex justify-center text-white text-base font-semibold"
+      >
         {{ item.rank }}등
       </div>
     </router-link>

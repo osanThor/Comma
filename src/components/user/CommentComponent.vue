@@ -54,13 +54,13 @@ const handleClickDelete = () => {
 
 <template>
   <!-- Main content area -->
-  <div class="w-full relative group">
+  <div class="w-full max-w-[1000px] relative group">
     <router-link
       :to="`/post/${item.post_id}`"
-      class="h-[70px] w-full rounded-2xl bg-main-600 flex flex-wrap items-center px-[33px] mt-3"
+      class="h-[70px] w-full rounded-2xl bg-main-600 flex flex-wrap items-center px-[33px]"
     >
       <div
-        class="w-[128px] flex-1 text-white text-base font-dnf max-w-32 truncate mr-10"
+        class="min-w-[200px] flex-1 text-white text-base font-dnf max-w-32 truncate mr-10"
       >
         {{ item.post.title }}
       </div>
@@ -76,7 +76,7 @@ const handleClickDelete = () => {
       </div>
       <div class="flex items-center text-point-500 text-base w-12">
         <small-like width="15" height="15"></small-like>
-        <span class="ml-1">{{ totalLikes }}</span>
+        <span class="ml-1 pt-1">{{ totalLikes }}</span>
       </div>
     </router-link>
     <button

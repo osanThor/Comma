@@ -69,7 +69,12 @@ watch(trigger, async () => {
 });
 </script>
 <template>
-  <div class="flex justify-end mb-5">
+  <div class="flex max-w-[1000px] items-end justify-between mb-[30px]">
+    <div class="text-white text-2xl font-semibold pt-1 leading-4">
+      댓글
+      <span>{{ commentsData.total }}</span
+      >개
+    </div>
     <base-filter
       :sort="sort"
       :sortOption="sortOption"
@@ -82,14 +87,14 @@ watch(trigger, async () => {
   >
     작성한 댓글이 존재하지 않습니다.
   </div>
-  <div v-else class="flex flex-col gap-3 pr-[70px] mb-[70px]">
+  <div v-else class="flex flex-col gap-5 pr-[70px] mb-[70px]">
     <comment-component
       v-for="item in commentsData.comments"
       :item="item"
       @comment-trigger="handleCommentTrigger"
     ></comment-component>
   </div>
-  <div class="w-full flex justify-center">
+  <div class="w-full max-w-[1000px] flex justify-center">
     <pagination
       :page="page"
       :total="commentsData.total"

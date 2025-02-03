@@ -45,7 +45,7 @@ watch(
 </script>
 <template>
   <section
-    class="w-[calc(100%-40px)] max-w-[1640px] min-h-[898px] mt-[120px] flex flex-col contents-box py-[90px] mb-10 px-10 lg:px-20"
+    class="w-[calc(100%-40px)] max-w-[1640px] min-h-[calc(100vh-140px)] mt-[100px] flex flex-col contents-box py-[90px] mb-10 px-10 lg:px-20"
   >
     <div
       v-if="loading"
@@ -54,32 +54,34 @@ watch(
       <div class="loader text-4xl font-bold text-white">Loading..</div>
     </div>
     <div v-else class="flex w-full h-full flex-grow gap-[7vw]">
-      <div class="min-w-[212px] border-white border-r-2 flex flex-col relative">
-        <div class="w-full flex flex-col gap-[33px] sticky top-[100px] left-0">
+      <div
+        class="min-w-[212px] border-white/70 border-r-2 flex flex-col relative"
+      >
+        <div class="w-full flex flex-col gap-7 sticky top-[100px] left-0">
           <router-link
             :to="`/user/${user.id}/post`"
-            class="block text-white hover:text-point-500 text-2xl font-bold transition-all"
+            class="block text-white hover:text-point-500 text-xl font-bold transition-all"
           >
             게시글
           </router-link>
 
           <router-link
             :to="`/user/${user.id}/like`"
-            class="block text-white hover:text-point-500 text-2xl font-bold transition-all"
+            class="block text-white hover:text-point-500 text-xl font-bold transition-all"
           >
             좋아요
           </router-link>
 
           <router-link
             :to="`/user/${user.id}/rank`"
-            class="block text-white hover:text-point-500 text-2xl font-bold transition-all"
+            class="block text-white hover:text-point-500 text-xl font-bold transition-all"
           >
             개인별 랭크
           </router-link>
 
           <router-link
             :to="`/user/${user.id}/comment`"
-            class="block text-white hover:text-point-500 text-2xl font-bold transition-all"
+            class="block text-white hover:text-point-500 text-xl font-bold transition-all"
           >
             작성한 댓글
           </router-link>

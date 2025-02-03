@@ -14,6 +14,11 @@ const ballSpeed = 6;
 const speedIncrease = 0.4;
 const ballSize = 20;
 
+// 1. 상수 정의 추가
+const INITIAL_BALL_SPEED = 6;
+const INITIAL_BALL_DX = () => (Math.random() * 2 - 1) * INITIAL_BALL_SPEED;
+const INITIAL_BALL_DY = INITIAL_BALL_SPEED;
+
 // 공의 이동 방향 (-1 ~ 1 사이의 랜덤한 X방향, Y방향은 항상 아래로)
 const ballDx = ref((Math.random() * 2 - 1) * ballSpeed);
 const ballDy = ref(ballSpeed);
@@ -29,26 +34,31 @@ let animationFrameId = null;
 // 사운드 객체 생성 및 최적화
 const ballSound = new Audio("/assets/sounds/ball.mp3");
 const paddleSound = new Audio("/assets/sounds/paddle.mp3");
+const laserSound = new Audio("/assets/sounds/laserthing.mp3"); // 추가
 
 // 사운드 미리 로드
 ballSound.preload = "auto";
 paddleSound.preload = "auto";
+laserSound.preload = "auto"; // 추가
 
 // 사운드 버퍼 준비
 onMounted(() => {
   ballSound.load();
   paddleSound.load();
+  laserSound.load(); // 추가
 });
 
 const gameContainerRef = ref(null); // template ref 추가
 
+// 2. resetGame 함수 수정
 const resetGame = () => {
   cleanupGame();
   score.value = 0;
   ballX.value = 250;
   ballY.value = 50;
-  ballDx.value = (Math.random() * 2 - 1) * ballSpeed;
-  ballDy.value = ballSpeed;
+  // 초기 속도 설정을 상수 사용으로 변경
+  ballDx.value = INITIAL_BALL_DX();
+  ballDy.value = INITIAL_BALL_DY;
   paddlePosition.value = 200;
   isGameOver.value = false;
   reset();
@@ -60,12 +70,19 @@ const updateBall = () => {
   ballX.value += ballDx.value;
   ballY.value += ballDy.value;
 
-  // 게임 오버 체크
+  // 게임 오버 체크 수정
   if (ballY.value >= GAME_HEIGHT) {
     isGameOver.value = true;
     isPlaying.value = false;
-    stop(); // 타이머 중지
-    emits("open-game-over", score.value, currentTime.value); // GameOverModal 호출
+    stop();
+
+    // 레이저 사운드 재생
+    laserSound.currentTime = 0;
+    laserSound.play().catch((e) => console.log("sound play error:", e));
+
+    setTimeout(() => {
+      emits("open-game-over", score.value, currentTime.value);
+    }, 200);
     return;
   }
 
@@ -137,10 +154,16 @@ const cleanupGame = () => {
   isPlaying.value = false;
 };
 
+// 3. togglePlay 함수 수정
 const togglePlay = () => {
   if (isPlaying.value) {
     cleanupGame();
   } else {
+    // 게임 시작 전 속도 재설정
+    if (!animationFrameId) {
+      ballDx.value = INITIAL_BALL_DX();
+      ballDy.value = INITIAL_BALL_DY;
+    }
     isPlaying.value = true;
     animationFrameId = requestAnimationFrame(updateBall);
     start();

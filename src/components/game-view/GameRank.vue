@@ -75,6 +75,10 @@ const getRankImage = (rank) => {
       return null;
   }
 };
+
+const formatedScore = (score) => {
+  return score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 </script>
 
 <template>
@@ -139,7 +143,9 @@ const getRankImage = (rank) => {
           </span>
           <!-- 점수 표시 -->
           <div class="min-w-[60px] text-right">
-            <span class="text-sm text-white">{{ item.score }}점</span>
+            <span class="text-sm text-white"
+              >{{ formatedScore(item.score) }}점</span
+            >
           </div>
         </div>
       </router-link>

@@ -122,7 +122,9 @@ export default {
       navigation: true,
       pagination: { clickable: true },
     };
-
+    const formatedScore = (score) => {
+      return score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
     return {
       post,
       currentUser,
@@ -131,6 +133,7 @@ export default {
       formatDate,
       swiperOptions,
       handleToggleLike,
+      formatedScore,
     };
   },
 };
@@ -197,7 +200,7 @@ export default {
             class="flex flex-row items-center gap-4 font-semibold text-lg mb-4 text-point-500"
           >
             <p>TIME | {{ post?.playTime }}</p>
-            <p>SCORE | {{ post?.score }}</p>
+            <p>SCORE | {{ formatedScore(post?.score || 0) }}</p>
           </div>
           <!-- 본문 -->
           <div class="flex-grow max-h-[275px] overflow-y-auto">

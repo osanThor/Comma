@@ -203,7 +203,7 @@ onMounted(async () => {
 
     k.loop(1, () => {
       if (isGameStarted.value && !player.isDead) {
-        score += 1;
+        score += 50;
         scoreLabel.updateScore(score);
       }
     });

@@ -34,6 +34,9 @@ onMounted(async () => {
     Object.keys(postCounts.value).map((name) => getPostCount(name))
   );
 });
+const formatedScore = (score) => {
+  return score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 </script>
 <template>
   <section
@@ -65,7 +68,8 @@ onMounted(async () => {
             {{ game.display_name }}
           </div>
           <div class="font-semibold text-sm">
-            BEST SCORE : {{ gameTopRankers[game.name]?.score || 0 }}점
+            BEST SCORE :
+            {{ formatedScore(gameTopRankers[game.name]?.score) || 0 }}점
           </div>
           <div class="flex items-end justify-between">
             <div class="text-xs flex items-center gap-1">

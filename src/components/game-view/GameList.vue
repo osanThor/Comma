@@ -53,6 +53,9 @@ const games = computed(() => {
 const filteredGames = computed(() => {
   return games.value.filter((game) => game.route !== route.params.gameName);
 });
+const formatedScore = (score) => {
+  return score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 </script>
 
 <template>
@@ -67,7 +70,7 @@ const filteredGames = computed(() => {
         {{ game.name }}
       </div>
       <div class="font-semibold text-[12.6px]">
-        BEST SCORE : {{ game.bestScore }}점
+        BEST SCORE : {{ formatedScore(game.bestScore) }}점
       </div>
       <div class="flex items-end justify-between">
         <div class="text-[10.8px] flex items-center gap-1">

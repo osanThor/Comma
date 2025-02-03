@@ -12,23 +12,23 @@ export class Enemy {
   static isGameOver = false;
 
   constructor(
-    generateRandomValue,
-    stop,
-    stopAllMusic,
-    emits,
-    score,
-    currentTime
+    generateRandomValue
+    // stop,
+    // stopAllMusic,
+    // emits,
+    // score,
+    // currentTime
   ) {
     this.x = generateRandomValue(
       ENEMY_BOX_PADDING,
       CANVAS_WIDTH - ENEMY_WIDTH - ENEMY_BOX_PADDING
     );
     this.y = 0;
-    this.stop = stop;
-    this.stopAllMusic = stopAllMusic;
-    this.emits = emits;
-    this.score = score;
-    this.currentTime = currentTime;
+    // this.stop = stop;
+    // this.stopAllMusic = stopAllMusic;
+    // this.emits = emits;
+    // this.score = score;
+    // this.currentTime = currentTime;
 
     Enemy.enemyList.push(this);
   }
@@ -38,9 +38,9 @@ export class Enemy {
 
     if (this.y >= CANVAS_HEIGHT - ENEMY_HEIGHT) {
       Enemy.isGameOver = true;
-      this.stop();
-      this.stopAllMusic();
-      this.emits("open-game-over", this.score, this.currentTime);
+      // this.stop();
+      // this.stopAllMusic();
+      // this.emits("open-game-over", this.score, this.currentTime);
     }
   }
 }

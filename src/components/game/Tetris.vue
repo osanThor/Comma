@@ -148,8 +148,6 @@ function gameOver() {
   finishSound.value.play();
   stop();
 
-  console.log(account.score, currentTime.value, formatTime(currentTime.value));
-
   isPlaying.value = false;
   isGameOver.value = true;
   emit("open-game-over", account.score, currentTime.value);

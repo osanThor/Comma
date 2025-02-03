@@ -249,7 +249,6 @@ onMounted(async () => {
       map.speed = 0;
 
       stop();
-      console.log(score, currentTime.value);
 
       emit("open-game-over", score, currentTime.value);
       reset();

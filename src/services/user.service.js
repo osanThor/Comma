@@ -105,7 +105,6 @@ supabase.auth.onAuthStateChange((event, session) => {
       }
     }, 0);
   } else if (event === "SIGNED_OUT") {
-    console.log("?");
     updateUser(null);
   }
 });

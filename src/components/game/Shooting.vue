@@ -35,10 +35,12 @@ const keysDown = {};
 const enemyIntervalId = ref(null);
 const previousIntervalTime = ref(null);
 
-const { currentTime, start, stop } = useTimer();
+const { currentTime, start, stop, reset } = useTimer();
 const { playGameMusic, stopAllMusic, setMute } = useBackgroundMusic();
 
 const isMuted = ref(false);
+
+const requestId = ref(null);
 
 function loadImage() {
   backgroundImage = new Image();
@@ -70,18 +72,20 @@ function loadImage() {
     }
   };
 }
+function handleKeyDown(event) {
+  keysDown[event.key] = true;
+}
+
+function handleKeyUp(event) {
+  delete keysDown[event.key];
+  if (event.key === " ") {
+    createBullet();
+  }
+}
 
 function setupKeyboardListener() {
-  document.addEventListener("keydown", function (event) {
-    keysDown[event.key] = true;
-  });
-  document.addEventListener("keyup", function (event) {
-    delete keysDown[event.key];
-
-    if (event.key === " ") {
-      createBullet();
-    }
-  });
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("keyup", handleKeyUp);
 }
 
 function createBullet() {
@@ -98,12 +102,12 @@ function createEnemy() {
 
     enemyIntervalId.value = setInterval(() => {
       new Enemy(
-        generateRandomValue,
-        stop,
-        stopAllMusic,
-        emits,
-        score.value,
-        currentTime.value
+        generateRandomValue
+        // stop,
+        // stopAllMusic,
+        // emits,
+        // score.value,
+        // currentTime.value
       );
     }, intervalTime);
   };
@@ -204,8 +208,14 @@ function main() {
   if (!Enemy.isGameOver) {
     update();
     render();
-    requestAnimationFrame(main);
-  } else console.log("game over");
+    requestId.value = requestAnimationFrame(main);
+  } else {
+    console.log("game over");
+    stop();
+    stopAllMusic();
+    emits("open-game-over", score.value, currentTime.value);
+    cancelAnimationFrame(requestId.value);
+  }
 }
 
 function startGame() {
@@ -224,6 +234,30 @@ function startGame() {
   }
 }
 
+function resetGame() {
+  score.value = 0;
+  playButtonVisible.value = true;
+  Enemy.isGameOver = false;
+  Enemy.enemyList = [];
+  Bullet.bulletList = [];
+
+  spaceshipX.value = CANVAS_WIDTH / 2 - SPACESHIP_INITIAL_X_OFFSET;
+  spaceshipY.value = CANVAS_HEIGHT - SPACESHIP_HEIGHT;
+
+  stop();
+  reset();
+  stopAllMusic();
+
+  if (ctx) {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    renderInitialState();
+  }
+  clearInterval(enemyIntervalId.value);
+  cancelAnimationFrame(requestId.value);
+  document.removeEventListener("keydown", handleKeyDown);
+  document.removeEventListener("keyup", handleKeyUp);
+}
+
 watch(
   () => route.name,
   (newGameName) => {
@@ -233,6 +267,7 @@ watch(
 );
 
 onMounted(() => {
+  resetGame();
   if (canvas.value) {
     canvas.value.width = CANVAS_WIDTH;
     canvas.value.height = CANVAS_HEIGHT;
@@ -240,6 +275,9 @@ onMounted(() => {
 
     loadImage();
   }
+});
+onBeforeUnmount(() => {
+  resetGame();
 });
 </script>
 <template>

@@ -269,6 +269,11 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", setCanvasSize);
+
+  if (audioContext && audioContext.state !== "closed") {
+    audioContext.close();
+    window.location.reload();
+  }
 });
 </script>
 

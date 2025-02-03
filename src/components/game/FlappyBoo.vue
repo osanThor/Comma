@@ -26,7 +26,7 @@ let audioContext = null;
 let k = null;
 
 const SCORE_LABEL_CONFIG = {
-  font: "Pixel NES",
+  font: "Pixel_NES",
   size: 32,
   styles: {
     bold: true,
@@ -76,7 +76,7 @@ onMounted(async () => {
     canvas: canvas,
   });
 
-  await k.loadFont("gameFont", "/assets/fonts/Pixel_NES.otf");
+  await k.loadFont("Pixel_NES", "/assets/fonts/Pixel_NES.otf");
 
   k.loadSprite("sky", "/assets/images/game/flappy/2.png");
   k.loadSprite("field", "/assets/images/game/flappy/3.png");
@@ -148,6 +148,7 @@ onMounted(async () => {
         },
       },
     ]);
+
     const clouds = map.add([k.sprite("clouds"), k.pos(), { speed: 5 }]);
     clouds.onUpdate(() => {
       if (isGameStarted.value) {

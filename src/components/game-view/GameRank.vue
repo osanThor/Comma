@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { getGameRanking } from "@/services/game.service";
 import rank1st from "/assets/images/medal1.png";
@@ -62,6 +62,11 @@ watch(
   }
 );
 
+// 10등까지만 보여주는 computed 속성 추가
+const topTenRanks = computed(() => {
+  return rankData.value.slice(0, 10);
+});
+
 // 랭킹 이미지 가져오기 함수
 const getRankImage = (rank) => {
   switch (rank) {
@@ -97,7 +102,7 @@ const formatedScore = (score) => {
     <!-- 랭킹 리스트 표시 -->
     <div v-else class="mt-[20px] flex flex-col gap-[12px]">
       <router-link
-        v-for="item in rankData"
+        v-for="item in topTenRanks"
         :key="item.id"
         :to="`/user/${item.user_id}`"
         class="block"

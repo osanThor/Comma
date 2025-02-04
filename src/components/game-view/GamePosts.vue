@@ -90,7 +90,11 @@ onBeforeMount(async () => {
 watch(
   () => route.params.gameName,
   async (newGame) => {
+    // 검색 관련 상태 초기화
+    searchQuery.value = "";
+    query.value = "";
     page.value = 1;
+    // 검색어 초기화된 상태로 게시글 새로 불러오기
     await handleGetPosts(1);
   }
 );

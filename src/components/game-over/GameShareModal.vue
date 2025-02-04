@@ -106,6 +106,7 @@ watch(
           type="text"
           class="w-[372px] mt-[52px] mx-auto text-white font-dnf text-3xl placeholder:text-white placeholder:font-dnf placeholder:opacity-70 bg-transparent text-center focus:outline-none border-none shadow-none focus:placeholder-transparent"
           placeholder="제목을 입력해 주세요..."
+          maxlength="15"
           v-model="title"
           required
         />

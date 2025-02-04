@@ -67,11 +67,23 @@ const filterRankingsForDisplay = (rankings, latestRanking) => {
     (rank) => rank.rank === latestRanking.rank + 1
   );
 
+  const rankPlusTwo = rankings.find(
+    (rank) => rank.rank === latestRanking.rank + 2
+  );
+
   if (!rankPlusOne) {
     return [
       rankMinusOne,
       { ...latestRanking, isHighlighted: true },
       { isLastPlace: true },
+    ].filter(Boolean);
+  }
+
+  if (latestRanking.rank === 1 && rankPlusTwo) {
+    return [
+      { ...latestRanking, isHighlighted: true },
+      rankPlusOne,
+      rankPlusTwo,
     ].filter(Boolean);
   }
 

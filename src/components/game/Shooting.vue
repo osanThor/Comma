@@ -288,7 +288,13 @@ onBeforeUnmount(() => {
   <div
     class="relative w-full h-full bg-cover bg-center bg-[url(/assets/images/bg/shoot-bg.png)]"
   >
-    <div class="relative w-[500px] h-[700px] mx-auto">
+    <div
+      class="relative w-[500px] h-[700px] mx-auto"
+      :style="{
+        boxShadow:
+          '0 0 7px #fff, 0 0 10px rgb(0, 100, 200), 0 0 21px rgb(0, 100, 200)',
+      }"
+    >
       <canvas ref="canvas" class="w-full h-full"></canvas>
       <div
         v-if="playButtonVisible"
@@ -319,7 +325,7 @@ onBeforeUnmount(() => {
       <button
         @click="toggleMute"
         @keydown.space.prevent="(e) => e.target.blur"
-        class="absolute top-0 right-0 focus:outline-none"
+        class="absolute top-0 right-1 focus:outline-none"
       >
         <img
           :src="

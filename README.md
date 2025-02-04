@@ -123,21 +123,21 @@
 
 #### 2. 상세한 PROP 정의 사용
 
-![Image](https://github.com/user-attachments/assets/0bc03ea3-e0d1-426a-8e59-a6bc8a35fe6e)
+![스크린샷 2025-02-04 오전 11 24 47](https://github.com/user-attachments/assets/20a4f424-e288-42f0-92ab-610353ef049b)
 
 #### 3. V-for에 key 사용
 
-![Image](https://github.com/user-attachments/assets/2e456008-6192-47b5-8029-a02906591aaa)
+![스크린샷 2025-02-04 오전 11 25 41](https://github.com/user-attachments/assets/58b3ecab-5b66-4d4a-b21e-de4a655b1d92)
 
 ### 우선 순위 B - 강력히 권장
 
 #### 1. PROP 이름 대소문자 규칙
 
-![Image](https://github.com/user-attachments/assets/ab80982c-e1cb-4713-bcd4-4f5cdd54ec46)
+![스크린샷 2025-02-04 오전 11 26 29](https://github.com/user-attachments/assets/72635d8e-0994-4b39-a7ed-8e25453437eb)
 
 #### 2. 템플릿의 간단한 표현 규칙
 
-![Image](https://github.com/user-attachments/assets/995d4d2d-e7e9-4ebe-a2d7-cb18897f6aaf)
+![스크린샷 2025-02-04 오전 11 26 47](https://github.com/user-attachments/assets/5f4c4572-2912-4047-9884-71337af6ddc7)
 
 <br>
 

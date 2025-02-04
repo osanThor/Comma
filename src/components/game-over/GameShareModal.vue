@@ -60,9 +60,11 @@ const handleGetImageURL = async (file) => {
   }
 };
 
+const loading = ref(false);
+
 const handleSubmit = async () => {
   if (!user.value || !user.value.id) return alert("로그인해주세요");
-
+  loading.value = true;
   try {
     const images = await Promise.all(
       imageBlobs.map((file) => handleGetImageURL(file.file))
@@ -83,6 +85,8 @@ const handleSubmit = async () => {
     }
   } catch (err) {
     console.error(err);
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -187,6 +191,7 @@ watch(
           <after-game-over-button
             text="SHARE"
             type="submit"
+            :disabled="loading"
           ></after-game-over-button>
         </div>
       </section>

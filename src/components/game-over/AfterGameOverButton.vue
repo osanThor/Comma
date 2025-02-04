@@ -11,6 +11,9 @@ defineProps({
     type: String,
     default: "bg-point-500",
   },
+  disabled: {
+    type: Boolean,
+  },
 });
 </script>
 <template>
@@ -20,6 +23,7 @@ defineProps({
       'font-dnf text-xl text-white w-[160px] h-[64px] rounded-xl',
       bgColor,
     ]"
+    :disabled="disabled"
   >
     {{ text }}
   </button>

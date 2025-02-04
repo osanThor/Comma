@@ -8,6 +8,7 @@ import {
   readAllNotifications,
 } from "@/services/notification.service";
 import { twMerge } from "tailwind-merge";
+import dayjs from "dayjs";
 
 const router = useRouter();
 
@@ -82,6 +83,10 @@ watch([isOpenMenu, user], async () => {
   if (user.value && isOpenMenu.value)
     await handleGetNotifications(user.value.id);
 });
+const formatedDate = (D) => {
+  const date = dayjs(D);
+  return date.format("YYYY.MM.DD");
+};
 </script>
 <template>
   <div class="relative flex items-center justify-center">
@@ -160,7 +165,9 @@ watch([isOpenMenu, user], async () => {
                 <span class="font-bold">{{ item.sender.name }}</span> 님이
                 {{ item.message }}{{ " " }}<span class="ml-1"></span>
               </div>
-              <span class="text-xs opacity-70">2025년 1월 13일</span>
+              <span class="text-xs opacity-70">{{
+                formatedDate(item.created_at)
+              }}</span>
             </div>
           </li>
         </ul>

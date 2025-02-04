@@ -97,7 +97,7 @@ const formatedScore = (score) => {
     <!-- 랭킹 리스트 표시 -->
     <div v-else class="mt-[20px] flex flex-col gap-[12px]">
       <router-link
-        v-for="item in rankData"
+        v-for="item in rankData.slice(0, 10)"
         :key="item.id"
         :to="`/user/${item.user_id}`"
         class="block"

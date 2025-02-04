@@ -71,12 +71,12 @@ const resetGame = () => {
 let paddleCollisionProcessed = false;
 
 // 3. updateBall 함수 수정
-const updateBall = (currentTime) => {
+const updateBall = (timeStamp) => {
   if (!isPlaying.value) return;
 
   // 델타타임 계산 (초 단위)
-  const deltaTime = lastTime ? (currentTime - lastTime) / 1000 : 0;
-  lastTime = currentTime;
+  const deltaTime = lastTime ? (timeStamp - lastTime) / 1000 : 0;
+  lastTime = timeStamp;
 
   // 델타타임을 적용한 이동 계산
   ballX.value += ballDx.value * deltaTime;
@@ -86,7 +86,8 @@ const updateBall = (currentTime) => {
   if (ballY.value >= GAME_HEIGHT) {
     isGameOver.value = true;
     isPlaying.value = false;
-    stop();
+    stop(); // 타이머 정지
+    const finalTime = currentTime.value; // useTimer의 currentTime 값 저장
     lastTime = 0;
 
     // 레이저 사운드 재생
@@ -94,7 +95,7 @@ const updateBall = (currentTime) => {
     laserSound.play().catch((e) => console.log("sound play error:", e));
 
     setTimeout(() => {
-      emits("open-game-over", score.value, currentTime.value);
+      emits("open-game-over", score.value, finalTime);
     }, 200);
     return;
   }

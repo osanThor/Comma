@@ -108,9 +108,22 @@ const updateBall = (currentTime) => {
     ballDx.value = -ballDx.value;
   }
 
-  // 상단 벽 충돌
+  // 상단 벽 충돌 부분 수정
   if (ballY.value <= 0) {
+    ballY.value = 0; // Y좌표 보정
     ballDy.value = -ballDy.value;
+
+    // 최소 Y속도 보장 (전체 속도의 30% 이상)
+    const currentSpeed = Math.sqrt(ballDx.value ** 2 + ballDy.value ** 2);
+    const minYSpeed = currentSpeed * 0.3;
+
+    if (Math.abs(ballDy.value) < minYSpeed) {
+      // Y속도가 너무 작으면 보정
+      ballDy.value = Math.sign(ballDy.value) * minYSpeed;
+      // X속도도 함께 보정하여 전체 속도 유지
+      const newXSpeed = Math.sqrt(currentSpeed ** 2 - minYSpeed ** 2);
+      ballDx.value = Math.sign(ballDx.value) * newXSpeed;
+    }
   }
 
   // 패들 충돌이 없는 경우 플래그 초기화

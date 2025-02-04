@@ -148,6 +148,8 @@ function gameOver() {
   finishSound.value.play();
   stop();
 
+  document.removeEventListener("keydown", handleKeyPress);
+
   isPlaying.value = false;
   isGameOver.value = true;
   emit("open-game-over", account.score, currentTime.value);

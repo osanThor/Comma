@@ -54,7 +54,7 @@ export const updateGameScore = async (gameId, userId, score, playTime) => {
     .update([
       {
         score: renewal ? score : existingGameData.score,
-        play_time: playTime,
+        play_time: renewal ? playTime : existingGameData.play_time,
         total_play_time: existingGameData.total_play_time + playTime,
       },
     ])
